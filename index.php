@@ -1,6 +1,7 @@
 <?php $pageTitle = '8gag'?>
 
 <?php require_once('components/top.php');?>
+<?php require_once('controllers/database.php');?>
 
 <!-- ------------------------------------------ INDEX BODY ------------------------------------------ -->
 
