@@ -9,6 +9,7 @@ if(isset($_POST['registerUsername']) &&
     isset($_POST['registerPassword1']) &&
     isset($_POST['registerCheckbox'])
 ){
+
     $registerUsername = $_POST['registerUsername'];
     $registerEmail = $_POST['registerEmail'];
     $registerPassword1 = $_POST['registerPassword1'];
@@ -16,14 +17,36 @@ if(isset($_POST['registerUsername']) &&
     $registerCheckbox = $_POST['registerCheckbox'];
     $userId = uniqid();
 
+    //select all users to see if email is available
+    try{
+        $stmt = $db->prepare('SELECT * FROM users WHERE email = :registerEmail');
+        $stmt->bindValue(':registerEmail', $registerEmail);
+        $stmt->execute();
+        $users = $stmt->fetchAll();
+    } catch (PDOException $ex){
+        echo 'error selecting users';
+        exit();
+    }
+
+    //if a user with same email is found then set alreadyUsedEmail to true
+    $alreadyUsedEmail = false;
+    foreach($users as $user){
+        if($user['username'] == $registerUsername){
+            $alreadyUsedEmail = true;
+            exit();
+        }
+    }
+    
+
     //verification
-    //TODO check if it is already existing user
+
     if(
         $registerPassword1 == $registerPassword2 &&
         $registerCheckbox == 'on' &&
         strlen($registerUsername) > 2 &&
         strlen($registerUsername) < 20 &&
-        filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == TRUE
+        filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == TRUE &&
+        $alreadyUsedEmail == false
     ){
             //verification code for email verify - why do we even need to save it? 
             $verificationCode = 'verification code here';
