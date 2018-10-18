@@ -7,6 +7,17 @@
     display: none;
 }
 
+#logoutNav {
+    display: none;
+}
+
+.nav-item.display {
+    display: block !important;
+}
+
+.nav-item.hide {
+    display: none !important;
+}
 
 /* INDEX */
 .card-custom{

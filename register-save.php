@@ -29,31 +29,31 @@ if(isset($_POST['registerUsername']) &&
     }
 
     //if a user with same email is found then set alreadyUsedEmail to true
-    $alreadyUsedEmail = false;
-    foreach($users as $user){
-        if($user['username'] == $registerUsername){
-            $alreadyUsedEmail = true;
-            exit();
-        }
-    }
+    // $alreadyUsedEmail = false;
+    // foreach($users as $user){
+    //     if($user['username'] == $registerUsername){
+    //         $alreadyUsedEmail = true;
+    //         exit();
+    //     }
+    // }
     
 
-    //verification
+    //validation
 
     if(
         $registerPassword1 == $registerPassword2 &&
         $registerCheckbox == 'on' &&
         strlen($registerUsername) > 2 &&
         strlen($registerUsername) < 20 &&
-        filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == TRUE &&
-        $alreadyUsedEmail == false
+        filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == TRUE
+        // $alreadyUsedEmail == false
     ){
             //verification code for email verify - why do we even need to save it? 
             $verificationCode = 'verification code here';
 
             //hashing pattern:
-            $salt = random_int(100000, 999999);
-            $peber = "BetterSafeThanSorry";
+            $salt = 42;
+            $peber = "MaciejStopHackingUs";
             $options = [
                 'cost' => 12
             ];
@@ -76,6 +76,8 @@ if(isset($_POST['registerUsername']) &&
                 echo 'error, database insertion';
                 exit();
             }
+
+            header('location: login.php');   
 
     } else {
         echo 'fields not filled out properly, try again';

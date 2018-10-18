@@ -10,6 +10,9 @@
 <!-- SWEET ALERT -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+<!-- RECAPTCHA -->
+<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
+
 <!-- CUSTOM SCRIPT -->
 <script src="script/main.js"></script>
 
