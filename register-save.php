@@ -16,11 +16,13 @@ if(isset($_POST['registerUsername']) &&
     $registerPassword2 = $_POST['registerPassword2'];
     $registerCheckbox = $_POST['registerCheckbox'];
     $userId = uniqid();
+    $verificationCode = uniqid();
 
     //select all users to see if email is available
     try{
-        $stmt = $db->prepare('SELECT * FROM users WHERE email = :registerEmail');
+        $stmt = $db->prepare('SELECT * FROM users WHERE email = :registerEmail AND username = :registerUsername');
         $stmt->bindValue(':registerEmail', $registerEmail);
+        $stmt->bindValue(':registerUsername', $registerUsername);
         $stmt->execute();
         $users = $stmt->fetchAll();
     } catch (PDOException $ex){
@@ -28,17 +30,23 @@ if(isset($_POST['registerUsername']) &&
         exit();
     }
 
-    //if a user with same email is found then set alreadyUsedEmail to true
+    // if a user with same email is found then set alreadyUsedEmail to true
+
     $alreadyUsedEmail = false;
+    $alreadyUsedUsername = false;
+
     foreach($users as $user){
-        if($user['username'] == $registerUsername){
+        if($user['email'] == $registerEmail){
             $alreadyUsedEmail = true;
-            exit();
+            echo '<br>'.'this email is already in use, try a different one'.'<br>';
+        }
+        if($user['username'] == $registerUsername){
+            $alreadyUsedUsername = true;
+            echo 'this username is already in use, try a different one'.'<br>';
         }
     }
-    
 
-    //verification
+    //validation
 
     if(
         $registerPassword1 == $registerPassword2 &&
@@ -46,13 +54,12 @@ if(isset($_POST['registerUsername']) &&
         strlen($registerUsername) > 2 &&
         strlen($registerUsername) < 20 &&
         filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == TRUE &&
-        $alreadyUsedEmail == false
+        ($alreadyUsedEmail == false || $alreadyUsedUsername == false)
     ){
-            //verification code for email verify - why do we even need to save it? 
-            $verificationCode = 'verification code here';
+
 
             //hashing pattern:
-            $salt = random_int(100000, 999999);
+            $salt = rand(100000, 999999);
             $peber = "BetterSafeThanSorry";
             $options = [
                 'cost' => 12
@@ -60,25 +67,32 @@ if(isset($_POST['registerUsername']) &&
             //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
             $pass_hash = password_hash($registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options);
 
-            //if validation passes then try catch
+            //if validation passes then insert into database try catch
 
             try {
-                $stmt = $db->prepare('INSERT INTO users VALUES (:userId, :username, :email, :password, :salt, :verification_code, :verified)');
-                $stmt->bindValue(':userId', $userId);
-                $stmt->bindValue(':username', $registerUsername);
-                $stmt->bindValue(':email', $registerEmail);
-                $stmt->bindValue(':password', $pass_hash);
-                $stmt->bindValue(':salt', $salt);
-                $stmt->bindValue(':verification_code', $verificationCode);
-                $stmt->bindValue(':verified', 0);
-                $stmt->execute();
+                $stmt1 = $db->prepare('INSERT INTO users VALUES (:userId, :username, :email, :password, :salt, :verified)');
+                $stmt1->bindValue(':userId', $userId);
+                $stmt1->bindValue(':username', $registerUsername);
+                $stmt1->bindValue(':email', $registerEmail);
+                $stmt1->bindValue(':password', $pass_hash);
+                $stmt1->bindValue(':salt', $salt);
+                $stmt1->bindValue(':verified', 0);
+                $stmt1->execute();
+
+                $stmt2 = $db->prepare('INSERT INTO verification_codes VALUES (:userId, :verification_code)');
+                $stmt2->bindValue(':userId', $userId);
+                $stmt2->bindValue(':verification_code', $verificationCode);
+                $stmt2->execute();
+
             } catch (PDOException $ex) {
                 echo 'error, database insertion';
                 exit();
             }
 
+        
     } else {
         echo 'fields not filled out properly, try again';
     }
 
+    require_once('send-verification-email.php');
 }
