@@ -36,7 +36,7 @@
         <input name="registerCheckbox" type="checkbox" class="form-check-input" id="registerCheckbox">
         <label class="form-check-label" for="registerCheckbox">I agree to privacy statements.</label>
     </div>
-    <span><p>insert captcha</p></span>
+    
     <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <!-- REGISTER FORM END -->

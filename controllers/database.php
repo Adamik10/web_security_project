@@ -11,7 +11,7 @@ try{
     );
 
     $db = new PDO( $sConnection, $sUserName, $sPassword, $aOptions );
-    echo 'connected';
+    // echo 'connected';
 }catch( PDOException $e){
     echo 'error';
     exit();

@@ -60,7 +60,7 @@ if(isset($_POST['registerUsername']) &&
 
             //hashing pattern:
             $salt = rand(100000, 999999);
-            $peber = "BetterSafeThanSorry";
+            $peber = "MaciejStopHackingUs";
             $options = [
                 'cost' => 12
             ];

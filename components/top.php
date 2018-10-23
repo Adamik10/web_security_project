@@ -1,3 +1,5 @@
+<?php session_start();?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,18 +30,41 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item <?php if($pageTitle == 'register'){echo 'active';}?>">
+
+      <li class="nav-item 
+      <?php if($pageTitle == 'register'){echo ' active';}
+            if(!empty($_SESSION['userEmail'])){echo ' hide';}?>"
+            id="profileRegister">
         <a class="nav-link" href="register.php">Register</a>
       </li>
-      <li class="nav-item <?php if($pageTitle == 'login'){echo 'active';}?>">
+      <li class="nav-item 
+      <?php if($pageTitle == 'login'){echo ' active';}
+            if(!empty($_SESSION['userEmail'])){echo ' hide';}?>"
+            id="profileLogin">
         <a class="nav-link" href="login.php">Login</a>
       </li>
-      <!-- Profile and post should be displayed instead of login and register after the user logs in -->
-      <li class="nav-item <?php if($pageTitle == 'profile'){echo 'active';}?>" id="profileNav">
+
+
+      <!-- Profile, post and logout should be displayed instead of login and register after the user logs in -->
+
+
+      <li class="nav-item 
+      <?php if($pageTitle == 'profile'){echo ' active';}
+            if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
+            id="profileNav">
         <a class="nav-link" href="profile.php">Profile</a>
       </li>
-      <li class="nav-item <?php if($pageTitle == 'post'){echo 'active';}?>" id="postNav">
+      <li class="nav-item 
+      <?php if($pageTitle == 'post'){echo ' active';}
+            if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
+            id="postNav">
         <a class="nav-link" href="post.php">Post</a>
+      </li>
+      <li class="nav-item 
+      <?php if($pageTitle == 'logout'){echo ' active';}
+            if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
+            id="logoutNav">
+        <a class="nav-link" href="logout.php">Logout</a>
       </li>
     </ul>
     
