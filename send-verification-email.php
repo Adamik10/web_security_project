@@ -1,5 +1,6 @@
 <?php
 
+header('Location: email-sent.php');
 
 // header('Location:signup-email-sent.php');
 
