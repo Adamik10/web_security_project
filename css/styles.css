@@ -42,14 +42,36 @@
 
 /* PROFILE */
 
-#uploadImgThumbnail {
+/* #uploadImgThumbnail {
     width:100px;
     height:100px;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-}
+} */
 
 .float {
     float: left;
 }
+
+#uploadImgThumbnail{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    margin-right:auto;
+    margin-left:auto;
+  }
+
+  #uploadImgThumbnail img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-height:100%;
+    min-width:100%;
+    object-fit: cover;
+    -webkit-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+    
+  }

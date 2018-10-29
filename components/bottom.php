@@ -15,6 +15,7 @@
 
 <!-- CUSTOM SCRIPT -->
 <script src="script/main.js"></script>
+<script src="script/preview-image-upload.js"></script>
 
 </body>
 </html>
