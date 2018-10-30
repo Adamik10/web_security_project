@@ -58,7 +58,7 @@
       <?php if($pageTitle == 'post'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="postNav">
-        <a class="nav-link" href="post.php">Post</a>
+        <span class="nav-link">Post</span>
       </li>
       <li class="nav-item 
       <?php if($pageTitle == 'logout'){echo ' active';}

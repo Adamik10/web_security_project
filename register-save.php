@@ -70,11 +70,11 @@ if(isset($_POST['registerUsername']) &&
             //if validation passes then insert into database try catch
 
             try {
-                $stmt1 = $db->prepare('INSERT INTO users VALUES (:userId, :username, :email, :password, :salt, :verified)');
+                $stmt1 = $db->prepare('INSERT INTO users VALUES (:userId, :username, :email, :pass, :salt, :verified)');
                 $stmt1->bindValue(':userId', $userId);
                 $stmt1->bindValue(':username', $registerUsername);
                 $stmt1->bindValue(':email', $registerEmail);
-                $stmt1->bindValue(':password', $pass_hash);
+                $stmt1->bindValue(':pass', $pass_hash);
                 $stmt1->bindValue(':salt', $salt);
                 $stmt1->bindValue(':verified', 0);
                 $stmt1->execute();

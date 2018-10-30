@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2018 at 02:54 AM
--- Server version: 10.1.30-MariaDB
--- PHP Version: 7.2.1
+-- Generation Time: Oct 29, 2018 at 11:06 PM
+-- Server version: 10.1.36-MariaDB
+-- PHP Version: 5.6.38
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -88,18 +88,8 @@ CREATE TABLE `posts` (
   `id_users` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `headline` varchar(140) NOT NULL,
   `image_location` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `image_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `sensitive_content` tinyint(1) NOT NULL
+  `image_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `posts`
---
-
-INSERT INTO `posts` (`id_posts`, `id_users`, `headline`, `image_location`, `image_name`, `sensitive_content`) VALUES
-('5bd7b326e5b11', '5bd78546961a5', 'Yaaaas', 'images/posts/5bd7b326e5b27.jpg', '5bd7b326e5b27', 0),
-('5bd7b981d2cee', '5bd78546961a5', 'Gym is life', 'images/posts/5bd7b981d2cff.jpg', '5bd7b981d2cff', 0),
-('5bd7b9c62f6f3', '5bd78546961a5', 'Spyro knows the feeling', 'images/posts/5bd7b9c62f704.jpg', '5bd7b9c62f704', 1);
 
 -- --------------------------------------------------------
 
@@ -139,8 +129,7 @@ INSERT INTO `users` (`id_users`, `username`, `email`, `password_hash`, `salt`, `
 ('5bcf3ba902651', 'Kat', 'k0kukavica@gmail.com', '$2y$12$Rfm/Y45GicHm6X6sn.lHX.DMkqYXnKI7i7/F3vbsMwdFQD5UA9GpS', '484576', 0),
 ('5bcf3c52daa26', 'Kata', 'k0kukavica@gmail.com', '$2y$12$aOWUEHnQsuqmOWgX4ykATe73K0NEZZF5pavKHr3xp4IhtiA.dZw4a', '479769', 0),
 ('5bcf3ca8247e9', 'Jozo', 'k0kukavica@gmail.com', '$2y$12$Vc8k8xUKgBcO3uFui1G4iuxLhHz2W92A1Qz7ypu74uEmNbUEoQ0e2', '279296', 0),
-('5bd72addc57b4', 'Maraaaaaaaaa', 'k0kukavica@gmail.com', '$2y$12$5e9qjr960HhePVCvcaZ49ue8KFJFwtg3vIKagkB7z.swI8mdpk3rK', '642614', 1),
-('5bd78546961a5', 'Adamik10', 'adoantal@gmail.com', '$2y$12$twCSxcj0wVMceASKV6ief.XdpPj.t6w54LbYjqVQEi8bEFbVYua4W', '493562', 1);
+('5bd72addc57b4', 'Maraaaaaaaaa', 'k0kukavica@gmail.com', '$2y$12$5e9qjr960HhePVCvcaZ49ue8KFJFwtg3vIKagkB7z.swI8mdpk3rK', '642614', 1);
 
 -- --------------------------------------------------------
 
@@ -164,8 +153,7 @@ INSERT INTO `verification_codes` (`id_users`, `verification_code`) VALUES
 ('5bcf3ba902651', '5bcf3ba90265a'),
 ('5bcf3c52daa26', '5bcf3c52daa2e'),
 ('5bcf3ca8247e9', '5bcf3ca8247f2'),
-('5bd72addc57b4', '5bd72addc57bf'),
-('5bd78546961a5', '5bd78546961af');
+('5bd72addc57b4', '5bd72addc57bf');
 
 --
 -- Indexes for dumped tables
@@ -184,8 +172,8 @@ ALTER TABLE `admins`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id_comments`),
   ADD UNIQUE KEY `id_comments` (`id_comments`),
-  ADD KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `logging_in`
@@ -199,8 +187,8 @@ ALTER TABLE `logging_in`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id_posts`),
-  ADD UNIQUE KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `upvotes`
@@ -208,8 +196,8 @@ ALTER TABLE `posts`
 ALTER TABLE `upvotes`
   ADD PRIMARY KEY (`id_upvotes`),
   ADD UNIQUE KEY `id_upvotes` (`id_upvotes`),
-  ADD KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `users`

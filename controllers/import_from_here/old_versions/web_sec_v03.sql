@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2018 at 02:54 AM
+-- Generation Time: Oct 30, 2018 at 02:29 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -97,9 +97,7 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id_posts`, `id_users`, `headline`, `image_location`, `image_name`, `sensitive_content`) VALUES
-('5bd7b326e5b11', '5bd78546961a5', 'Yaaaas', 'images/posts/5bd7b326e5b27.jpg', '5bd7b326e5b27', 0),
-('5bd7b981d2cee', '5bd78546961a5', 'Gym is life', 'images/posts/5bd7b981d2cff.jpg', '5bd7b981d2cff', 0),
-('5bd7b9c62f6f3', '5bd78546961a5', 'Spyro knows the feeling', 'images/posts/5bd7b9c62f704.jpg', '5bd7b9c62f704', 1);
+('5bd7b326e5b11', '5bd78546961a5', 'Yaaaas', 'images/posts/5bd7b326e5b27.jpg', '5bd7b326e5b27', 0);
 
 -- --------------------------------------------------------
 
@@ -184,8 +182,8 @@ ALTER TABLE `admins`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id_comments`),
   ADD UNIQUE KEY `id_comments` (`id_comments`),
-  ADD KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `logging_in`
@@ -199,8 +197,8 @@ ALTER TABLE `logging_in`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id_posts`),
-  ADD UNIQUE KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `upvotes`
@@ -208,8 +206,8 @@ ALTER TABLE `posts`
 ALTER TABLE `upvotes`
   ADD PRIMARY KEY (`id_upvotes`),
   ADD UNIQUE KEY `id_upvotes` (`id_upvotes`),
-  ADD KEY `id_posts` (`id_posts`) USING BTREE,
-  ADD KEY `id_users` (`id_users`) USING BTREE;
+  ADD UNIQUE KEY `id_posts` (`id_posts`),
+  ADD UNIQUE KEY `id_users` (`id_users`);
 
 --
 -- Indexes for table `users`

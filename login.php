@@ -33,7 +33,7 @@
             // check if that ip is in the db 
             try{ 
                 $stmt = $db->prepare('SELECT ip, attempts FROM logging_in 
-                                                                WHERE ip = :currentIp LIMIT 1');
+                                                            WHERE ip = :currentIp LIMIT 1');
                 $stmt->bindValue('currentIp', $currentIp);
                 $stmt->execute();
                 $aaResult = $stmt->fetchAll();

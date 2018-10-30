@@ -61,9 +61,9 @@
     overflow: hidden;
     margin-right:auto;
     margin-left:auto;
-  }
+}
 
-  #uploadImgThumbnail img {
+#uploadImgThumbnail img {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -74,4 +74,77 @@
         -ms-transform: translate(-50%,-50%);
             transform: translate(-50%,-50%);
     
-  }
+}
+
+#postNav {
+    cursor: pointer;
+}
+
+#screenBlind {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    background-color: black;
+    opacity: 0.8;
+    overflow: scroll;
+    z-index: 1100;
+    visibility: hidden;
+}
+
+#uploadBox{
+    position: absolute;
+    width: 540px;
+    height: 500px;
+    background-color: white;
+    opacity: 1;
+    left: 50%;
+    top: 100px;
+    margin-left: -270px;
+    z-index: 1200;
+    padding: 3em;
+    visibility: hidden;
+}
+
+#closePostingPopup{
+    float: right;
+}
+
+.fa-window-close{
+    font-size: 2em;
+    cursor: pointer;
+}
+
+input{
+    display: block;
+    margin-top: 1em;
+}
+
+textarea{
+    display: inline-block;
+    margin-top: 1em;
+}
+
+.littleExtraSpaceTop{
+    margin-top: 2em;
+}
+
+#preview-image-placeholder{
+    display: inline-block;
+    width: 7.9em;
+    height: 7.9em;
+    min-width: 7.9em;
+    min-height: 7.9em;
+    background-color: rgb(161, 161, 161);
+    overflow: hidden;
+}
+
+#preview-image{
+    width: auto;
+    height: 100%;
+}
+
+#naughtyCheckbox{
+    display: inline-block;
+}
