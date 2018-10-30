@@ -20,22 +20,52 @@ echo 'Current PHP version: ' . phpversion();
 
     <!-- TEMPLATE START -->
     <div class="card align-self-center card-custom mt-2 mb-2">
-
         <div class="row ml-3 mr-3 mt-1">
             <div class="mr-3">img</div>
             <a href="#">OP´s name</a>
         </div>
-
         <h4 class="card-title mr-3 ml-3 mt-3">Wise words.</h4>
-
         <img class="card-img-top" src="https://jolicode.com/media/original/2017/password.png" alt="Card image cap">
-        
         <div class="card-body">
             <a href="#" class="btn btn-primary">Upvote</a>
             <a href="#" class="btn btn-primary">Comment</a>
         </div>
     </div>
     <!-- TEMPLATE END -->
+    <?php
+        require('controllers/database.php');
+        // we need - image of user, user's nickname, post headline, post picture location
+        try{
+        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, users.username 
+                                FROM posts INNER JOIN users ON posts.id_users = users.id_users LIMIT 5');
+        $stmt->execute();
+        $aOfPosts = $stmt->fetchAll();
+    }catch (PDOException $exception){
+        echo $exception;
+    }
+    // echo 'These are the posts from the database: '.json_encode($aOfPosts).'<br>';
+
+    for($j = 0; $j < sizeof($aOfPosts); $j++){
+        $currentPostId = $aOfPosts[$j]['id_posts'];
+        $currentPostHeadline = $aOfPosts[$j]['headline'];
+        $currentPostImageLocation = $aOfPosts[$j]['image_location'];
+        $currentPostImageName = $aOfPosts[$j]['image_name'];
+        $currentPostUsername = $aOfPosts[$j]['username'];
+
+        echo '<div class="card align-self-center card-custom mt-2 mb-2" id="'.$currentPostId.'">
+            <div class="row ml-3 mr-3 mt-1">
+                <div class="mr-3">img</div>
+                <a href="#">'.$currentPostUsername.'</a>
+            </div>
+            <h4 class="card-title mr-3 ml-3 mt-3">'.$currentPostHeadline.'</h4>
+            <img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'">
+            <div class="card-body">
+                <a href="#" class="btn btn-primary">Upvote</a>
+                <a href="#" class="btn btn-primary">Comment</a>
+            </div>
+        </div>';
+    }
+    ?>
 
 </div>
 
