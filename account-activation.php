@@ -1,6 +1,7 @@
 <?php
-
+$pageTitle = 'Account activated';
 require_once("controllers/database.php");
+require_once('components/top.php');
 
 if(isset($_GET['user'])){
     $verification_code = $_GET['user'];
@@ -30,26 +31,22 @@ if(isset($_GET['user'])){
                 echo 'error, inserting 1 for verified';
                 exit();
             } 
-
+            //echo template
+            echo '<div class="container">
+                    <!-- TEMPLATE START -->
+                        <div class="card align-self-center card-custom mt-2 mb-2">
+                            <p style="text-align:center; margin-top:15px;">Your account is verified. You can log in.</p>
+                        </div>
+                    <!-- TEMPLATE END -->
+                </div>'; 
+            break;
         }
     }
 }
 
-require_once('components/top.php');
+
 
 ?>
-
-<div class="container">
-
-    <!-- TEMPLATE START -->
-<div class="card align-self-center card-custom mt-2 mb-2">
-
-<p style="text-align:center; margin-top:15px;">Your account is verified. You can log in.</p>
-
-</div>
-    <!-- TEMPLATE END -->
-
-</div>
 
 <?php
 

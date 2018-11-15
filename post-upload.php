@@ -1,9 +1,10 @@
 <?php
 session_start();
 if(!isset($_SESSION['sessionId'])){
-    header('location: login.php');
+    header('location: login.php?status=not_logged_in');
+    exit;
 }
-// FINISH ADAM - if the user isn't logged in - this redirects to index
+// if the user isn't logged in - this redirects to index
 
 if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_POST['postHeader'])){
 
@@ -72,5 +73,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         exit();
     }
     header('location: index.php');
+}else{
+    header('location: index.php?status=post_invalid'); //ADAM TOTO this
 }
 ?>

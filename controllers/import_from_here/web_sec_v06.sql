@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2018 at 02:50 PM
+-- Generation Time: Nov 15, 2018 at 04:53 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -70,6 +70,13 @@ CREATE TABLE `logging_in` (
   `attempts` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `logging_in`
+--
+
+INSERT INTO `logging_in` (`id_logging_in`, `username`, `ip`, `attempts`) VALUES
+(2, 'Adamik10', '::1', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +91,13 @@ CREATE TABLE `posts` (
   `image_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `sensitive_content` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id_posts`, `id_users`, `headline`, `image_location`, `image_name`, `sensitive_content`) VALUES
+('5bed958bb23b9', '5bed924353b16', 'This is it', 'images/posts/5bed958bb23c8.jpg', '5bed958bb23c8', 0);
 
 -- --------------------------------------------------------
 
@@ -110,9 +124,16 @@ CREATE TABLE `users` (
   `password_hash` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `salt` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `verified` tinyint(1) NOT NULL,
-  `image_location` varchar(100) NOT NULL,
-  `image_name` varchar(50) NOT NULL
+  `image_location` varchar(100) DEFAULT NULL,
+  `image_name` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id_users`, `username`, `email`, `password_hash`, `salt`, `verified`, `image_location`, `image_name`) VALUES
+('5bed924353b16', 'Spyro', 'adoantal2@gmail.com', '$2y$12$I5.Vbc.FseP2lydbCARMhec5/t6gseCIGPPjui8fOEYpznVDfDPVm', '476401', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -125,6 +146,19 @@ CREATE TABLE `verification_codes` (
   `id_users` varchar(200) NOT NULL,
   `verification_code` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `verification_codes`
+--
+
+INSERT INTO `verification_codes` (`id_verification_codes`, `id_users`, `verification_code`) VALUES
+('5bed80a81ff70', '5bed80a81ff66', '5bed80a81ff6d'),
+('5bed820b59a95', '5bed820b59a82', '5bed820b59a8f'),
+('5bed82f79397b', '5bed82f793971', '5bed82f793978'),
+('5bed8847d4d1e', '5bed8847d4d12', '5bed8847d4d1b'),
+('5bed8888b1c56', '5bed8888b1c49', '5bed8888b1c52'),
+('5bed924353b5c', '5bed924353b16', '5bed924353b57'),
+('6fd165s1dv61s561v5s1dv', 'sdfvsdv5d5df2vsv', 's2df1sf5vf1s5f1s51f');
 
 --
 -- Indexes for dumped tables
@@ -191,7 +225,7 @@ ALTER TABLE `verification_codes`
 -- AUTO_INCREMENT for table `logging_in`
 --
 ALTER TABLE `logging_in`
-  MODIFY `id_logging_in` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_logging_in` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

@@ -1,5 +1,5 @@
 <?php
-
+$pageTitle = 'Email sent';
 require_once('components/top.php');
 
 ?>

@@ -3,7 +3,7 @@
 
 <!-- ------------------------------------------ REGISTER BODY ------------------------------------------ -->
 
-<div class="container">
+<div class="container"> 
 
     <!-- REGISTER FORM START -->
     <form id="frmRegister" method="post" action="register-save.php">
@@ -37,9 +37,24 @@
         <label class="form-check-label" for="registerCheckbox">I agree to privacy statements.</label>
     </div>
     
+    <!-- DISPLAY ERROR MESSAGES HERE -->
+    <?php
+    if(isset($_GET['status'])){
+        if ($_GET['status'] == 'already_exists'){
+            echo '  <div>
+                    <p class="login-error">Username or email already exists.</p>
+                    </div>';
+        }
+    } 
+    
+    
+    ?>
+    <!-- ERROR MESSAGES END -->
+    
     <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <!-- REGISTER FORM END -->
+
 
 </div>
 
