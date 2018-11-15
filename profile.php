@@ -1,41 +1,42 @@
 <?php $pageTitle = 'profile'?>
+<?php session_start(); ?>
+
 <?php 
-require_once('components/top.php');
-require_once('controllers/database.php');
+// display this page only if session is started
+if(isset($_SESSION['userEmail'])){
+    require_once('components/top.php');
+    require_once('controllers/database.php');
 
+    //select user that is logged in 
 
-//TODO - saska? how does one assure that session is still going?
+    $sUserIdFromDb = $_SESSION['userId'];
 
-//select user that is logged in 
+    try{
+        $stmt = $db->prepare('SELECT * FROM users WHERE id_users = :loggedInUserId');
+        $stmt->bindValue(':loggedInUserId', $sUserIdFromDb);
+        $stmt->execute();
+        $user = $stmt->fetchAll();
+    } catch(PDOException $ex){
+        echo 'error getting user data';
+        exit();
+    }
 
-$sUserIdFromDb = $_SESSION['userId'];
+    //get username and email from the array so we can put them in the input values
 
-try{
-    $stmt = $db->prepare('SELECT * FROM users WHERE id_users = :loggedInUserId');
-    $stmt->bindValue(':loggedInUserId', $sUserIdFromDb);
-    $stmt->execute();
-    $user = $stmt->fetchAll();
-} catch(PDOException $ex){
-    echo 'error getting user data';
-    exit();
-}
-
-//get username and email from the array so we can put them in the input values
-
-foreach($user as $a){
-    $username = $a['username'];
-    $email = $a['email'];
-}
-
+    foreach($user as $a){
+        $username = $a['username'];
+        $email = $a['email'];
+    }
 ?>
 
-<div class="container mb-5">
+
+    <div class="container mb-5">
 
     <div class="card align-self-center card-custom mt-2 mb-2" style="border:0px solid white;">
     <h2 class="text-center mt-4">Profile</h2>
 
     <form class="py-3" action="edit-profile.php" method="post" enctype="multipart/form-data">
-     
+    
         <div class="form-group"> 
             <label for="inputFile" class="mt-4">
             <div id="uploadImgThumbnail" class="float">
@@ -59,12 +60,12 @@ foreach($user as $a){
         <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo $email; ?>">
     </div>
 
-     <button type="submit" class="btn btn-primary">Save changes</button>
+    <button type="submit" class="btn btn-primary">Save changes</button>
     </form>
 
-   <form action="edit-profile.php" method="post"> 
+    <form action="edit-profile.php" method="post"> 
 
-   <h5 class="mt-4">Change password</h5>
+    <h5 class="mt-4">Change password</h5>
 
     <div class="form-group">
         <label for="changedPassword1">Password</label>
@@ -74,7 +75,7 @@ foreach($user as $a){
         <label for="changedPassword2">Repeat password</label>
         <input name="changedPassword2" type="password" class="form-control" placeholder="Repeat new password">
     </div>
-    
+
     <button type="submit" class="btn btn-primary">Save changes</button>
 
     </form>
@@ -83,13 +84,23 @@ foreach($user as $a){
 
     </div>
 
-</div>
+    </div>
 
-
-
-
-
+    <?php
+    require_once('components/bottom.php');
+    ?>
 
 <?php
-require_once('components/bottom.php');
+}else{
+    // session is not set - redirect to index
+    header('location: index.php');
+}
 ?>
+
+
+
+
+
+
+
+

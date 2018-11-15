@@ -18,20 +18,6 @@ echo 'Current PHP version: ' . phpversion();
         }
     ?>
 
-    <!-- TEMPLATE START -->
-    <div class="card align-self-center card-custom mt-2 mb-2">
-        <div class="row ml-3 mr-3 mt-1">
-            <div class="mr-3">img</div>
-            <a href="#">OP´s name</a>
-        </div>
-        <h4 class="card-title mr-3 ml-3 mt-3">Wise words.</h4>
-        <img class="card-img-top" src="https://jolicode.com/media/original/2017/password.png" alt="Card image cap">
-        <div class="card-body">
-            <a href="#" class="btn btn-primary">Upvote</a>
-            <a href="#" class="btn btn-primary">Comment</a>
-        </div>
-    </div>
-    <!-- TEMPLATE END -->
     <?php
         require('controllers/database.php');
         // we need - image of user, user's nickname, post headline, post picture location
@@ -52,16 +38,24 @@ echo 'Current PHP version: ' . phpversion();
         $currentPostImageName = $aOfPosts[$j]['image_name'];
         $currentPostUsername = $aOfPosts[$j]['username'];
 
-        echo '<div class="card align-self-center card-custom mt-2 mb-2" id="'.$currentPostId.'">
-            <div class="row ml-3 mr-3 mt-1">
-                <div class="mr-3">img</div>
+        echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
+            <div class="card-header">
+                <div class="row">
+                <div style="background-image: url('.$currentPostImageLocation.');" class="OP-img mr-3"></div>
                 <a href="#">'.$currentPostUsername.'</a>
+                </div>
             </div>
-            <h4 class="card-title mr-3 ml-3 mt-3">'.$currentPostHeadline.'</h4>
-            <img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'">
+            <h4 class="card-title mt-1">'.$currentPostHeadline.'</h4>
+            <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
             <div class="card-body">
-                <a href="#" class="btn btn-primary">Upvote</a>
-                <a href="#" class="btn btn-primary">Comment</a>
+                <div class="row">
+                    <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link"># Comments</a>
+                </div>
+                <div class="row mt-3">
+                    <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
+                </div>
             </div>
         </div>';
     }
@@ -71,6 +65,8 @@ echo 'Current PHP version: ' . phpversion();
 
 <div id='screenBlind'>
 </div>
+
+<!-- POSTING START -->
 
 <div id='uploadBox'>
         <div id="posting_header">
@@ -88,6 +84,7 @@ echo 'Current PHP version: ' . phpversion();
             <button type="submit" class="btn btn-primary littleExtraSpaceTop" >Post</button>
         </form>
 </div>
+<!-- POSTING END -->
 
 <!-- ------------------------------------------ INDEX BODY END ------------------------------------------ -->
 

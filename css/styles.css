@@ -19,12 +19,6 @@
     display: none !important;
 }
 
-/* INDEX */
-.card-custom{
-    max-width: 700px;
-    margin: auto;
-}
-
 
 /* REGISTER */
 #frmRegister{
@@ -93,6 +87,25 @@
     visibility: hidden;
 }
 /* ----------------------------------------------------------------- INDEX */
+.card-custom{
+    max-width: 700px;
+    margin: auto;
+}
+
+.card{
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-header{
+    border: none;
+}
+
+.OP-img{
+    background-size: cover;
+    width: 30px;
+}
+
 #uploadBox{
     position: absolute;
     width: 540px;
@@ -147,4 +160,42 @@ textarea{
 
 #naughtyCheckbox{
     display: inline-block;
+}
+
+.post-link{
+    font-size: smaller;
+}
+
+/* LOGIN */
+
+.login-error{
+    color: red;
+    font-size: smaller;
+}
+
+/* GAG */
+.row-custom{
+    max-width: 700px;
+    margin: auto;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.container-custom{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+#comment-user-img{
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+}
+
+.col-custom{
+    padding: 0px;
+}
+
+textarea{
+    margin-top: 0px;
 }

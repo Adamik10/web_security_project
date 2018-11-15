@@ -24,6 +24,7 @@ function tryToLogin(){
     $options = [
         'cost' => 12
     ];
+    // getting the IP adress
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $currentIp = $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -34,7 +35,7 @@ function tryToLogin(){
 
     //get the hashed password and the salt from DB
     try{
-        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email FROM users 
+        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified FROM users 
                                                                                     WHERE username = :enteredName LIMIT 1');
         $stmt->bindValue('enteredName', $enteredUsername);
         $stmt->execute();
@@ -42,7 +43,7 @@ function tryToLogin(){
 
         //if this is an empty array - there is no user with that username 
         if(empty($aaResult)){
-            header('location: login.php?status=username_not_active');
+            header('location: login.php?status=doesnt_exist');
         }else{ //if there is a match, verify whether the password matches
             $aResult = $aaResult[0];
             $sUserSaltFromDb = $aResult['salt'];
@@ -50,40 +51,51 @@ function tryToLogin(){
             $sUserIdFromDb = $aResult['id_users'];
             $sUserUsernameFromDb = $aResult['username'];
             $sUserEmailFromDb = $aResult['email'];
+            $sUserVerifiedFromDb = $aResult['verified'];
             
-            echo '<br>This is the array we got'.print_r($aaUserSaltAndPass).'<br>';
-            echo '<br>This is the pass entered: '.$enteredPassword;
-            echo '<br>This is the pass from db: '.$sUserPasswordFromDb;
-            echo '<br>This is the salt: '.$sUserSaltFromDb;
-            echo '<br>This is the peber: '.$peber;
+            // echo '<br>This is the array we got'.print_r($aaUserSaltAndPass).'<br>';
+            // echo '<br>This is the pass entered: '.$enteredPassword;
+            // echo '<br>This is the pass from db: '.$sUserPasswordFromDb;
+            // echo '<br>This is the salt: '.$sUserSaltFromDb;
+            // echo '<br>This is the peber: '.$peber;
 
+            // check if the user is verified, if verified is 0 then redirect to login with status not verified
+            
 
             $doTheyEqual = password_verify($enteredPassword.$peber.$sUserSaltFromDb, $sUserPasswordFromDb);
             // $registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options
             // echo '<br> do they: '.$doTheyEqual;
 
-            // if the password is correct, redirect to welcome (TODO - also start a sesion)
+            // check if they equal 
             if($doTheyEqual == 1){
+
+                // check if the account is verified
+                if($sUserVerifiedFromDb == 0){
+                    header('location: login.php?status=not_verified');
+                }else{
+                    // if its verified start session, clean attempts and redirect to index
                     session_start();
                     $_SESSION['sessionId']=uniqid();
                     $_SESSION['userId'] = $sUserIdFromDb;
                     $_SESSION['userUsername'] = $sUserUsernameFromDb;
                     $_SESSION['userEmail'] = $sUserEmailFromDb;
 
-                // CLEAR NUMBER OF ATTEMPTS FOR THIS IP
-                try{
-                    $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip' );
-                    $sUpdate->bindValue( ':default' , 0 );
-                    $sUpdate->bindValue( ':ip' , $currentIp );
-                    $sUpdate->execute();
-
-                    header('location: index.php');
-                }catch( PDOException $ex ){
+                    //CLEAR NUMBER OF ATTEMPTS FOR THIS IP
+                    try{
+                        $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip' );
+                        $sUpdate->bindValue( ':default' , 0 );
+                        $sUpdate->bindValue( ':ip' , $currentIp );
+                        $sUpdate->execute();
+                        // redirect to index
+                        header('location: index.php');
+                    }catch( PDOException $ex ){
                     echo $ex;
+                    }
                 }
 
+                    
             }else{ //if the password is incorrect, redirect to login
-                header('location: login.php?status=try_again02');
+                header('location: login.php?status=doesnt_exist');
             }
         }
         
@@ -91,7 +103,7 @@ function tryToLogin(){
         echo $exception;
     }
 }
-// ------------------------------------ END OF LOGIN FUNCTION ------------------------------------
+// ------------------------------------ END OF LOGIN FUNCTION --------------------------------------------------
 
 
 
@@ -188,7 +200,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             if ($response != null && $response->success) {
                 tryToLogin();
             }else{
-                header('location: login.php?status=wrong_after_captcha');
+                header('location: login.php?status=wrong_captcha');
             }
         }
  
@@ -196,7 +208,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
 
 }else{
     // if form data wasnt passed to this page
-    header('location: login.php?status=wrong_info');   
+    header('location: login.php');   
 }
 
 

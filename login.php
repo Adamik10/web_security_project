@@ -58,6 +58,30 @@
             
         ?>
 
+    <!-- DISPLAY ERROR MESSAGES HERE -->
+    <?php
+    if(isset($_GET['status'])){
+        if ($_GET['status'] == 'doesnt_exist'){
+            echo '  <div>
+                    <p class="login-error">Username or password doesn´t exist.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'not_verified'){
+            echo '  <div>
+                    <p class="login-error">Please verify your account first.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'wrong_captcha'){
+            echo '  <div>
+                    <p class="login-error">Please check the recaptcha.</p>
+                    </div>';
+        }
+    } 
+    
+    
+    ?>
+    <!-- ERROR MESSAGES END -->
+
     <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
