@@ -1,6 +1,14 @@
 <?php $pageTitle = 'login'?>
 <?php require_once('components/top.php'); ?>
-<?php require_once("components/recaptchalib.php"); ?>
+<?php require_once("components/recaptchalib.php"); 
+
+session_start();
+if(isset($_SESSION['sessionId'])){
+    header('location: index.php');
+    exit;
+}
+
+?>
 
 <!-- ------------------------------------------ LOGIN BODY ------------------------------------------ -->
 
@@ -20,6 +28,10 @@
 
         <!-- DISPLAY CAPTCHA IF ITS MORE THAN 3rd ATTEMPT FROM SAME IP -->
         <?php
+            //get username from url
+        if(isset($_GET['username'])){
+            $enteredUsername = $_GET['username'];
+
             // connect db
             require('controllers/database.php');
             // get the IP
@@ -33,8 +45,9 @@
             // check if that ip is in the db 
             try{ 
                 $stmt = $db->prepare('SELECT ip, attempts FROM logging_in 
-                                                            WHERE ip = :currentIp LIMIT 1');
+                                                            WHERE ip = :currentIp AND username = :enteredUsername LIMIT 1');
                 $stmt->bindValue('currentIp', $currentIp);
+                $stmt->bindValue('enteredUsername', $enteredUsername);
                 $stmt->execute();
                 $aaResult = $stmt->fetchAll();
 
@@ -55,6 +68,9 @@
             }catch (PDOException $exception){
                 echo $exception;
             }
+        }
+        // no username passed
+            
             
         ?>
 
@@ -76,9 +92,12 @@
                     <p class="login-error">Please check the recaptcha.</p>
                     </div>';
         }
+        if ($_GET['status'] == 'not_logged_in'){
+            echo '  <div>
+                    <p class="login-error">Please login first.</p>
+                    </div>';
+        }
     } 
-    
-    
     ?>
     <!-- ERROR MESSAGES END -->
 

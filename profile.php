@@ -1,32 +1,36 @@
 <?php $pageTitle = 'profile'?>
-<?php session_start(); ?>
+<?php 
+session_start();
+if(!isset($_SESSION['sessionId'])){
+    header('location: login.php?status=not_logged_in');
+    exit;
+}
+?>
 
 <?php 
-// display this page only if session is started
-if(isset($_SESSION['userEmail'])){
-    require_once('components/top.php');
-    require_once('controllers/database.php');
+require_once('components/top.php');
+require_once('controllers/database.php');
 
-    //select user that is logged in 
+//select user that is logged in 
 
-    $sUserIdFromDb = $_SESSION['userId'];
+$sUserIdFromDb = $_SESSION['userId'];
 
-    try{
-        $stmt = $db->prepare('SELECT * FROM users WHERE id_users = :loggedInUserId');
-        $stmt->bindValue(':loggedInUserId', $sUserIdFromDb);
-        $stmt->execute();
-        $user = $stmt->fetchAll();
-    } catch(PDOException $ex){
-        echo 'error getting user data';
-        exit();
-    }
+try{
+    $stmt = $db->prepare('SELECT * FROM users WHERE id_users = :loggedInUserId');
+    $stmt->bindValue(':loggedInUserId', $sUserIdFromDb);
+    $stmt->execute();
+    $user = $stmt->fetchAll();
+} catch(PDOException $ex){
+    echo 'error getting user data';
+    exit();
+}
 
-    //get username and email from the array so we can put them in the input values
+//get username and email from the array so we can put them in the input values
 
-    foreach($user as $a){
-        $username = $a['username'];
-        $email = $a['email'];
-    }
+foreach($user as $a){
+    $username = $a['username'];
+    $email = $a['email'];
+}
 ?>
 
 
@@ -89,13 +93,6 @@ if(isset($_SESSION['userEmail'])){
     <?php
     require_once('components/bottom.php');
     ?>
-
-<?php
-}else{
-    // session is not set - redirect to index
-    header('location: index.php');
-}
-?>
 
 
 

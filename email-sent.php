@@ -1,7 +1,13 @@
 <?php
 $pageTitle = 'Email sent';
-require_once('components/top.php');
 
+session_start();
+if(!isset($_SESSION['sessionId'])){
+    header('location: login.php?status=not_logged_in');
+    exit;
+}
+
+require_once('components/top.php');
 ?>
 
 <div class="container">

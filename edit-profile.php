@@ -67,4 +67,6 @@ if(isset($_POST['changedUsername']) &&
         echo 'fields not filled out properly, try again';
     }
 
+}else{
+    header('location: profile.php');
 };

@@ -1,5 +1,12 @@
 <?php $pageTitle = 'register'?>
-<?php require_once('components/top.php');?>
+<?php require_once('components/top.php');
+
+session_start();
+if(isset($_SESSION['sessionId'])){
+    header('location: index.php');
+    exit;
+}
+?>
 
 <!-- ------------------------------------------ REGISTER BODY ------------------------------------------ -->
 

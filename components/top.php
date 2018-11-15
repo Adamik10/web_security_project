@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -52,20 +55,23 @@
       <?php if($pageTitle == 'profile'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="profileNav">
-        <a class="nav-link" href="profile.php">Profile</a>
+        <a class="nav-link" href="profile.php"><div id="nav-profile-div"></div></a>
       </li>
+
       <li class="nav-item 
       <?php if($pageTitle == 'post'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="postNav">
-        <span class="nav-link">Post</span>
+        <span class="nav-link">Upload +</span>
       </li>
+
       <li class="nav-item 
       <?php if($pageTitle == 'logout'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="logoutNav">
         <a class="nav-link" href="logout.php">Logout</a>
       </li>
+
     </ul>
     
   </div>

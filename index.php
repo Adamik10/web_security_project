@@ -22,13 +22,13 @@ echo 'Current PHP version: ' . phpversion();
         require('controllers/database.php');
         // we need - image of user, user's nickname, post headline, post picture location
         try{
-        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, users.username 
-                                FROM posts INNER JOIN users ON posts.id_users = users.id_users LIMIT 5');
+        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username 
+                                FROM posts INNER JOIN users ON posts.id_users = users.id_users ORDER BY posts.datetime DESC LIMIT 5');
         $stmt->execute();
         $aOfPosts = $stmt->fetchAll();
-    }catch (PDOException $exception){
-        echo $exception;
-    }
+        }catch (PDOException $exception){
+            echo $exception;
+        }
     // echo 'These are the posts from the database: '.json_encode($aOfPosts).'<br>';
 
     for($j = 0; $j < sizeof($aOfPosts); $j++){

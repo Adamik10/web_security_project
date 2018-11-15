@@ -1,6 +1,4 @@
-
-<?php 
-
+<?php
 require_once("controllers/database.php");
 
 if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&

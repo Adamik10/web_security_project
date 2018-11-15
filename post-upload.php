@@ -60,7 +60,8 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
 
     // FINISH ADAM - maybe it would be nice to have a transaction here since the image is already in the folder
     try{
-        $stmt = $db->prepare('INSERT INTO posts VALUES ( :newPostId , :newPostUserId , :newPostHeadline , :newPostImageLocation , :newPostImageName , :newPostSensitivity )');
+        $stmt = $db->prepare('INSERT INTO posts (id_posts, id_users, headline, image_location, image_name, sensitive_content) 
+                                VALUES ( :newPostId , :newPostUserId , :newPostHeadline , :newPostImageLocation , :newPostImageName , :newPostSensitivity )');
         $stmt->bindValue(':newPostId', $newPostId);
         $stmt->bindValue(':newPostUserId', $newPostUserId);
         $stmt->bindValue(':newPostHeadline', $newPostHeadline);

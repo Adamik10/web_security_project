@@ -43,7 +43,7 @@ function tryToLogin(){
 
         //if this is an empty array - there is no user with that username 
         if(empty($aaResult)){
-            header('location: login.php?status=doesnt_exist');
+            header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
         }else{ //if there is a match, verify whether the password matches
             $aResult = $aaResult[0];
             $sUserSaltFromDb = $aResult['salt'];
@@ -71,7 +71,7 @@ function tryToLogin(){
 
                 // check if the account is verified
                 if($sUserVerifiedFromDb == 0){
-                    header('location: login.php?status=not_verified');
+                    header('location: login.php?username='.$enteredUsername.'&status=not_verified');
                 }else{
                     // if its verified start session, clean attempts and redirect to index
                     session_start();
@@ -95,7 +95,7 @@ function tryToLogin(){
 
                     
             }else{ //if the password is incorrect, redirect to login
-                header('location: login.php?status=doesnt_exist');
+                header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
             }
         }
         
@@ -129,14 +129,15 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     // get an array of IPs that match from the database
     try{
         $stmt = $db->prepare('SELECT * FROM logging_in 
-                                        WHERE ip = :currentIP');
+                                        WHERE ip = :currentIP AND username = :enteredUsername');
         $stmt->bindValue('currentIP', $currentIp);
+        $stmt->bindValue('enteredUsername', $enteredUsername);
         $stmt->execute();
         $aOfMatchedIPs = $stmt->fetchAll();
     }catch (PDOException $exception){
         echo $exception;
     }
-    echo 'This is the IPs that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
+    echo 'This is the records IPs + username that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
 
 
 
@@ -159,8 +160,9 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
         //if the array of matched ips is NOT EMPTY, check which attempt in row was it
         try{
             $stmt = $db->prepare('SELECT *  FROM logging_in 
-                                            WHERE ip = :currentIP');
-            $stmt->bindValue('currentIP', $currentIp); 
+                                            WHERE ip = :currentIP AND username = :enteredUsername');
+            $stmt->bindValue('currentIP', $currentIp);
+            $stmt->bindValue( ':enteredUsername' , $enteredUsername );
             $stmt->execute();
             $aaIPinfo = $stmt->fetchAll();
         }catch (PDOException $exception){
@@ -175,10 +177,11 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
         //if this is the first, or second attempt, or 3rd just increment the value in the database and try to login
         if($attempt*1 == 0 || $attempt*1 == 1 || $attempt*1 == 2 ){
             try{
-                $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :increment WHERE ip = :ip' );
+                $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :increment WHERE ip = :ip AND username = :enteredUsername' );
                 $time_of_third_attempt = date('Y/m/d H:i:s');
                 $sUpdate->bindValue( ':increment' , ($attempt*1)+1 );
                 $sUpdate->bindValue( ':ip' , $currentIp );
+                $sUpdate->bindValue( ':enteredUsername' , $enteredUsername );
                 $sUpdate->execute();
                 // echo 'Incrementation done<br>';
                 tryToLogin();
@@ -200,7 +203,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             if ($response != null && $response->success) {
                 tryToLogin();
             }else{
-                header('location: login.php?status=wrong_captcha');
+                header('location: login.php?username='.$enteredUsername.'&status=wrong_captcha');
             }
         }
  
@@ -208,7 +211,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
 
 }else{
     // if form data wasnt passed to this page
-    header('location: login.php');   
+    header('location: login.php?status=not_logged_in');   
 }
 
 
