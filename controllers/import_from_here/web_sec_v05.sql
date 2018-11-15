@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2018 at 02:54 AM
+-- Generation Time: Nov 15, 2018 at 02:50 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -70,13 +70,6 @@ CREATE TABLE `logging_in` (
   `attempts` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `logging_in`
---
-
-INSERT INTO `logging_in` (`id_logging_in`, `username`, `ip`, `attempts`) VALUES
-(1, 'Jozo', '::1', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -91,15 +84,6 @@ CREATE TABLE `posts` (
   `image_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `sensitive_content` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `posts`
---
-
-INSERT INTO `posts` (`id_posts`, `id_users`, `headline`, `image_location`, `image_name`, `sensitive_content`) VALUES
-('5bd7b326e5b11', '5bd78546961a5', 'Yaaaas', 'images/posts/5bd7b326e5b27.jpg', '5bd7b326e5b27', 0),
-('5bd7b981d2cee', '5bd78546961a5', 'Gym is life', 'images/posts/5bd7b981d2cff.jpg', '5bd7b981d2cff', 0),
-('5bd7b9c62f6f3', '5bd78546961a5', 'Spyro knows the feeling', 'images/posts/5bd7b9c62f704.jpg', '5bd7b9c62f704', 1);
 
 -- --------------------------------------------------------
 
@@ -125,22 +109,10 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `password_hash` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `salt` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `verified` tinyint(1) NOT NULL
+  `verified` tinyint(1) NOT NULL,
+  `image_location` varchar(100) NOT NULL,
+  `image_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id_users`, `username`, `email`, `password_hash`, `salt`, `verified`) VALUES
-('5bcf189178a52', 'Pablo', 'k0kukavica@gmail.com', '$2y$12$9.xC9LCKrcJQ93o7L0GCNuV0ZlS.Ow3rY17Xyw.gsDW20ioCoa5la', '988381', 0),
-('5bcf18c93dacf', 'Pabloo', 'k0kukavica@gmail.com', '$2y$12$fH1RVkYGfX4ozfN/WPooHeJEmI4U9kTCDXcamtclwEKTXjhniZ0dq', '908566', 0),
-('5bcf1b589a259', 'Pablooo', 'k0kukavica@gmail.com', '$2y$12$2z80LZfFAnpblxgmAFMtiOOwsc7wdVtCgKFWirpvmOEC2HeRh9Zt.', '724353', 1),
-('5bcf3ba902651', 'Kat', 'k0kukavica@gmail.com', '$2y$12$Rfm/Y45GicHm6X6sn.lHX.DMkqYXnKI7i7/F3vbsMwdFQD5UA9GpS', '484576', 0),
-('5bcf3c52daa26', 'Kata', 'k0kukavica@gmail.com', '$2y$12$aOWUEHnQsuqmOWgX4ykATe73K0NEZZF5pavKHr3xp4IhtiA.dZw4a', '479769', 0),
-('5bcf3ca8247e9', 'Jozo', 'k0kukavica@gmail.com', '$2y$12$Vc8k8xUKgBcO3uFui1G4iuxLhHz2W92A1Qz7ypu74uEmNbUEoQ0e2', '279296', 0),
-('5bd72addc57b4', 'Maraaaaaaaaa', 'k0kukavica@gmail.com', '$2y$12$5e9qjr960HhePVCvcaZ49ue8KFJFwtg3vIKagkB7z.swI8mdpk3rK', '642614', 1),
-('5bd78546961a5', 'Adamik10', 'adoantal@gmail.com', '$2y$12$twCSxcj0wVMceASKV6ief.XdpPj.t6w54LbYjqVQEi8bEFbVYua4W', '493562', 1);
 
 -- --------------------------------------------------------
 
@@ -149,23 +121,10 @@ INSERT INTO `users` (`id_users`, `username`, `email`, `password_hash`, `salt`, `
 --
 
 CREATE TABLE `verification_codes` (
+  `id_verification_codes` varchar(50) NOT NULL,
   `id_users` varchar(200) NOT NULL,
   `verification_code` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `verification_codes`
---
-
-INSERT INTO `verification_codes` (`id_users`, `verification_code`) VALUES
-('5bcf189178a52', '5bcf189178a5b'),
-('5bcf18c93dacf', '5bcf18c93dad9'),
-('5bcf1b589a259', '5bcf1b589a262'),
-('5bcf3ba902651', '5bcf3ba90265a'),
-('5bcf3c52daa26', '5bcf3c52daa2e'),
-('5bcf3ca8247e9', '5bcf3ca8247f2'),
-('5bd72addc57b4', '5bd72addc57bf'),
-('5bd78546961a5', '5bd78546961af');
 
 --
 -- Indexes for dumped tables
@@ -217,6 +176,12 @@ ALTER TABLE `upvotes`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_users`),
   ADD UNIQUE KEY `id_users` (`id_users`);
+
+--
+-- Indexes for table `verification_codes`
+--
+ALTER TABLE `verification_codes`
+  ADD PRIMARY KEY (`id_verification_codes`);
 
 --
 -- AUTO_INCREMENT for dumped tables
