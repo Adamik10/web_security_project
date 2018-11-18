@@ -4,7 +4,7 @@
 <?php require_once('controllers/database.php');?>
 
 <?php
-echo 'Current PHP version: ' . phpversion();
+// echo 'Current PHP version: ' . phpversion();
 ?>
 
 <!-- ------------------------------------------ INDEX BODY ------------------------------------------ -->
@@ -12,10 +12,10 @@ echo 'Current PHP version: ' . phpversion();
 <div class="container">
 
     <?php 
-        if(!empty($_SESSION['userEmail'])){
-        echo 'session is not empty';
-        print_r($_SESSION);
-        }
+        // if(!empty($_SESSION['userEmail'])){
+        // echo 'session is not empty';
+        // print_r($_SESSION);
+        // }
     ?>
 
     <?php
