@@ -3,12 +3,6 @@ $pageTitle = 'Account activated';
 require_once("controllers/database.php");
 require_once('components/top.php');
 
-session_start();
-if(!isset($_SESSION['sessionId'])){
-    header('location: login.php?status=not_logged_in');
-    exit;
-}
-
 if(isset($_GET['user'])){
     $verification_code = $_GET['user'];
 
