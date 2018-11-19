@@ -121,7 +121,7 @@
 #uploadBox{
     position: absolute;
     width: 540px;
-    height: 500px;
+    /* height: 500px; */
     background-color: white;
     opacity: 1;
     left: 50%;
