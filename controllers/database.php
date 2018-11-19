@@ -2,7 +2,7 @@
 
 try{
     $sUserName = 'root';
-    $sPassword = '';
+    $sPassword = '3people1appendix';
     $sConnection = "mysql:host=localhost; dbname=web_sec; charset=utf8";
 
     $aOptions = array(
