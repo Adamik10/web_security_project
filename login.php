@@ -60,7 +60,7 @@ if(isset($_SESSION['sessionId'])){
                     if($iAttempts*1 !== 3){
                         
                     }else{
-                        echo '<div class="g-recaptcha mb-3" data-sitekey="6LcsjHUUAAAAACkdWpdCFL7XudBrpByJaCyMAiix"></div>';
+                        echo '<div class="g-recaptcha mb-3" data-sitekey="6LdDwHsUAAAAAGwUfBr7T46DGkBC6_ICkBFRLMdF"></div>';
                     }
                 }
                 

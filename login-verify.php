@@ -5,7 +5,7 @@
 <?php 
 // RECAPTCHA VARIABLES
             // your secret key
-            $secret = "6LcsjHUUAAAAAMpZyBF1M9u3KnQgoT-PCTtEP0B3";
+            $secret = "6LdDwHsUAAAAAHmepwzgRc50k9tOa26yzPEDPRnD";
             
             // empty response
             $response = null;
