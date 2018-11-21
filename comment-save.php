@@ -14,9 +14,11 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
 ){
     // echo 'yeah boi';
     // store post variables
-    $newComment = $_POST['postNewComment'];
+    $newComment = htmlentities($_POST['postNewComment']);
     $postId = $_POST['postId'];
-    // store user id from session
+    $commentToken = $_POST['commentToken'];
+    // store user id and token from session
+    $commentTokenFromSession = $_SESSION['commentToken'];
     $loggedInUserId = $_SESSION['userId'];
     $newCommentId = uniqid();
     
@@ -24,23 +26,30 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
     // echo "<br> post id: ".$postId;
     // echo "<br> user id of logged in user: ".$sUserIdFromDb;
 
-    try {
-        $stmt1 = $db->prepare('INSERT INTO comments (id_comments, id_posts, id_users, comment) 
-                                VALUES (:commentId, :postId, :userId, :newComment)');
-        $stmt1->bindValue(':commentId', $newCommentId);
-        $stmt1->bindValue(':postId', $postId);
-        $stmt1->bindValue(':userId', $loggedInUserId);
-        $stmt1->bindValue(':newComment', $newComment);
-        $stmt1->execute();
-
-    } catch (PDOException $ex) {
-        echo 'error, database insertion<br>';
-        echo $ex;
-        exit();
+    // only update the db if token from post == token from session
+    if($commentTokenFromSession == $commentToken){
+        try {
+            $stmt1 = $db->prepare('INSERT INTO comments (id_comments, id_posts, id_users, comment) 
+                                    VALUES (:commentId, :postId, :userId, :newComment)');
+            $stmt1->bindValue(':commentId', $newCommentId);
+            $stmt1->bindValue(':postId', $postId);
+            $stmt1->bindValue(':userId', $loggedInUserId);
+            $stmt1->bindValue(':newComment', $newComment);
+            $stmt1->execute();
+    
+        } catch (PDOException $ex) {
+            echo 'error, database insertion<br>';
+            echo $ex;
+            exit();
+        }
+    
+        header("location: gag.php?p_id={$postId}");
+    }else{
+        header("location: gag.php?p_id={$postId}&status=wrong_comment");
     }
 
-    header("location: gag.php?p_id={$postId}");
+    
 }else{
-    // post variables werent passed so redirect to the index
+    // post variables werent passed throught the form so redirect to the index
     header('location: index.php');
 }

@@ -12,7 +12,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
 
     $newPostId = uniqid();
     $newPostUserId = $_SESSION['userId'];
-    $newPostHeadline = $_POST['postHeader'];
+    $newPostHeadline = htmlentities($_POST['postHeader']);
     $newPostImageLocation;
     $newPostImageName;
     if(isset($_POST['postSensitive'])){

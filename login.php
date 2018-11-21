@@ -57,9 +57,7 @@ if(isset($_SESSION['sessionId'])){
                     // echo $iAttempts;
 
                     // If its 3 echo display captcha
-                    if($iAttempts*1 !== 3){
-                        
-                    }else{
+                    if($iAttempts*1 >= 3){
                         echo '<div class="g-recaptcha mb-3" data-sitekey="6LcsjHUUAAAAACkdWpdCFL7XudBrpByJaCyMAiix"></div>';
                     }
                 }

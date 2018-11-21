@@ -7,8 +7,8 @@ if(isset($_POST['changedUsername']) &&
     isset($_POST['changedEmail'])
 ){
 
-    $changedUsername = $_POST['changedUsername'];
-    $changedEmail = $_POST['changedEmail'];
+    $changedUsername = htmlentities($_POST['changedUsername']);
+    $changedEmail = htmlentities($_POST['changedEmail']);
     $sUserIdFromDb = $_SESSION['userId'];
 
     //select all users to see if email is available

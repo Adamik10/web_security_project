@@ -8,10 +8,10 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
     isset($_POST['registerCheckbox']) && !empty($_POST['registerCheckbox'])
 ){
 
-    $registerUsername = $_POST['registerUsername'];
-    $registerEmail = $_POST['registerEmail'];
-    $registerPassword1 = $_POST['registerPassword1'];
-    $registerPassword2 = $_POST['registerPassword2'];
+    $registerUsername = htmlentities($_POST['registerUsername']);
+    $registerEmail = htmlentities($_POST['registerEmail']);
+    $registerPassword1 = htmlentities($_POST['registerPassword1']);
+    $registerPassword2 = htmlentities($_POST['registerPassword2']);
     $registerCheckbox = $_POST['registerCheckbox'];
     $userId = uniqid();
     $verificationCode = uniqid();

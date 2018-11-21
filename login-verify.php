@@ -110,8 +110,8 @@ function tryToLogin(){
 // check if the form was passed
 if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     require('controllers/database.php');
-    $enteredUsername = $_POST['loginUsername'];
-    $enteredPassword = $_POST['loginPassword'];
+    $enteredUsername = htmlentities($_POST['loginUsername']);
+    $enteredPassword = htmlentities($_POST['loginPassword']);
     echo '<br>username: '.$enteredUsername.' and password: '.$enteredPassword.'<br>';
 
 
@@ -178,7 +178,6 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
         if($attempt*1 == 0 || $attempt*1 == 1 || $attempt*1 == 2 ){
             try{
                 $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :increment WHERE ip = :ip AND username = :enteredUsername' );
-                $time_of_third_attempt = date('Y/m/d H:i:s');
                 $sUpdate->bindValue( ':increment' , ($attempt*1)+1 );
                 $sUpdate->bindValue( ':ip' , $currentIp );
                 $sUpdate->bindValue( ':enteredUsername' , $enteredUsername );
@@ -190,6 +189,16 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             }
         }else{
             // IF THIS IS 4th TIME
+            // still increment and save to database
+            try{
+                $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :increment WHERE ip = :ip AND username = :enteredUsername' );
+                $sUpdate->bindValue( ':increment' , ($attempt*1)+1 );
+                $sUpdate->bindValue( ':ip' , $currentIp );
+                $sUpdate->bindValue( ':enteredUsername' , $enteredUsername );
+                $sUpdate->execute();
+            }catch( PDOException $ex ){
+                echo $ex;
+            }
 
             // if RECAPTCHA IS SUBMITTED CHECK RESPONSE
             if ($_POST["g-recaptcha-response"]) {
