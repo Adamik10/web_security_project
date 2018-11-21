@@ -29,6 +29,7 @@
         }catch (PDOException $exception){
             echo $exception;
         }
+
     // echo 'These are the posts from the database: '.json_encode($aOfPosts).'<br>';
 
     for($j = 0; $j < sizeof($aOfPosts); $j++){
@@ -39,6 +40,22 @@
         $currentPostUsername = $aOfPosts[$j]['username'];
         $currentUserImgLocation = $aOfPosts[$j]['user_image_location'];
         $currentUserImgName = $aOfPosts[$j]['user_image_name'];
+
+        // count comments for each post from db
+        try{
+        $stmt2 = $db->prepare(' SELECT COUNT(*) AS comments_count
+                                FROM comments
+                                WHERE id_posts = :currentPostId');
+        $stmt2->bindValue(':currentPostId', $currentPostId);
+        $stmt2->execute();
+        $aaCommentCount = $stmt2->fetchAll();
+    
+        }catch (PDOException $ex){
+            echo $ex;
+        }
+
+        $aCommentCount = $aaCommentCount[0];
+        $iCommentCount = $aCommentCount['comments_count'];
 
         // if there is no profile img echo default profile image else echo the profile img from db
         if($currentUserImgLocation == NULL){
@@ -54,7 +71,7 @@
             <div class="card-body">
                 <div class="row">
                     <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
-                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link"># Comments</a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
                 </div>
                 <div class="row mt-3">
                     <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
@@ -75,7 +92,7 @@
             <div class="card-body">
                 <div class="row">
                     <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
-                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link"># Comments</a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
                 </div>
                 <div class="row mt-3">
                     <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
