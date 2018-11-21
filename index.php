@@ -22,7 +22,7 @@
         require('controllers/database.php');
         // we need - image of user, user's nickname, post headline, post picture location
         try{
-        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username 
+        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name 
                                 FROM posts INNER JOIN users ON posts.id_users = users.id_users ORDER BY posts.datetime DESC LIMIT 5');
         $stmt->execute();
         $aOfPosts = $stmt->fetchAll();
@@ -37,11 +37,15 @@
         $currentPostImageLocation = $aOfPosts[$j]['image_location'];
         $currentPostImageName = $aOfPosts[$j]['image_name'];
         $currentPostUsername = $aOfPosts[$j]['username'];
+        $currentUserImgLocation = $aOfPosts[$j]['user_image_location'];
+        $currentUserImgName = $aOfPosts[$j]['user_image_name'];
 
-        echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
+        // if there is no profile img echo default profile image else echo the profile img from db
+        if($currentUserImgLocation == NULL){
+            echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
             <div class="card-header">
                 <div class="row">
-                <div style="background-image: url('.$currentPostImageLocation.');" class="OP-img mr-3"></div>
+                <div style="background-image: url(images/profile.jpg);" class="OP-img mr-3"></div>
                 <a href="#">'.$currentPostUsername.'</a>
                 </div>
             </div>
@@ -58,6 +62,29 @@
                 </div>
             </div>
         </div>';
+        }else{
+            echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
+            <div class="card-header">
+                <div class="row">
+                <div style="background-image: url('.$currentUserImgLocation.');" class="OP-img mr-3"></div>
+                <a href="#">'.$currentPostUsername.'</a>
+                </div>
+            </div>
+            <h4 class="card-title mt-1">'.$currentPostHeadline.'</h4>
+            <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
+            <div class="card-body">
+                <div class="row">
+                    <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link"># Comments</a>
+                </div>
+                <div class="row mt-3">
+                    <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
+                    <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
+                </div>
+            </div>
+        </div>';
+        }
+        
     }
     ?>
 

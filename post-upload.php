@@ -1,10 +1,10 @@
 <?php
+// if the user isn't logged in - this redirects to index
 session_start();
 if(!isset($_SESSION['sessionId'])){
     header('location: login.php?status=not_logged_in');
     exit;
 }
-// if the user isn't logged in - this redirects to index
 
 if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_POST['postHeader'])){
 

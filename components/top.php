@@ -31,6 +31,11 @@ session_start();
 </head>
 <body>
 
+<?php 
+  $sUserImgLocation = $_SESSION['userImgLocation'];
+  $sUserImgName = $_SESSION['userImgName'];
+?>
+
 <!-- --------------------------------------- NAVBAR --------------------------------------- -->
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="index.php"><img style="width:70px;" src="images/LOGO.png"></a>
@@ -62,7 +67,7 @@ session_start();
       <?php if($pageTitle == 'profile'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="profileNav">
-        <a class="nav-link" href="profile.php"><div id="nav-profile-div"></div></a>
+        <a class="nav-link" href="profile.php"><div id="nav-profile-div" style="background:url(<?php echo $sUserImgLocation;?>)"></div></a>
       </li>
 
       <li class="nav-item 

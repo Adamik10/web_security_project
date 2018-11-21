@@ -27,8 +27,8 @@
     border-radius: 50%;
     display: block;
     background-image: url(http://www.eindhovenstartups.com/wp-content/uploads/2016/08/blank_male_avatar.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
 }
 
 
@@ -114,6 +114,7 @@
 }
 
 .OP-img{
+    background: url(images/profile.jpg);
     background-size: cover;
     width: 30px;
 }

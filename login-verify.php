@@ -35,7 +35,7 @@ function tryToLogin(){
 
     //get the hashed password and the salt from DB
     try{
-        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified FROM users 
+        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified, user_image_location, user_image_name FROM users 
                                                                                     WHERE username = :enteredName LIMIT 1');
         $stmt->bindValue('enteredName', $enteredUsername);
         $stmt->execute();
@@ -52,6 +52,8 @@ function tryToLogin(){
             $sUserUsernameFromDb = $aResult['username'];
             $sUserEmailFromDb = $aResult['email'];
             $sUserVerifiedFromDb = $aResult['verified'];
+            $sUserImgLocationFromDb = $aResult['user_image_location'];
+            $sUserImgNameFromDb = $aResult['user_image_name'];
             
             // echo '<br>This is the array we got'.print_r($aaUserSaltAndPass).'<br>';
             // echo '<br>This is the pass entered: '.$enteredPassword;
@@ -79,6 +81,8 @@ function tryToLogin(){
                     $_SESSION['userId'] = $sUserIdFromDb;
                     $_SESSION['userUsername'] = $sUserUsernameFromDb;
                     $_SESSION['userEmail'] = $sUserEmailFromDb;
+                    $_SESSION['userImgLocation'] = $sUserImgLocationFromDb ;
+                    $_SESSION['userImgName'] = $sUserImgNameFromDb;
 
                     //CLEAR NUMBER OF ATTEMPTS FOR THIS IP
                     try{
