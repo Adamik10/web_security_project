@@ -77,6 +77,25 @@ $('#commentSubmitButton').click(callForToken);
 
 //load more posts
 $('#loadMorePostsButton').click(function(){
-    //get all the post IDs
-    
+    //get all the post IDs there are loaded on the page
+    var currentPostsIds = [];
+    $('.postHolder').each(function (i, obj) {
+        // obj is the dom object, while $(this) would be the jQuery object
+        // console.log($(obj).attr('id'));
+        var post_id = $(obj).attr('id');
+        currentPostsIds.push(post_id);
+    })
+
+    function contactApiForMorePosts(){
+        $.ajax({
+            method : "post",
+            url: "api-get-more-posts.php",
+            data: { kvcArray: currentPostsIds }
+        }).done(function (gotBack) {
+            console.log(JSON.parse(gotBack));
+            // console.log(data);
+            // console.log('we got here');
+        })
+    }
+    setTimeout(contactApiForMorePosts, 1000)
 })
