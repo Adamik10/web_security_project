@@ -46,13 +46,15 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         // get extension knowing that the last element is the extension
         $sExtension = $aImageName[count($aImageName)-1];
         // Create a variable with the new path
-        $sPathToSaveFile = "images/posts/$sUniqueImageName.$sExtension";
+        $sPathToSaveFile = "$sUniqueImageName.$sExtension";
         $newPostImageLocation = $sPathToSaveFile;
         // save the image to a folder
-        if( move_uploaded_file( $sOldPath , $sPathToSaveFile ) ){
+        if( move_uploaded_file( $sOldPath , '/var/www/images/posts/'.$sPathToSaveFile ) ){
             echo "SUCCESS UPLOADING FILE"; 
+            echo '<br> This is the old path: '.$sOldPath.'<br>And this is the new path: '.$sPathToSaveFile;
         }else{
             echo "ERROR UPLOADING FILE";
+            echo '<br> This is the old path: '.$sOldPath.'<br>And this is the new path: '.$sPathToSaveFile;
         } 
     }else{
     echo "FILE TOO LARGE"; // FINISH ADAM - just redirect back to index and show reason
@@ -73,7 +75,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         echo $ex;
         exit();
     }
-    header('location: index.php');
+    // header('location: index.php');
 }else{
     header('location: index.php?status=post_invalid'); //ADAM TOTO this
 }

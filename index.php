@@ -46,7 +46,7 @@
                 </div>
             </div>
             <h4 class="card-title mt-1">'.$currentPostHeadline.'</h4>
-            <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
+            <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="images/posts/'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
             <div class="card-body">
                 <div class="row">
                     <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
