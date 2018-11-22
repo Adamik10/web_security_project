@@ -6,6 +6,20 @@ if(!isset($_SESSION['sessionId'])){
     exit;
 }
 
+// now we know that the person trying to post is logged in 
+// but we still don't know whether it's the real person or just someone using their session ID
+// a token was created if the real person wanted to post something - otherwise there is no token
+if(!isset($_SESSION['token'])){
+    //echo 'The token is not set';
+    session_destroy();
+    header('location: login.php?status=security_logout');
+}else{
+    // if there is a token, now we can destroy it
+    unset($_SESSION['token']);
+    //echo 'The token has been destroyed';
+    //echo '<br> The session id is: '.$_SESSION['sessionId'];
+}
+
 if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_POST['postHeader'])){
 
     require('controllers/database.php');
@@ -35,11 +49,53 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         $sImageName = $aImage['name'];
         $aImageName = explode( '.' , $sImageName ); // logo.svg ['logo','svg']
         // loop through all of the items in the exploded array except the first one - if any contain 'exe', redirect back to index and log this attempt
-        for($i = 1; $i < sizeof($aImageName)-1; $i++){
+        for($i = 1; $i < sizeof($aImageName); $i++){
             if($aImageName[$i] == 'exe'){
-                // FINISH ADAM - write logs here on which user did it
-                //...
-                header('location: index.php');
+                // write logs here on which user did it
+                $currentIp = 'template';
+                $attack_description = 'Upload of an exe file';
+                date_default_timezone_set("UTC");
+                $time_of_attack = date('Y-m-d H:i:s');
+                try{
+                    $db->beginTransaction();
+
+                    $stmt = $db->prepare('INSERT INTO security_logs VALUES ( :id_security_logs , :description_of_attack , :ip_address , :user_og_id, :time_of_attack)');
+                    $id_security_logs = uniqid();
+                    $stmt->bindValue(':id_security_logs', $id_security_logs);
+                    $stmt->bindValue(':description_of_attack', $attack_description);
+                    //get IP address https://stackoverflow.com/questions/3003145/how-to-get-the-client-ip-address-in-php
+                    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                        $currentIp = $_SERVER['HTTP_CLIENT_IP'];
+                    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                        $currentIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                    } else {
+                        $currentIp = $_SERVER['REMOTE_ADDR'];
+                    }
+                    $stmt->bindValue(':ip_address', $currentIp);
+                    $stmt->bindValue(':user_og_id', $_SESSION['userId']);
+                    $stmt->bindValue(':time_of_attack', $time_of_attack);
+                    if($stmt->execute()){ //true or false   -> doesn't throw a fatal error if it returns false . so we need to use if statement to check for it
+                        // ban the user who tried to upload an exe file
+                        $stmtTwo = $db->prepare('UPDATE users SET banned = 1 WHERE id_users = :user_og_id');
+                        $stmtTwo->bindValue(':user_og_id', $_SESSION['userId']);
+                        if($stmtTwo->execute()){ //true or false  -> doesn't throw a fatal error if it returns false . so we need to use if statement to check for it
+                            $db->commit();
+                        }else{
+                            $db->rollBack();  //if the if is false, the database roolsback all the changes
+                            echo 'we rolledback the changes in db';
+                        }
+                    }else{
+                        $db->rollBack(); // same as above
+                        echo 'we rolledback ALL the changes in db';
+                    }
+                } catch (PDOException $ex){
+                    echo $ex;
+                    exit();
+                }
+
+                header('location: index.php?status=banned');
+                require_once('send_email_potential_attack.php');
+                session_destroy();
                 exit;
             }
         }
@@ -53,12 +109,15 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
             echo "SUCCESS UPLOADING FILE"; 
         }else{
             echo "ERROR UPLOADING FILE";
+            header('location: index.php?status=error_uploading_image');
+            exit;
         } 
     }else{
-    echo "FILE TOO LARGE"; // FINISH ADAM - just redirect back to index and show reason
+        echo "FILE TOO LARGE"; 
+        header('location: index.php?status=file_too_large');
+        exit;
     }
 
-    // FINISH ADAM - maybe it would be nice to have a transaction here since the image is already in the folder
     try{
         $stmt = $db->prepare('INSERT INTO posts (id_posts, id_users, headline, image_location, image_name, sensitive_content) 
                                 VALUES ( :newPostId , :newPostUserId , :newPostHeadline , :newPostImageLocation , :newPostImageName , :newPostSensitivity )');
@@ -75,6 +134,6 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
     }
     header('location: index.php');
 }else{
-    header('location: index.php?status=post_invalid'); //ADAM TOTO this
+    header('location: index.php?status=post_invalid'); 
 }
 ?>

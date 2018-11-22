@@ -55,7 +55,7 @@ if(isset($_GET['p_id'])){
         echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
         <div class="card-header">
             <div class="row">
-            <div style="background-image: url(images/profile.jpg);" class="OP-img mr-3"></div>
+            <div style="background-image: url(images/users/default.png);" class="OP-img mr-3"></div>
             <a href="#">'.$currentPostUsername.'</a>
             </div>
         </div>
@@ -98,8 +98,6 @@ if(isset($_GET['p_id'])){
     // echo html for posting a comment only if you are logged in
     if(!empty($_SESSION['userId'])){
         // create a unique token for comment and store it in the session to compare later
-        $commentToken = uniqid();
-        $_SESSION['commentToken'] = $commentToken;
         $loggedInUserImgLocation = $_SESSION['userImgLocation'];
 
         if($loggedInUserImgLocation == NULL){
@@ -107,13 +105,12 @@ if(isset($_GET['p_id'])){
             <form class="container container-custom align-self-center mt-2 mb-5" method="post" action="comment-save.php">
                     <div class="row row-custom">
                         <div class="col-2 col-custom">
-                            <div style="background-image: url(images/profile.jpg)" id="comment-user-img"></div>
+                            <div style="background-image: url(images/users/default.png)" id="comment-user-img"></div>
                         </div>
                         <div class="col-10 col-custom">
                             <input name="postId" type="text" value="'.$currentPostId.'" hidden>
-                            <input name="commentToken" type="text" value="'.$commentToken.'" hidden>
                             <textarea class="form-control" name="postNewComment" aria-label="With textarea" placeholder="Write a comment..."></textarea>
-                            <button type="submit" class="btn btn-info ml-auto">Post</button>
+                            <button type="submit" class="btn btn-info ml-auto" id="commentSubmitButton">Post</button>
                         </div>
                     </div> 
             </form>
@@ -127,9 +124,8 @@ if(isset($_GET['p_id'])){
                         </div>
                         <div class="col-10 col-custom">
                             <input name="postId" type="text" value="'.$currentPostId.'" hidden>
-                            <input name="commentToken" type="text" value="'.$commentToken.'" hidden>
                             <textarea class="form-control" name="postNewComment" aria-label="With textarea" placeholder="Write a comment..."></textarea>
-                            <button type="submit" class="btn btn-info ml-auto">Post</button>
+                            <button type="submit" class="btn btn-info ml-auto" id="commentSubmitButton">Post</button>
                         </div>
                     </div> 
             </form>

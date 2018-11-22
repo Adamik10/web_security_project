@@ -72,13 +72,16 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
             //if validation passes then insert into database try catch
 
             try {
-                $stmt1 = $db->prepare('INSERT INTO users(id_users, username, email, password_hash, salt, verified) VALUES (:userId, :username, :email, :pass, :salt, :verified)');
+                $stmt1 = $db->prepare('INSERT INTO users(id_users, username, email, password_hash, salt, verified, user_image_location, user_image_name) 
+                                        VALUES (:userId, :username, :email, :pass, :salt, :verified, :user_image_location, :user_image_name)');
                 $stmt1->bindValue(':userId', $userId);
                 $stmt1->bindValue(':username', $registerUsername);
                 $stmt1->bindValue(':email', $registerEmail);
                 $stmt1->bindValue(':pass', $pass_hash);
                 $stmt1->bindValue(':salt', $salt);
                 $stmt1->bindValue(':verified', 0);
+                $stmt1->bindValue(':user_image_location', 'images/users/default.JPG');
+                $stmt1->bindValue(':user_image_name', 'default');
                 $stmt1->execute();
 
                 $stmt2 = $db->prepare('INSERT INTO verification_codes VALUES (:id_verification_code, :userId, :verification_code)');

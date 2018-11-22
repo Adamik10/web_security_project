@@ -30,8 +30,9 @@ try{
 foreach($user as $a){
     $username = $a['username'];
     $email = $a['email'];
-    $userImageLocation = $a['image_location'];
+    $userImageLocation = $a['user_image_location'];
 }
+
 ?>
 
 
@@ -45,7 +46,8 @@ foreach($user as $a){
         <div class="form-group"> 
             <label for="inputFile" class="mt-4">
             <div id="uploadImgThumbnail" class="float">
-                <img src="<?php if ($userImageLocation == NULL){echo 'images/profile.jpg';}else{echo $userImageLocation;} ?>" id="uploadImg" class="img-fluid d-block align-self-center justify-content-center responsive"/>
+                <img src="<?php if ($userImageLocation == NULL){echo 'images/users/default.png';}else{echo $userImageLocation;} ?>" 
+                id="uploadImg" class="img-fluid d-block align-self-center justify-content-center responsive"/>
             </div>
             <div class="float ml-4 mt-2">
                 <label for="inputFile">Click to upload a new profile picture</label>

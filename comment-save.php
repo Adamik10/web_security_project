@@ -9,6 +9,18 @@ if(!isset($_SESSION['sessionId'])){
     exit;
 }
 
+// now we know that the person trying to post is logged in 
+// but we still don't know whether it's the real person or just someone using their session ID
+// a token was created if the real person wanted to post something - otherwise there is no token
+if(!isset($_SESSION['token'])){
+    //echo 'The token is not set';
+    session_destroy();
+    header('location: login.php?status=security_logout');
+}else{
+    // if there is a token, now we can destroy it
+    unset($_SESSION['token']);
+}
+
 // check if data was passed through the form
 if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
 ){
@@ -16,9 +28,7 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
     // store post variables
     $newComment = htmlentities($_POST['postNewComment']);
     $postId = $_POST['postId'];
-    $commentToken = $_POST['commentToken'];
     // store user id and token from session
-    $commentTokenFromSession = $_SESSION['commentToken'];
     $loggedInUserId = $_SESSION['userId'];
     $newCommentId = uniqid();
     
@@ -26,27 +36,22 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
     // echo "<br> post id: ".$postId;
     // echo "<br> user id of logged in user: ".$sUserIdFromDb;
 
-    // only update the db if token from post == token from session
-    if($commentTokenFromSession == $commentToken){
-        try {
-            $stmt1 = $db->prepare('INSERT INTO comments (id_comments, id_posts, id_users, comment) 
-                                    VALUES (:commentId, :postId, :userId, :newComment)');
-            $stmt1->bindValue(':commentId', $newCommentId);
-            $stmt1->bindValue(':postId', $postId);
-            $stmt1->bindValue(':userId', $loggedInUserId);
-            $stmt1->bindValue(':newComment', $newComment);
-            $stmt1->execute();
-    
-        } catch (PDOException $ex) {
-            echo 'error, database insertion<br>';
-            echo $ex;
-            exit();
-        }
-    
-        header("location: gag.php?p_id={$postId}");
-    }else{
-        header("location: gag.php?p_id={$postId}&status=wrong_comment");
+    try {
+        $stmt1 = $db->prepare('INSERT INTO comments (id_comments, id_posts, id_users, comment) 
+                                VALUES (:commentId, :postId, :userId, :newComment)');
+        $stmt1->bindValue(':commentId', $newCommentId);
+        $stmt1->bindValue(':postId', $postId);
+        $stmt1->bindValue(':userId', $loggedInUserId);
+        $stmt1->bindValue(':newComment', $newComment);
+        $stmt1->execute();
+
+    } catch (PDOException $ex) {
+        echo 'error, database insertion<br>';
+        echo $ex;
+        exit();
     }
+
+    header("location: gag.php?p_id={$postId}");
 
     
 }else{

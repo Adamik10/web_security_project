@@ -121,8 +121,8 @@
 
 #uploadBox{
     position: absolute;
-    width: 540px;
-    /* height: 500px; */
+    width: 580px;
+    min-height: 450px; 
     background-color: white;
     opacity: 1;
     left: 50%;
@@ -171,8 +171,19 @@ textarea{
     height: 100%;
 }
 
+#naughtyCheckboxSpan{
+    display: block;
+}
+
 #naughtyCheckbox{
     display: inline-block;
+}
+
+.error_message {
+    color: orangered;
+    display: block;
+    margin-top: 1em;
+    font-size: smaller;
 }
 
 .post-link{
@@ -229,4 +240,23 @@ textarea{
 
 .text-404{
     color: white;
+}
+
+#loadMorePostsButton {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5em;
+    margin-top: 5em;
+    cursor: pointer;
+    height: 3em;
+    width: 80%;
+    outline: none;
+    border: none;
+    background-color: #FFFFFF;
+    color: gray;
+}   
+#loadMorePostsButton:hover {
+    background-color: rgb(200, 208, 216);
 }

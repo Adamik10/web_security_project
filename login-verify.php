@@ -20,7 +20,7 @@ function tryToLogin(){
     $enteredUsername = $_POST['loginUsername'];
     $enteredPassword = $_POST['loginPassword'];
     $peber = 'MaciejStopHackingUs';
-    // this is supposed to influence the time of hashing - ask adam
+    // this is supposed to influence the time of hashing - ask adam (already resoleved)
     $options = [
         'cost' => 12
     ];
@@ -35,7 +35,7 @@ function tryToLogin(){
 
     //get the hashed password and the salt from DB
     try{
-        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified, user_image_location, user_image_name FROM users 
+        $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified, user_image_location, user_image_name, banned FROM users 
                                                                                     WHERE username = :enteredName LIMIT 1');
         $stmt->bindValue('enteredName', $enteredUsername);
         $stmt->execute();
@@ -54,6 +54,7 @@ function tryToLogin(){
             $sUserVerifiedFromDb = $aResult['verified'];
             $sUserImgLocationFromDb = $aResult['user_image_location'];
             $sUserImgNameFromDb = $aResult['user_image_name'];
+            $bBanned = $aResult['banned'];
             
             // echo '<br>This is the array we got'.print_r($aaUserSaltAndPass).'<br>';
             // echo '<br>This is the pass entered: '.$enteredPassword;
@@ -75,25 +76,33 @@ function tryToLogin(){
                 if($sUserVerifiedFromDb == 0){
                     header('location: login.php?username='.$enteredUsername.'&status=not_verified');
                 }else{
-                    // if its verified start session, clean attempts and redirect to index
-                    session_start();
-                    $_SESSION['sessionId']=uniqid();
-                    $_SESSION['userId'] = $sUserIdFromDb;
-                    $_SESSION['userUsername'] = $sUserUsernameFromDb;
-                    $_SESSION['userEmail'] = $sUserEmailFromDb;
-                    $_SESSION['userImgLocation'] = $sUserImgLocationFromDb ;
-                    $_SESSION['userImgName'] = $sUserImgNameFromDb;
+                    // check if the account is banned
+                    if($bBanned == 1){
+                        header('location: login.php?username='.$enteredUsername.'&status=banned');
+                    }else{
+                        // if its verified and not banned start session, clean attempts and redirect to index
+                        session_start();
+                        $_SESSION['sessionId']=uniqid();
+                        $_SESSION['userId'] = $sUserIdFromDb;
+                        $_SESSION['userUsername'] = $sUserUsernameFromDb;
+                        $_SESSION['userEmail'] = $sUserEmailFromDb;
+                        $_SESSION['userImgLocation'] = $sUserImgLocationFromDb ;
+                        $_SESSION['userImgName'] = $sUserImgNameFromDb;
+                        if(isset($_SESSION['token'])){
+                            unset($_SESSION['token']);
+                        }
 
-                    //CLEAR NUMBER OF ATTEMPTS FOR THIS IP
-                    try{
-                        $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip' );
-                        $sUpdate->bindValue( ':default' , 0 );
-                        $sUpdate->bindValue( ':ip' , $currentIp );
-                        $sUpdate->execute();
-                        // redirect to index
-                        header('location: index.php');
-                    }catch( PDOException $ex ){
-                    echo $ex;
+                        //CLEAR NUMBER OF ATTEMPTS FOR THIS IP
+                        try{
+                            $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip' );
+                            $sUpdate->bindValue( ':default' , 0 );
+                            $sUpdate->bindValue( ':ip' , $currentIp );
+                            $sUpdate->execute();
+                            // redirect to index
+                            header('location: index.php');
+                        }catch( PDOException $ex ){
+                        echo $ex;
+                        }
                     }
                 }
 
