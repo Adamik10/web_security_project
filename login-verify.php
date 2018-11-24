@@ -139,7 +139,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     echo 'This is the current IP: '.$currentIp.'<br>';
 
 
-    // get an array of IPs that match from the database
+    // get an array of IPs with the same username that match from the database
     try{
         $stmt = $db->prepare('SELECT * FROM logging_in 
                                         WHERE ip = :currentIP AND username = :enteredUsername');
@@ -213,6 +213,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                 echo $ex;
             }
 
+
             // if RECAPTCHA IS SUBMITTED CHECK RESPONSE
             if ($_POST["g-recaptcha-response"]) {
                 $response = $reCaptcha->verifyResponse(
@@ -227,6 +228,50 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             }else{
                 header('location: login.php?username='.$enteredUsername.'&status=wrong_captcha');
             }
+            
+            
+
+            // IF THIS IS 15th TIME
+            // send an email to the admins
+            if($attempt*1 == 14){
+            
+                // first find the ID of account where the user is trying to login
+                try{
+                    $stmt = $db->prepare('SELECT id_users, email FROM users 
+                                                    WHERE username = :enteredUsername');
+                    $stmt->bindValue('enteredUsername', $enteredUsername);
+                    $stmt->execute();
+                    $aaMatchedProfileId = $stmt->fetchAll();
+                }catch (PDOException $exception){
+                    echo $exception;
+                }
+                echo 'This is the ID of user that has been trying to log in for 15 times: '.json_encode($aaMatchedProfileId).'<br>';
+
+
+                // write logs into the db on which user did it
+                $aMatchedProfileId = $aaMatchedProfileId[0];
+                $userProfileId = $aMatchedProfileId['id_users'];
+                $userProfileEmail = $aMatchedProfileId['email'];
+                $attack_description = 'Unsuccessful login 15 times or more';
+                date_default_timezone_set("UTC");
+                $time_of_attack = date('Y-m-d H:i:s');
+                try{
+                    $stmt = $db->prepare('INSERT INTO security_logs VALUES ( :id_security_logs , :description_of_attack , :ip_address , :user_og_id, :time_of_attack)');
+                    $id_security_logs = uniqid();
+                    $stmt->bindValue(':id_security_logs', $id_security_logs);
+                    $stmt->bindValue(':description_of_attack', $attack_description);
+                    $stmt->bindValue(':ip_address', $currentIp);
+                    $stmt->bindValue(':user_og_id', $userProfileId);
+                    $stmt->bindValue(':time_of_attack', $time_of_attack);
+                    $stmt->execute();
+                } catch (PDOException $exce){
+                    echo $exce;
+                }
+                require_once('send_email_potential_attack.php');
+            }
+            
+
+
         }
  
     }

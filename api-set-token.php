@@ -3,7 +3,6 @@
 // if the user isn't logged in - this redirects to index
 session_start();
 if(!isset($_SESSION['sessionId'])){
-    session_destroy();
     header('location: login.php?status=not_logged_in');
     exit;
 }

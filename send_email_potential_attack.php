@@ -57,9 +57,9 @@ try {
                     Time: '.$time_of_attack.'<br>
                     Description: '.$attack_description.'<br>
                     IP address: '.$currentIp.'<br>
-                    User id: '.$_SESSION['userId'].'<br>
-                    User email: '.$_SESSION['userEmail'].'<br>
-                    Username: '.$_SESSION['userUsername'].'<br>
+                    User id: '.$userProfileId.'<br>
+                    User email: '.$userProfileEmail.'<br>
+                    Username: '.$enteredUsername.'<br>
                 </p>
                 <p>This mentioned user is now also banned. We encourage you to investigate this matter further.</p>
                 <p>For more details please look into your activity log in the database, or log in to your account and check the activity log page.</p>
