@@ -9,7 +9,7 @@
 
 <!-- ------------------------------------------ INDEX BODY ------------------------------------------ -->
 
-<div class="container">
+<div class="container" id="postsContainer">
 
     <?php 
         // if(!empty($_SESSION['userEmail'])){
@@ -80,9 +80,8 @@
     }
     ?>
 
-    <button type='button' id='loadMorePostsButton'>Load more recent posts</button>
 </div>
-
+<button type='button' id='loadMorePostsButton'>Load more recent posts</button>
 
 <!-- NEW POST POSTING START -->
 

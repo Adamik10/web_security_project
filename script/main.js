@@ -77,6 +77,7 @@ $('#commentSubmitButton').click(callForToken);
 
 //load more posts
 $('#loadMorePostsButton').click(function(){
+    var dataWeGotBack;
     //get all the post IDs there are loaded on the page
     var currentPostsIds = [];
     $('.postHolder').each(function (i, obj) {
@@ -92,9 +93,23 @@ $('#loadMorePostsButton').click(function(){
             url: "api-get-more-posts.php",
             data: { kvcArray: currentPostsIds }
         }).done(function (gotBack) {
-            console.log(JSON.parse(gotBack));
-            // console.log(data);
+             console.log(JSON.parse(gotBack));
+            // console.log(gotBack);
             // console.log('we got here');
+            dataWeGotBack = JSON.parse(gotBack);
+
+            //now we grab the data and display it
+            //loop through the result 
+            for (var j = 0; j < dataWeGotBack.length; j++) {
+                var currentPostId = dataWeGotBack[j].id_posts;
+                var currentUserImgLocation = dataWeGotBack[j].user_image_location;
+                var currentPostImageLocation = dataWeGotBack[j].image_location;
+                var currentPostUsername = dataWeGotBack[j].username;
+                var currentPostHeadline = dataWeGotBack[j].headline;
+                var currentPostImageName = dataWeGotBack[j].image_name;
+                var iCommentCount = dataWeGotBack[j].id_posts;
+                $('#postsContainer').append('<div class= "card align-self-center card-custom mt-5 mb-2 postHolder" id = "' + currentPostId +'" \> <div class= "card-header"\> <div class="row"\> <div style="background-image: url('+currentUserImgLocation+');" class="OP-img mr-3"\></div\> <a href="#"\>'+currentPostUsername+'</a\> </div\> </div\> <h4 class="card-title mt-1"\>'+currentPostHeadline+'</h4\> <a href="gag.php?p_id='+currentPostId+'"\><img class="card-img-top" src="'+currentPostImageLocation+'" alt="'+currentPostImageName+'"\></a\> <div class="card-body"\> <div class="row"\> <a href="gag.php?p_id='+currentPostId+'" class="card-link post-link"\># Upvotes</a\> <a href="gag.php?p_id='+currentPostId+'#comment" class="card-link post-link"\>'+iCommentCount+' Comments</a\> </div\> <div class="row mt-3"\> <a href="#"\><i class="far fa-hand-point-up fa-2x mr-3"\></i\></a\> <a href="gag.php?p_id='+currentPostId+'#comment"\><i class="far fa-comment fa-2x"\></i\></a\> </div\> </div\> </div\>')
+            }  
         })
     }
     setTimeout(contactApiForMorePosts, 1000)

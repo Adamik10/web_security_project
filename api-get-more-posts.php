@@ -7,7 +7,6 @@ if(isset($_SESSION['sessionId'])){
     $overEighteen = true;
 }
 
-
 //here we get the data from the AJAX function from jQuery
 $listOfIds;
 if(isset($_POST['kvcArray'])){
@@ -18,12 +17,12 @@ if(isset($_POST['kvcArray'])){
 }
 
 // now we need to get all the IDs already loaded into one string from that array we got so we can use it in an SQL statement
-// echo print_r($listOfIds);
+// echo json_encode($listOfIds);
 // echo count($listOfIds);
 $finalListOfIds = ''; 
 for( $i = 0; $i < count($listOfIds); $i++ ){
     if($i != 0){
-        $finalListOfIds = $finalListOfIds." AND posts.id_posts <> '".$listOfIds[$i]."'";
+        $finalListOfIds = $finalListOfIds." AND posts.id_posts != '".$listOfIds[$i]."'";
     }else{
         $finalListOfIds = "'".$listOfIds[$i]."'";
     } 
@@ -36,12 +35,14 @@ require('controllers/database.php');
 // we need - image of user, user's nickname, post headline, post picture location
 try{
 $stmt = $db->prepare("SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name 
-                        FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.id_posts <> :listOfPostsAlreadyLoaded ORDER BY posts.datetime DESC LIMIT 5");
+                        FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.id_posts != :listOfPostsAlreadyLoaded ORDER BY posts.datetime DESC LIMIT 5");
 $stmt->bindValue(':listOfPostsAlreadyLoaded', $finalListOfIds);
+// echo json_encode($stmt);
+// echo $finalListOfIds;
 $stmt->execute();
 $aOfPosts = $stmt->fetchAll();
 }catch (PDOException $exception){
-    echo $exception;
+    //echo $exception;
 }
 echo json_encode($aOfPosts);
 // wtf this statement returns bullshiet but it works when entered into mySQL 
