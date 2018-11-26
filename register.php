@@ -23,25 +23,25 @@ if(isset($_SESSION['sessionId'])){
         <input name="registerLastName" type="text" class="form-control" id="registerLastName" placeholder="Enter last name">
     </div> -->
     <div class="form-group">
-        <label for="registerUsername">Username</label>
+        <label for="registerUsername">Username*</label>
         <input name="registerUsername" type="text" class="form-control" id="registerUsername" placeholder="Enter username">
     </div>
     <div class="form-group">
-        <label for="registerEmail">Email address</label>
+        <label for="registerEmail">Email address*</label>
         <input name="registerEmail" type="email" class="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
     </div>
     <div class="form-group">
-        <label for="registerPassword1">Password</label>
+        <label for="registerPassword1">Password*</label>
         <input name="registerPassword1" type="password" class="form-control" id="registerPassword1" placeholder="Password">
+        <small id="emailHelp" class="form-text text-muted">Password must have at least 8 characters, contain uppercase and lowercase letters and a number.</small>
     </div>
     <div class="form-group">
-        <label for="registerPassword2">Repeat password</label>
+        <label for="registerPassword2">Repeat password*</label>
         <input name="registerPassword2" type="password" class="form-control" id="registerPassword2" placeholder="Password">
     </div>
     <div class="form-group form-check">
         <input name="registerCheckbox" type="checkbox" class="form-check-input" id="registerCheckbox">
-        <label class="form-check-label" for="registerCheckbox">I agree to privacy statements.</label>
+        <label class="form-check-label" for="registerCheckbox">I agree to terms and conditions.</label>
     </div>
     
     <!-- DISPLAY ERROR MESSAGES HERE -->
@@ -50,6 +50,36 @@ if(isset($_SESSION['sessionId'])){
         if ($_GET['status'] == 'already_exists'){
             echo '  <div>
                     <p class="login-error">Username or email already exists.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'password_not_matching'){
+            echo '  <div>
+                    <p class="login-error">Password and repeat password do not match.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'password_criteria'){
+            echo '  <div>
+                    <p class="login-error">Password must have at least 8 characters, contain uppercase and lowercase letters and a number.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'privacy_statement'){
+            echo '  <div>
+                    <p class="login-error">In order to register you must agree to privacy statements.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'username_length'){
+            echo '  <div>
+                    <p class="login-error">Username must be between 2 and 20 characters.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'email_pattern'){
+            echo '  <div>
+                    <p class="login-error">Email invalid.</p>
+                    </div>';
+        }
+        if ($_GET['status'] == 'all_required'){
+            echo '  <div>
+                    <p class="login-error">All fields are required.</p>
                     </div>';
         }
     } 
