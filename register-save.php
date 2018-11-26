@@ -60,10 +60,11 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
    $uppercase = preg_match('@[A-Z]@', $registerPassword2);
    $lowercase = preg_match('@[a-z]@',$registerPassword2);
    $number    = preg_match('@[0-9]@', $registerPassword2);
-   if($registerPassword2 < 7  || !$uppercase || !$lowercase || !$number){
-       header('location: register.php?status=password_criteria');
-       $validationPass = 0;
+   if(strlen($registerPassword2) < 7  || !$uppercase || !$lowercase || !$number){
+       //header('location: register.php?status=password_criteria');
+        $validationPass = 0;    
    }
+   // echo $lowercase.', '.$uppercase.', '.$number.', '.strlen($registerPassword2);
 
    if($registerCheckbox !== 'on' ){
        header('location: register.php?status=privacy_statement');
@@ -125,5 +126,5 @@ if($validationPass == 1){
     }
 
 } else {
-    header('location: register.php?status=all_required');
-}
+    header('location: register.php?status=all_required'); 
+} 

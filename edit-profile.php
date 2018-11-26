@@ -53,7 +53,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
         // TO DO - maybe it would be nice to have a transaction here since the image is already in the folder
         try{
             $update = $db->prepare('UPDATE users 
-                                    SET image_location = :newPostImageLocation , image_name = :newPostImageName WHERE id_users = :userId');
+                                    SET user_image_location = :newPostImageLocation , user_image_name = :newPostImageName WHERE id_users = :userId');
             $update->bindValue(':newPostImageLocation', $newProfileImageLocation);
             $update->bindValue(':newPostImageName', $newProfileImgName);
             $update->bindValue(':userId', $userId);
@@ -62,7 +62,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
             echo $ex;
             exit();
         }
-        
+        $_SESSION['userImgLocation'] = $newProfileImageLocation;
         header('location: profile.php');
 
     }else{
