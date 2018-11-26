@@ -7,7 +7,7 @@ if(!isset($_SESSION['sessionId'])){
     exit;
 }
 
-// if new image was added
+// if new image was uploaded
 if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 ){
     
     require_once('controllers/database.php');
