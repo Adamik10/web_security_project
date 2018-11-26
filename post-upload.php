@@ -93,9 +93,12 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
                     exit();
                 }
 
+                $userProfileId = $_SESSION['userId'];
+                $userProfileEmail = $_SESSION['userEmail'];
+                $enteredUsername = $_SESSION['userUsername'];
+                session_destroy();
                 header('location: index.php?status=banned');
                 require_once('send_email_potential_attack.php');
-                session_destroy();
                 exit;
             }
         }
