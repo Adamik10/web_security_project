@@ -45,63 +45,85 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
         }
     }
 
-    //validation
+   //validation
 
-    if(
-        $registerPassword1 == $registerPassword2 &&
-        $registerCheckbox == 'on' &&
-        strlen($registerUsername) > 2 &&
-        strlen($registerUsername) < 20 &&
-        filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == true &&
-        $alreadyUsedEmail == 0 && 
-        $alreadyUsedUsername == 0
-    ){
-        echo $registerPassword1.' should equal '.$registerPassword2.'<br>'.$registerCheckbox.'<br>'.strlen($registerUsername).
-        ' should be less than 20 and more than 2<br>'.filter_var($registerEmail, FILTER_VALIDATE_EMAIL).' should be email<br> already used email:'.$alreadyUsedEmail.
-        ' <br> already used username: '.$alreadyUsedUsername;
-        
-            //hashing pattern:
-            $salt = rand(100000, 999999);
-            $peber = "MaciejStopHackingUs";
-            $options = [
-                'cost' => 12
-            ];
-            //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
-            $pass_hash = password_hash($registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options);
+   $validationPass = 1;
 
-            //if validation passes then insert into database try catch
+   //if password1 and password2 are not matching
+   if($registerPassword1 !== $registerPassword2){
+       header('location: register.php?status=password_not_matching');
+       $validationPass = 0;
+       echo 'password not matching';
+   }
 
-            try {
-                $stmt1 = $db->prepare('INSERT INTO users(id_users, username, email, password_hash, salt, verified, user_image_location, user_image_name) 
-                                        VALUES (:userId, :username, :email, :pass, :salt, :verified, :user_image_location, :user_image_name)');
-                $stmt1->bindValue(':userId', $userId);
-                $stmt1->bindValue(':username', $registerUsername);
-                $stmt1->bindValue(':email', $registerEmail);
-                $stmt1->bindValue(':pass', $pass_hash);
-                $stmt1->bindValue(':salt', $salt);
-                $stmt1->bindValue(':verified', 0);
-                $stmt1->bindValue(':user_image_location', 'images/users/default.JPG');
-                $stmt1->bindValue(':user_image_name', 'default');
-                $stmt1->execute();
+   //password pattern validation 
+   $uppercase = preg_match('@[A-Z]@', $registerPassword2);
+   $lowercase = preg_match('@[a-z]@',$registerPassword2);
+   $number    = preg_match('@[0-9]@', $registerPassword2);
+   if($registerPassword2 < 7  || !$uppercase || !$lowercase || !$number){
+       header('location: register.php?status=password_criteria');
+       $validationPass = 0;
+   }
 
-                $stmt2 = $db->prepare('INSERT INTO verification_codes VALUES (:id_verification_code, :userId, :verification_code)');
-                $stmt2->bindValue(':id_verification_code', $idVerificationCode);
-                $stmt2->bindValue(':userId', $userId);
-                $stmt2->bindValue(':verification_code', $verificationCode);
-                $stmt2->execute(); 
+   if($registerCheckbox !== 'on' ){
+       header('location: register.php?status=privacy_statement');
+       $validationPass = 0;
+   }
 
-            } catch (PDOException $ex) {
-                echo 'error, database insertion<br>';
-                echo $ex;
-                exit();
-            }
-            require_once('send-verification-email.php');
-        
-    } else {
-        header('location: register.php?status=already_exists');
+   if(strlen($registerUsername) < 2 || strlen($registerUsername) > 20){
+       header('location: register.php?status=username_length');
+       $validationPass = 0;
+   }
+
+   if(filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == false){
+       header('location: register.php?status=email_pattern');
+       $validationPass = 0;
+   }
+
+   if($alreadyUsedEmail == 1 || $alreadyUsedUsername == 1){
+       header('location: register.php?status=already_exists');
+       $validationPass = 0;
+   }
+
+
+
+if($validationPass == 1){
+   
+       //hashing pattern:
+       $salt = rand(100000, 999999);
+       $peber = "MaciejStopHackingUs";
+       $options = [
+           'cost' => 12
+       ];
+       //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
+       $pass_hash = password_hash($registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options);
+
+       //if validation passes then insert into database try catch
+
+       try {
+           $stmt1 = $db->prepare('INSERT INTO users(id_users, username, email, password_hash, salt, verified) VALUES (:userId, :username, :email, :pass, :salt, :verified)');
+           $stmt1->bindValue(':userId', $userId);
+           $stmt1->bindValue(':username', $registerUsername);
+           $stmt1->bindValue(':email', $registerEmail);
+           $stmt1->bindValue(':pass', $pass_hash);
+           $stmt1->bindValue(':salt', $salt);
+           $stmt1->bindValue(':verified', 0);
+           $stmt1->execute();
+
+           $stmt2 = $db->prepare('INSERT INTO verification_codes VALUES (:id_verification_code, :userId, :verification_code)');
+           $stmt2->bindValue(':id_verification_code', $idVerificationCode);
+           $stmt2->bindValue(':userId', $userId);
+           $stmt2->bindValue(':verification_code', $verificationCode);
+           $stmt2->execute(); 
+
+       } catch (PDOException $ex) {
+           echo 'error, database insertion<br>';
+           echo $ex;
+           exit();
+       }
+       require_once('send-verification-email.php'); 
     }
 
-    
-}else{
-    header('location: register.php');
+} else {
+    header('location: register.php?status=all_required');
 }

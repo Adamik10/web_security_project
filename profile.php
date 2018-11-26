@@ -61,7 +61,7 @@ foreach($user as $a){
                                 <br>
                                 <p class="login-error">The file is too large.</p>
                                 </div>';
-                    }
+                    } 
                 } 
                 // ERROR MESSAGES END
                 ?>
@@ -72,14 +72,48 @@ foreach($user as $a){
 
     <h5 class="mt-4">Account</h5>
 
+                    <!-- 
+                    if ($_GET['status'] == 'email_pattern'){
+                        echo '  <div>
+                                <p class="login-error">Email invalid.</p>
+                                </div>';
+                    }
+                    if ($_GET['status'] == 'password_not_matching'){
+                        echo '  <div>
+                                <p class="login-error">Password and repeat password do not match.</p>
+                                </div>';
+                    }
+                    if ($_GET['status'] == 'password_criteria'){
+                        echo '  <div>
+                                <p class="login-error">Password must have at least 8 characters, contain uppercase and lowercase letters and a number.</p>
+                                </div>';
+                    } -->
+
         <div class="form-group">
         <label for="changedUsername">Username</label>
         <input name="changedUsername" type="text" class="form-control" value="<?php echo $username; ?>">
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="changedEmail">Email address</label>
         <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo $email; ?>">
-    </div>
+    </div> -->
+
+            <?php 
+        // DISPLAY ERROR MESSAGES HERE
+        if(isset($_GET['status'])){
+            if ($_GET['status'] == 'username_length'){
+                echo '  <div>
+                        <p class="login-error">Username must be between 2 and 20 characters.</p>
+                        </div>';
+            }
+            if ($_GET['status'] == 'already_exists'){
+                echo '  <div>
+                        <p class="login-error">Username already exists.</p>
+                        </div>';
+            }
+        } 
+        // ERROR MESSAGES END
+        ?>
 
     <button type="submit" class="btn btn-primary">Save changes</button>
     </form>
@@ -87,7 +121,7 @@ foreach($user as $a){
     <form action="edit-profile.php" method="post"> 
 
     <h5 class="mt-4">Change password</h5>
-
+    <p class="mt-4">Doesn't work yet.</p>
     <div class="form-group">
         <label for="changedPassword1">Password</label>
         <input name="changedPassword1" type="password" class="form-control" placeholder="New password">
