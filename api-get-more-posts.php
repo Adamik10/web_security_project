@@ -19,27 +19,25 @@ if(isset($_POST['kvcArray'])){
 // now we need to get all the IDs already loaded into one string from that array we got so we can use it in an SQL statement
 // echo json_encode($listOfIds);
 // echo count($listOfIds);
-$finalListOfIds = ''; 
+$clause = ''; 
 for( $i = 0; $i < count($listOfIds); $i++ ){
     if($i != 0){
-        $finalListOfIds = $finalListOfIds." AND posts.id_posts != '".$listOfIds[$i]."'";
+        $clause = $clause." AND posts.id_posts != ? ";
     }else{
-        $finalListOfIds = "'".$listOfIds[$i]."'";
+        $clause = " ? ";
     } 
 }
 // echo $listOfIds[0]; 
-// echo $finalListOfIds;
-
+// echo $clause;
+ 
 
 require('controllers/database.php');
 // we need - image of user, user's nickname, post headline, post picture location
 try{
-$stmt = $db->prepare("SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name 
-                        FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.id_posts != :listOfPostsAlreadyLoaded ORDER BY posts.datetime DESC LIMIT 5");
-$stmt->bindValue(':listOfPostsAlreadyLoaded', $finalListOfIds);
-// echo json_encode($stmt);
-// echo $finalListOfIds;
-$stmt->execute();
+$stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.id_posts != '.$clause.' ORDER BY posts.datetime DESC LIMIT 5');
+// die(json_encode($stmt));
+// echo $clause;
+$stmt->execute($listOfIds);
 $aOfPosts = $stmt->fetchAll();
 }catch (PDOException $exception){
     //echo $exception;

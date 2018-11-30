@@ -93,7 +93,7 @@ $('#loadMorePostsButton').click(function(){
             url: "api-get-more-posts.php",
             data: { kvcArray: currentPostsIds }
         }).done(function (gotBack) {
-            // console.log(JSON.parse(gotBack));
+             console.log(JSON.parse(gotBack));
             // console.log(gotBack);
             // console.log('we got here');
             dataWeGotBack = JSON.parse(gotBack);

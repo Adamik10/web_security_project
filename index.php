@@ -18,7 +18,7 @@
         // }
     ?>
 
-    <?php
+    <?php 
         require('controllers/database.php');
         // we need - image of user, user's nickname, post headline, post picture location
         try{
