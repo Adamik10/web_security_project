@@ -197,6 +197,28 @@ textarea{
     font-size: smaller;
 }
 
+/* LOGOUT */
+
+#logout_form{
+    height: 80%;
+}
+
+#logout_button {
+    border: none;
+    outline: none;
+    background-color: rgba(56, 56, 56, 0);
+    color: #949D9A;
+    cursor: pointer;
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 100%;
+}
+
+#logout_button:hover {
+    color: rgb(196, 196, 196);
+}
+
 /* GAG */
 .row-custom{
     max-width: 700px;
@@ -260,3 +282,4 @@ textarea{
 #loadMorePostsButton:hover {
     background-color: rgb(200, 208, 216);
 }
+

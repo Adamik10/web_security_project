@@ -10,15 +10,19 @@ if(!isset($_SESSION['sessionId'])){
 }
 
 // now we know that the person trying to post is logged in 
-// but we still don't know whether it's the real person or just someone using their session ID
-// a token was created if the real person wanted to post something - otherwise there is no token
-if(!isset($_SESSION['token'])){
+// but we still don't know whether it's the real person or just someone using their session
+// a token was created if the real person wanted to do this - does it match what we got?
+if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
     //echo 'The token is not set';
-    session_destroy();
-    header('location: login.php?status=security_logout');
+    header('location: ups.php');
+    exit;
 }else{
-    // if there is a token, now we can destroy it
-    unset($_SESSION['token']);
+    // if there is a token, compare it to the one we got from the form
+    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+        header('location: ups.php');
+        exit;
+    }
 }
 
 // check if data was passed through the form

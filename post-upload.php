@@ -8,16 +8,18 @@ if(!isset($_SESSION['sessionId'])){
 
 // now we know that the person trying to post is logged in 
 // but we still don't know whether it's the real person or just someone using their session ID
-// a token was created if the real person wanted to post something - otherwise there is no token
-if(!isset($_SESSION['token'])){
+// a token was created if the real person wanted to do this - does it match what we got?
+if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
     //echo 'The token is not set';
-    session_destroy();
-    header('location: login.php?status=security_logout');
+    header('location: ups.php');
+    exit;
 }else{
-    // if there is a token, now we can destroy it
-    unset($_SESSION['token']);
-    //echo 'The token has been destroyed';
-    //echo '<br> The session id is: '.$_SESSION['sessionId'];
+    // if there is a token, compare it to the one we got from the form
+    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+        header('location: ups.php');
+        exit;
+    }
 }
 
 if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_POST['postHeader'])){
@@ -104,6 +106,19 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         }
         // get extension knowing that the last element is the extension
         $sExtension = $aImageName[count($aImageName)-1];
+        // now we whitelist PNG JPG JPEG
+        // if the extention isn't any of these then tell the user only they are allowed
+        $bCorrectExtension = false;
+        $allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF'];
+        for($j = 0; $j < sizeof($allowedExtensions)-1; $j++){
+            if($allowedExtensions[$j] == $sExtension){
+                $bCorrectExtension = true;
+            }
+        }
+        if($bCorrectExtension == false){
+            header('location: index.php?status=wrong_file_format');
+            exit;
+        }
         // Create a variable with the new path
         $sPathToSaveFile = "images/posts/$sUniqueImageName.$sExtension";
         $newPostImageLocation = $sPathToSaveFile;

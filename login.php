@@ -25,6 +25,9 @@ if(isset($_SESSION['sessionId'])){
         <input name="loginPassword" type="password" class="form-control" id="loginPassword" placeholder="Password">
     </div>
 
+    <?php
+        require_once('api-set-token.php');
+    ?>
 
         <!-- DISPLAY CAPTCHA IF ITS MORE THAN 3rd ATTEMPT FROM SAME IP -->
         <?php

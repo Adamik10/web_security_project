@@ -90,7 +90,13 @@ session_start();
       <?php if($pageTitle == 'logout'){echo ' active';}
             if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
             id="logoutNav">
-        <a class="nav-link" href="logout.php">Logout</a>
+        <!-- <a class="nav-link" href="logout.php">Logout</a> -->
+        <form method="post" action="logout.php" id="logout_form">
+          <?php
+              require_once('api-set-token-logout.php');
+          ?>
+          <button type="submit" id="logout_button">Logout</button>
+        </form>
       </li>
 
     </ul>

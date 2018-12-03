@@ -28,10 +28,12 @@ $(document).ready(function(){
     var pattern1 = /status=post_invalid/;
     var pattern2 = /file_too_large/;
     var pattern3 = /error_uploading_image/;
+    var pattern4 = /wrong_file_format/;
     var exists1 = pattern1.test(url);
     var exists2 = pattern2.test(url);
     var exists3 = pattern3.test(url);
-    if (exists1 || exists2 || exists3){
+    var exists4 = pattern4.test(url);
+    if (exists1 || exists2 || exists3 || exists4){
         //show the post upload section
         $('#screenBlind').css('visibility', 'visible');
         $('#uploadBox').css('visibility', 'visible');
@@ -54,7 +56,7 @@ function callApi(){
 setInterval(callApi, 15000);
 
 
-
+/* WE ARE NOT DOING TOKENS LIKE THIS ANYMORE
 //adding session token on every:
     //click of POST a post button
     //click of COMMENT submit button
@@ -72,7 +74,7 @@ function callForToken() {
 };
 $('#postSubmitButton').click(callForToken);
 $('#commentSubmitButton').click(callForToken);
-
+*/
 
 
 //load more posts
