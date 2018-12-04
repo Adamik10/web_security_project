@@ -125,6 +125,25 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         // save the image to a folder
         if( move_uploaded_file( $sOldPath , $sPathToSaveFile ) ){
             echo "SUCCESS UPLOADING FILE"; 
+            // now we can update the database when the image is in the folder
+            try{
+                $stmt = $db->prepare('INSERT INTO posts (id_posts, id_users, headline, image_location, image_name, sensitive_content) 
+                                        VALUES ( :newPostId , :newPostUserId , :newPostHeadline , :newPostImageLocation , :newPostImageName , :newPostSensitivity )');
+                $stmt->bindValue(':newPostId', $newPostId);
+                $stmt->bindValue(':newPostUserId', $newPostUserId);
+                $stmt->bindValue(':newPostHeadline', $newPostHeadline);
+                $stmt->bindValue(':newPostImageLocation', $newPostImageLocation);
+                $stmt->bindValue(':newPostImageName', $newPostImageName);
+                $stmt->bindValue(':newPostSensitivity', $newPostSensitivity);
+                $stmt->execute();
+            } catch (PDOException $ex){
+                echo $ex;
+                // if the new post couldn't be written into the database, pretend the whole thing failed
+                header('location: index.php?status=error_uploading_image');
+                exit();
+            }
+            header('location: index.php');
+
         }else{
             echo "ERROR UPLOADING FILE";
             header('location: index.php?status=error_uploading_image');
@@ -136,21 +155,6 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
         exit;
     }
 
-    try{
-        $stmt = $db->prepare('INSERT INTO posts (id_posts, id_users, headline, image_location, image_name, sensitive_content) 
-                                VALUES ( :newPostId , :newPostUserId , :newPostHeadline , :newPostImageLocation , :newPostImageName , :newPostSensitivity )');
-        $stmt->bindValue(':newPostId', $newPostId);
-        $stmt->bindValue(':newPostUserId', $newPostUserId);
-        $stmt->bindValue(':newPostHeadline', $newPostHeadline);
-        $stmt->bindValue(':newPostImageLocation', $newPostImageLocation);
-        $stmt->bindValue(':newPostImageName', $newPostImageName);
-        $stmt->bindValue(':newPostSensitivity', $newPostSensitivity);
-        $stmt->execute();
-    } catch (PDOException $ex){
-        echo $ex;
-        exit();
-    }
-    header('location: index.php');
 }else{
     header('location: index.php?status=post_invalid'); 
 }

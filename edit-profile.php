@@ -5,6 +5,24 @@ if(!isset($_SESSION['sessionId'])){
     exit;
 }
 
+// a token was created if the real person wanted to do this - does it match what we got?
+if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
+    //echo 'The token is not set';
+    header('location: ups.php');
+    exit;
+}else{
+    // if there is a token, compare it to the one we got from the form
+    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+        header('location: ups.php');
+        exit;
+    }
+}
+
+// we cannot redirect after we hit a problem, because we need to check for other things passed too
+// so we log what went wrong and then in the end redirect with all the messages
+$thingsThatWentGrong = [];
+
 // if new image was added
 if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 ){
     
@@ -102,29 +120,27 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
         // save the image to a folder
         if( move_uploaded_file( $sOldPath , $sPathToSaveFile ) ){
             echo "SUCCESS UPLOADING FILE"; 
+            try{
+                $update = $db->prepare('UPDATE users 
+                                        SET user_image_location = :newPostImageLocation , user_image_name = :newPostImageName WHERE id_users = :userId');
+                $update->bindValue(':newPostImageLocation', $newProfileImageLocation);
+                $update->bindValue(':newPostImageName', $newProfileImgName);
+                $update->bindValue(':userId', $userId);
+                $update->execute();
+            } catch (PDOException $ex){
+                echo $ex;
+                array_push($thingsThatWentGrong, 'new user image data was not updated in database');
+            }
+            $_SESSION['userImgLocation'] = $newProfileImageLocation;
         }else{
             echo "ERROR UPLOADING FILE";
+            // if the new image couldn't be written into the database
+            array_push($thingsThatWentGrong, 'file could not be uploaded');
         } 
-
-        // TO DO - maybe it would be nice to have a transaction here since the image is already in the folder
-        try{
-            $update = $db->prepare('UPDATE users 
-                                    SET user_image_location = :newPostImageLocation , user_image_name = :newPostImageName WHERE id_users = :userId');
-            $update->bindValue(':newPostImageLocation', $newProfileImageLocation);
-            $update->bindValue(':newPostImageName', $newProfileImgName);
-            $update->bindValue(':userId', $userId);
-            $update->execute();
-        } catch (PDOException $ex){
-            echo $ex;
-            exit();
-        }
-        $_SESSION['userImgLocation'] = $newProfileImageLocation;
-        header('location: profile.php');
 
     }else{
         // echo "FILE TOO LARGE"; 
-        // redirect to profile with status file too large
-        header('location: profile.php?status=file_too_large');
+        array_push($thingsThatWentGrong, 'file too large');
     }
 }
 
@@ -149,7 +165,8 @@ if(isset($_POST['changedUsername'])
         $stmt->execute();
         $users = $stmt->fetchAll();
     } catch (PDOException $ex){
-        echo 'error selecting users';
+        echo 'error selecting users: '.$ex;
+        header('location: profile.php'); //in this case we can redirect and exit because if we didn't it could affect the database
         exit();
     }
 
@@ -164,10 +181,10 @@ if(isset($_POST['changedUsername'])
     //         // echo '<br>'.'this email is already in use, try a different one'.'<br>';
     //     }
         if($user['username'] == $changedUsername){
-            if ($user['username'] != $_SESSION['userUsername']){
+            if ($user['username'] != $_SESSION['userUsername']){ //if it's the users old username that is okay, just keep it
                 $alreadyUsedUsername = 1;
                 // echo 'this username is already in use, try a different one'.'<br>';
-                header('location: profile.php?status=username_or_email_used');
+                array_push($thingsThatWentGrong, 'username already in use');
             }
         }
     }
@@ -178,7 +195,7 @@ if(isset($_POST['changedUsername'])
     $validationPass = 1;
 
         if(strlen($changedUsername) < 2 || strlen($changedUsername) > 20){
-            header('location: profile.php?status=username_length');
+            array_push($thingsThatWentGrong, 'username invalid length');
             $validationPass = 0;
         }
     
@@ -188,7 +205,7 @@ if(isset($_POST['changedUsername'])
         // }
     
         if($alreadyUsedEmail == 1 || $alreadyUsedUsername == 1){
-            header('location: profile.php?status=already_exists');
+            array_push($thingsThatWentGrong, 'new user image data was not updated in database');
             $validationPass = 0;
         }
 
@@ -212,23 +229,32 @@ if(isset($_POST['changedUsername'])
 
     if($validationPass == 1){
 
-            //if validation passes then update user info
+        //if validation passes then update user info
+        try {
+            $stmt1 = $db->prepare('UPDATE users SET username=:username WHERE id_users=:loggedUserId');
+            $stmt1->bindValue(':username', $changedUsername);
+            // $stmt1->bindValue(':email', $changedEmail);
+            $stmt1->bindValue(':loggedUserId', $sUserIdFromDb);
+            $stmt1->execute();
 
-            try {
-                $stmt1 = $db->prepare('UPDATE users SET username=:username WHERE id_users=:loggedUserId');
-                $stmt1->bindValue(':username', $changedUsername);
-                // $stmt1->bindValue(':email', $changedEmail);
-                $stmt1->bindValue(':loggedUserId', $sUserIdFromDb);
-                $stmt1->execute();
-
-            } catch (PDOException $ex) {
-                echo 'error, database update email and username: '.$ex;
-                exit();
-            }
-
-            header('location: profile.php');
+        } catch (PDOException $ex) {
+            echo 'error, database update email and username: '.$ex;
+            array_push($thingsThatWentGrong, 'username could not be updated');
+        }
 
     } else {
         echo 'fields not filled out properly, try again';
+        array_push($thingsThatWentGrong, 'incorrect data provided');
     }
-};
+}
+
+if(sizeof($thingsThatWentGrong) == 0){
+    header('location: profile.php');
+}else{
+    // if something went wrong, then we need to let the user know what it was
+    //loop through the array and add stuff into the url
+    $finalURL = 'profile.php?status=something_went_wrong?spec=';
+    for($k = 0; $k < sizeof($thingsThatWentGrong); $k++){
+        $finalURL = $finalURL.$k;
+    }
+}

@@ -110,16 +110,21 @@ foreach($user as $a){
                     echo '  <div>
                             <p class="login-error">Username must be between 2 and 20 characters.</p>
                             </div>';
-                }
-                if ($_GET['status'] == 'already_exists'){
+                }else if ($_GET['status'] == 'already_exists'){
                     echo '  <div>
                             <p class="login-error">Username already exists.</p>
+                            </div>';
+                }else if ($_GET['status'] == 'something_went_wrong'){
+                    echo '  <div>
+                            <p class="login-error">We could not register your changes. Please try again.</p>
                             </div>';
                 }
             } 
             // ERROR MESSAGES END
             ?>
-
+        <?php
+            require_once('api-set-token.php');
+        ?>
         <button type="submit" class="btn btn-primary">Save changes</button>
     </form>
 
@@ -149,7 +154,7 @@ foreach($user as $a){
     <?php
     require_once('new-post.php');
     ?>
-    
+
     <?php
     require_once('components/bottom.php');
     ?>
