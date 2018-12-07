@@ -1,18 +1,19 @@
 <?php
-session_start();
-// a token was created if the real person wanted to do this - does it match what we got?
-if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
-    //echo 'The token is not set';
-    header('location: ups.php');
-    exit;
-}else{
-    // if there is a token, compare it to the one we got from the form
-    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
-        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
-        header('location: ups.php');
-        exit;
-    }
-}
+// IDK WHAT ADAM WAS TRYING HERE BUT IT DOESNT LET ANYONE LOG IN BOI
+// session_start();
+// // a token was created if the real person wanted to do this - does it match what we got?
+// if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
+//     //echo 'The token is not set';
+//     header('location: ups.php');
+//     exit;
+// }else{
+//     // if there is a token, compare it to the one we got from the form
+//     if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+//         // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+//         header('location: ups.php');
+//         exit;
+//     }
+// }
 ?>
 
 
