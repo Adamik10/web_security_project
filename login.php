@@ -98,6 +98,11 @@ if(isset($_SESSION['sessionId'])){
                     <p class="login-error">Please login first.</p>
                     </div>';
         }
+        if ($_GET['status'] == 'banned'){
+            echo '  <div>
+                    <p class="login-error">Your account was banned, please contact the <a href="mailto:8gag.web.sec@gmail.com?Subject=My%20account%20is%20banned" target="_blank">admin.</a></p>
+                    </div>';
+        }
     } 
     ?>
     <!-- ERROR MESSAGES END -->
