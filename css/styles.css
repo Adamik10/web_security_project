@@ -338,7 +338,7 @@ textarea{
     display: none;
 }
 
-.btnSaveChangesAdmin{
+.btnSaveChangesAdmin, .btnSaveChangesAdminComments{
     cursor: pointer;
     border: none;
     background: none;
