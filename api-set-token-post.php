@@ -9,9 +9,9 @@ if(!isset($pageTitle)){
 session_start();
 
 //if user is logged in, or on login/register page this will generate a session token for them
-$newToken = uniqid();
-$newTokenHashed = hash('sha256', $newToken);
-$_SESSION['token'] = $newToken;
+$newTokenPost = uniqid();
+$newTokenPostHashed = hash('sha256', $newTokenPost);
+$_SESSION['tokenPost'] = $newTokenPost;
 
 //this file will be used as an require_once() in other files so now we need to echo an input in the form that uses the same values
-echo '<input name="activityToken" type="text" value="'.$newTokenHashed.'" hidden>';
+echo '<input name="activityToken" type="text" value="'.$newTokenPostHashed.'" hidden>';
