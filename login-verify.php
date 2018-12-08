@@ -32,6 +32,111 @@
             // check secret key
             $reCaptcha = new ReCaptcha($secret);
 
+// ------------------------------------ LOGIN FUNCTION FOR ADMINS - IF USERNAME DOESNT MATCH ANYONE FROM USERS TABLE (gets called in tryToLogin) ;) ------------------------------------
+function tryLoginAsAdmin(){
+    require('controllers/database.php');
+    $enteredUsername = $_POST['loginUsername'];
+    $enteredPassword = $_POST['loginPassword'];
+    $peber = 'MaciejStopHackingUs';
+    // this is supposed to influence the time of hashing - ask adam (already resoleved)
+    $options = [
+        'cost' => 12
+    ];
+    // getting the IP adress
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $currentIp = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $currentIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $currentIp = $_SERVER['REMOTE_ADDR'];
+    }
+
+    // get the hashed password and the salt from db - admins table
+    try{
+        $stmt = $db->prepare('SELECT salt, password_hash, id_admins, first_name, last_name, username, email, admin_image_location, admin_image_name, privilege_level FROM admins 
+                                                                                    WHERE username = :enteredName LIMIT 1');
+        $stmt->bindValue('enteredName', $enteredUsername);
+        $stmt->execute();
+        $aaResult = $stmt->fetchAll();
+
+        // echo '<br>this is the admin that matched the username';
+        // print_r($aaResult);
+        //if this is an empty array - there is no admin with that username 
+        if(empty($aaResult)){
+            // echo '<br>there is no admin with that username';
+            header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+        }else{ //if there is a match, verify whether the password matches
+            $aResult = $aaResult[0];
+            $sAdminSaltFromDb = $aResult['salt'];
+            $sAdminPasswordFromDb = $aResult['password_hash'];
+            $sAdminIdFromDb = $aResult['id_admins'];
+            $sAdminFirstname = $aResult['first_name'];
+            $sAdminLastname = $aResult['last_name'];
+            $sAdminUsernameFromDb = $aResult['username'];
+            $sAdminEmailFromDb = $aResult['email'];
+            $sAdminImgLocationFromDb = $aResult['admin_image_location'];
+            $sAdminImgNameFromDb = $aResult['admin_image_name'];
+            $sAdminPrivilegeLevelFromDb = $aResult['privilege_level'];
+            
+            // echo '<br>This is the array we got'.print_r($aaUserSaltAndPass).'<br>';
+            // echo '<br>This is the pass entered: '.$enteredPassword;
+            // echo '<br>This is the pass from db: '.$sUserPasswordFromDb;
+            // echo '<br>This is the salt: '.$sUserSaltFromDb;
+            // echo '<br>This is the peber: '.$peber;
+
+            // check if the user is verified, if verified is 0 then redirect to login with status not verified
+            
+
+            $doTheyEqual = password_verify($enteredPassword.$peber.$sAdminSaltFromDb, $sAdminPasswordFromDb);
+            // $registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options
+            // echo '<br> do they equal: ';
+            // print_r($doTheyEqual);
+
+            // check if they equal 
+            if($doTheyEqual == 1){
+
+                // if password is correct start session, clean attempts and redirect to index
+                session_start();
+                $_SESSION['sessionId']=uniqid();
+                $_SESSION['userId'] = $sAdminIdFromDb;
+                $_SESSION['userUsername'] = $sAdminUsernameFromDb;
+                $_SESSION['userEmail'] = $sAdminEmailFromDb;
+                $_SESSION['userImgLocation'] = $sAdminImgLocationFromDb ;
+                $_SESSION['userImgName'] = $sAdminImgNameFromDb;
+                $_SESSION['userFirstname'] = $sAdminFirstname;
+                $_SESSION['userLastname'] = $sAdminLastname;
+                $_SESSION['userPrivileges'] = 'admin';
+                if(isset($_SESSION['token'])){
+                    unset($_SESSION['token']);
+                }
+
+                //CLEAR NUMBER OF ATTEMPTS FOR THIS USERNAME and IP
+                try{
+                    $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip && username = :username' );
+                    $sUpdate->bindValue( ':default' , 0 );
+                    $sUpdate->bindValue( ':ip' , $currentIp );
+                    $sUpdate->bindValue( ':username' , $enteredUsername );
+                    $sUpdate->execute();
+                    // redirect to index
+                    header('location: index.php');
+                }catch( PDOException $ex ){
+                echo $ex;
+                }
+               
+                    
+            }else{ //if the password is incorrect, redirect to login
+                // echo 'incorrect password in admins';
+                header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+            }
+        }
+        
+    }catch (PDOException $exception){
+        echo $exception;
+    }
+    
+}
+// ------------------------------------ END OF LOGIN AS ADMIN FUNCTION --------------------------------------------------
+
 
 // ------------------------------------ LOGIN FUNCTION that gets called in various places below ;) ------------------------------------
 function tryToLogin(){
@@ -52,7 +157,7 @@ function tryToLogin(){
         $currentIp = $_SERVER['REMOTE_ADDR'];
     }
 
-    //get the hashed password and the salt from DB
+    //get the hashed password and the salt from DB users table
     try{
         $stmt = $db->prepare('SELECT salt, password_hash, id_users, username, email, verified, user_image_location, user_image_name, banned FROM users 
                                                                                     WHERE username = :enteredName LIMIT 1');
@@ -62,7 +167,9 @@ function tryToLogin(){
 
         //if this is an empty array - there is no user with that username 
         if(empty($aaResult)){
-            header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+            // echo '<br> trying to login as admin';
+            tryLoginAsAdmin();
+            // header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
         }else{ //if there is a match, verify whether the password matches
             $aResult = $aaResult[0];
             $sUserSaltFromDb = $aResult['salt'];
@@ -111,11 +218,12 @@ function tryToLogin(){
                             unset($_SESSION['token']);
                         }
 
-                        //CLEAR NUMBER OF ATTEMPTS FOR THIS IP
+                        //CLEAR NUMBER OF ATTEMPTS FOR THIS USERNAME and IP
                         try{
-                            $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip' );
+                            $sUpdate = $db->prepare( 'UPDATE logging_in SET attempts = :default WHERE ip = :ip && username = :username' );
                             $sUpdate->bindValue( ':default' , 0 );
                             $sUpdate->bindValue( ':ip' , $currentIp );
+                            $sUpdate->bindValue( ':username' , $enteredUsername );
                             $sUpdate->execute();
                             // redirect to index
                             header('location: index.php');
@@ -158,7 +266,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     echo 'This is the current IP: '.$currentIp.'<br>';
 
 
-    // get an array of IPs with the same username that match from the database
+    // get an array of IPs with the same username that match from the database - logging in table
     try{
         $stmt = $db->prepare('SELECT * FROM logging_in 
                                         WHERE ip = :currentIP AND username = :enteredUsername');
@@ -169,7 +277,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     }catch (PDOException $exception){
         echo $exception;
     }
-    echo 'This is the records IPs + username that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
+    // echo 'This is the records IPs + username that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
 
 
 
@@ -243,6 +351,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             
             // IF RESPONSE IS OKE TRY TO LOGIN
             if ($response != null && $response->success) {
+                // echo '<br>trying to login 351';
                 tryToLogin();
             }else{
                 header('location: login.php?username='.$enteredUsername.'&status=wrong_captcha');
@@ -250,28 +359,67 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             
             
 
-            // IF THIS IS 15th TIME
+            // -------------------------------------------------- IF THIS IS 15th TIME -------------------------------------------------
             // send an email to the admins
-            if($attempt*1 == 14){
+            if($attempt*1 >= 15){
             
-                // first find the ID of account where the user is trying to login
+                // first find the ID in USERS TABLE
                 try{
                     $stmt = $db->prepare('SELECT id_users, email FROM users 
                                                     WHERE username = :enteredUsername');
                     $stmt->bindValue('enteredUsername', $enteredUsername);
                     $stmt->execute();
-                    $aaMatchedProfileId = $stmt->fetchAll();
+                    $aaMatchedUserProfileId = $stmt->fetchAll();
                 }catch (PDOException $exception){
                     echo $exception;
                 }
-                echo 'This is the ID of user that has been trying to log in for 15 times: '.json_encode($aaMatchedProfileId).'<br>';
+                // echo 'This is the ID of user that has been trying to log in for 15 times: '.json_encode($aaMatchedProfileId).'<br>';
+                    if(empty($aaMatchedUserProfileId)){
+                        // ------------------------- TRY TO MATCH ADMINS IF USERS ARE NOT MATCHED
+                        try{
+                            $stmt2 = $db->prepare('SELECT id_admins, email FROM admins 
+                                                            WHERE username = :enteredUsername');
+                            $stmt2->bindValue('enteredUsername', $enteredUsername);
+                            $stmt2->execute();
+                            $aaMatchedAdminProfileId = $stmt2->fetchAll();
+                        }catch (PDOException $exception){
+                            echo $exception;
+                        }
 
+                        if(empty($aaMatchedAdminProfileId)){
+                            // IF NOTHING IS MATCHED FROM USERS OR ADMINS TABLE
+                            header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+                        }
 
+                        $aMatchedAdminProfileId = $aaMatchedAdminProfileId[0];
+                        $AdminProfileId = $aMatchedAdminProfileId['id_admins'];
+                        // write logs into the db on which Admin did it
+                        $AdminProfileEmail = $aMatchedAdminProfileId['email'];
+                        $attack_description = 'Unsuccessful login 15 times or more from admin account';
+                        date_default_timezone_set("UTC");
+                        $time_of_attack = date('Y-m-d H:i:s');
+                        try{
+                            $stmt = $db->prepare('INSERT INTO security_logs VALUES ( :id_security_logs , :description_of_attack , :ip_address , :user_og_id, :time_of_attack)');
+                            $id_security_logs = uniqid();
+                            $stmt->bindValue(':id_security_logs', $id_security_logs);
+                            $stmt->bindValue(':description_of_attack', $attack_description);
+                            $stmt->bindValue(':ip_address', $currentIp);
+                            $stmt->bindValue(':user_og_id', $AdminProfileId);
+                            $stmt->bindValue(':time_of_attack', $time_of_attack);
+                            $stmt->execute();
+                        } catch (PDOException $exce){
+                            echo $exce;
+                        }
+                        // send mail
+                        require_once('send_email_potential_attack.php');
+
+                }else{
+                // ---------------------------------- IF USERS ARE MATCHED
+                $aMatchedUserProfileId = $aaMatchedUserProfileId[0];
                 // write logs into the db on which user did it
-                $aMatchedProfileId = $aaMatchedProfileId[0];
-                $userProfileId = $aMatchedProfileId['id_users'];
-                $userProfileEmail = $aMatchedProfileId['email'];
-                $attack_description = 'Unsuccessful login 15 times or more';
+                $userProfileId = $aMatchedUserProfileId['id_users'];
+                $userProfileEmail = $aMatchedUserProfileId['email'];
+                $attack_description = 'Unsuccessful login 15 times or more from user account';
                 date_default_timezone_set("UTC");
                 $time_of_attack = date('Y-m-d H:i:s');
                 try{
@@ -286,8 +434,23 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                 } catch (PDOException $exce){
                     echo $exce;
                 }
+
+                // BAN THE MATCHED USER
+                try{
+                    $stmt3 = $db->prepare('UPDATE users SET banned = :banned WHERE id_users = :id_users');
+                    $stmt3->bindValue(':banned', 1);
+                    $stmt3->bindValue(':id_users', $userProfileId);
+                    $stmt3->execute();
+                } catch (PDOException $exce){
+                    echo $exce;
+                }
+
                 require_once('send_email_potential_attack.php');
+                }
+
+            //end of 15th attempt 
             }
+
             
 
 

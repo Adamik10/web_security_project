@@ -15,7 +15,7 @@
             <textarea type="text" name='postHeader' placeholder="Post headline up to 280 characters." rows="5" cols="40"></textarea>
             <span id="naughtyCheckboxSpan"><input type="checkbox" id="naughtyCheckbox" name="postSensitive">This post has sensitive content.<br></span>
             <?php
-                require_once('api-set-post-token.php');
+                require_once('api-set-token-post.php');
             ?>
             <button type="submit" class="btn btn-primary littleExtraSpaceTop" id="postSubmitButton" >Post</button>
             <?php

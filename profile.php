@@ -157,11 +157,3 @@ foreach($user as $a){
     <?php
     require_once('components/bottom.php');
     ?>
-
-
-
-
-
-
-
-

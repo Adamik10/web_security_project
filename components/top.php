@@ -71,6 +71,19 @@ session_start();
 
       <!-- Profile, post and logout should be displayed instead of login and register after the user logs in -->
 
+      <li class="nav-item 
+      <?php if($pageTitle == 'users crud'){echo ' active';}
+            if(!empty($_SESSION['userEmail']) && $_SESSION['userPrivileges']=='admin'){echo ' display';}?>"
+            id="usersCrudNav">
+        <a class="nav-link" href="users-crud.php" class="nav-link">Users crud</a>
+      </li>
+      
+      <li class="nav-item 
+      <?php if($pageTitle == 'posts crud'){echo ' active';}
+            if(!empty($_SESSION['userEmail']) && $_SESSION['userPrivileges']=='admin'){echo ' display';}?>"
+            id="postsCrudNav">
+        <a class="nav-link" href="posts-crud.php" class="nav-link">Posts crud</a>
+      </li>
 
       <li class="nav-item 
       <?php if($pageTitle == 'profile'){echo ' active';}
