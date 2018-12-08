@@ -22,6 +22,7 @@ if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
 // we cannot redirect after we hit a problem, because we need to check for other things passed too
 // so we log what went wrong and then in the end redirect with all the messages
 $thingsThatWentGrong = [];
+$toAddToURL = '';
 
 // if new image was added
 if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 ){
@@ -86,8 +87,9 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
                         echo 'we rolledback ALL the changes in db';
                     }
                 } catch (PDOException $ex){
-                    echo $ex;
-                    exit();
+                    // echo $ex;
+                    array_push($thingsThatWentGrong, 'user was not banned due to an error updating database');
+                    $toAddToURL = $toAddToURL.'0a';
                 }
 
                 $userProfileId = $_SESSION['userId'];
@@ -111,36 +113,41 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
             }
         }
         if($bCorrectExtension == false){
-            header('location: profile.php?status=wrong_file_format');
-            exit;
-        }
-        // Create a variable with the new path
-        $sPathToSaveFile = "images/users/$sUniqueImageName.$sExtension";
-        $newProfileImageLocation = $sPathToSaveFile;
-        // save the image to a folder
-        if( move_uploaded_file( $sOldPath , $sPathToSaveFile ) ){
-            echo "SUCCESS UPLOADING FILE"; 
-            try{
-                $update = $db->prepare('UPDATE users 
-                                        SET user_image_location = :newPostImageLocation , user_image_name = :newPostImageName WHERE id_users = :userId');
-                $update->bindValue(':newPostImageLocation', $newProfileImageLocation);
-                $update->bindValue(':newPostImageName', $newProfileImgName);
-                $update->bindValue(':userId', $userId);
-                $update->execute();
-            } catch (PDOException $ex){
-                echo $ex;
-                array_push($thingsThatWentGrong, 'new user image data was not updated in database');
-            }
-            $_SESSION['userImgLocation'] = $newProfileImageLocation;
+            array_push($thingsThatWentGrong, 'wrong file format');
+            $toAddToURL = $toAddToURL.'0b';
         }else{
-            echo "ERROR UPLOADING FILE";
-            // if the new image couldn't be written into the database
-            array_push($thingsThatWentGrong, 'file could not be uploaded');
-        } 
+            // Create a variable with the new path
+            $sPathToSaveFile = "images/users/$sUniqueImageName.$sExtension";
+            $newProfileImageLocation = $sPathToSaveFile;
+            // save the image to a folder
+            if( move_uploaded_file( $sOldPath , $sPathToSaveFile ) ){
+                echo "SUCCESS UPLOADING FILE"; 
+                try{
+                    $update = $db->prepare('UPDATE users 
+                                            SET user_image_location = :newPostImageLocation , user_image_name = :newPostImageName WHERE id_users = :userId');
+                    $update->bindValue(':newPostImageLocation', $newProfileImageLocation);
+                    $update->bindValue(':newPostImageName', $newProfileImgName);
+                    $update->bindValue(':userId', $userId);
+                    $update->execute();
+                } catch (PDOException $ex){
+                    echo $ex;
+                    array_push($thingsThatWentGrong, 'new user image data was not updated in database');
+                    $toAddToURL = $toAddToURL.'1a';
+                }
+                $_SESSION['userImgLocation'] = $newProfileImageLocation;
+            }else{
+                echo "ERROR UPLOADING FILE";
+                // if the new image couldn't be written into the database
+                array_push($thingsThatWentGrong, 'file could not be uploaded');
+                $toAddToURL = $toAddToURL.'1b';
+            } 
+        }
+        
 
     }else{
         // echo "FILE TOO LARGE"; 
         array_push($thingsThatWentGrong, 'file too large');
+        $toAddToURL = $toAddToURL.'1c';
     }
 } 
 
@@ -198,12 +205,10 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
         if($user['email'] == $changedEmail && $emailTouched == true){
                 $alreadyUsedEmail = 1;
                 // echo 'this username is already in use, try a different one'.'<br>';
-                array_push($thingsThatWentGrong, 'email already in use');
         }
         if($user['username'] == $changedUsername && $usernameTouched == true){
                 $alreadyUsedUsername = 1;
                 // echo 'this username is already in use, try a different one'.'<br>';
-                array_push($thingsThatWentGrong, 'username already in use');
         }
     }
 
@@ -214,21 +219,25 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
         if(strlen($changedUsername) < 2 || strlen($changedUsername) > 20){
             array_push($thingsThatWentGrong, 'username invalid length');
             $validationPass = 0;
+            $toAddToURL = $toAddToURL.'3b';
         }
     
         if(filter_var($changedEmail, FILTER_VALIDATE_EMAIL) == false){
             array_push($thingsThatWentGrong, 'email pattern invalid');
             $validationPass = 0;
+            $toAddToURL = $toAddToURL.'2b';
         }
     
         if($alreadyUsedEmail == 1){
             array_push($thingsThatWentGrong, 'email already in use');
             $validationPass = 0;
+            $toAddToURL = $toAddToURL.'2a';
         }
 
         if($alreadyUsedUsername == 1){
             array_push($thingsThatWentGrong, 'username already in use');
             $validationPass = 0;
+            $toAddToURL = $toAddToURL.'3a';
         }
 
     if($validationPass == 1){
@@ -244,10 +253,12 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
         } catch (PDOException $ex) {
             echo 'error, database update email and username: '.$ex;
             array_push($thingsThatWentGrong, 'username and email could not be updated');
+            $toAddToURL = $toAddToURL.'4a';
         }
     } else {
         echo 'fields not filled out properly, try again - USERNAME and EMAIL';
         array_push($thingsThatWentGrong, 'incorrect data provided');
+        // here we don't need to add anything to URL because we already established what's wrong in the validation part up
     }
 }
 
@@ -272,6 +283,7 @@ if(isset($_POST['changedPassword1']) &&
             array_push($thingsThatWentGrong, 'password and repeat password are not matching');
             $validationPass2 = 0; 
             echo 'password not matching';
+            $toAddToURL = $toAddToURL.'5a';
         }
 
         //password pattern validation 
@@ -281,6 +293,7 @@ if(isset($_POST['changedPassword1']) &&
         if($changedPassword2 < 7  || !$uppercase || !$lowercase || !$number){
             array_push($thingsThatWentGrong, 'password criteria not met');
             $validationPass2 = 0;
+            $toAddToURL = $toAddToURL.'5b';
         }
 
         if($validationPass2 == 1){
@@ -305,10 +318,12 @@ if(isset($_POST['changedPassword1']) &&
             } catch (PDOException $ex) {
                 echo 'error, database update password: '.$ex;
                 array_push($thingsThatWentGrong, 'password could not be updated');
+                $toAddToURL = $toAddToURL.'5c';
             }
         } else {
             echo 'fields not filled out properly, try again - PASSWORD';
             array_push($thingsThatWentGrong, 'incorrect password data provided');
+            // we don't need to add to URL here because we already established what's wron in the validation2 section
         }
 
 } 
@@ -318,8 +333,6 @@ if(sizeof($thingsThatWentGrong) == 0){
 }else{
     // if something went wrong, then we need to let the user know what it was
     //loop through the array and add stuff into the url
-    $finalURL = 'profile.php?status=something_went_wrong?spec=';
-    for($k = 0; $k < sizeof($thingsThatWentGrong); $k++){
-        $finalURL = $finalURL.$k;
-    }
+    $finalURL = 'profile.php?status=something_went_wrong?spec='.$toAddToURL;
+    header('location: '.$finalURL);
 }
