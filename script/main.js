@@ -26,9 +26,9 @@ $(document).ready(function(){
     //check whether we are getting anything in the URL
     var url = window.location.href;
     var pattern1 = /status=post_invalid/;
-    var pattern2 = /file_too_large/;
-    var pattern3 = /error_uploading_image/;
-    var pattern4 = /wrong_file_format/;
+    var pattern2 = /status=file_too_large/;
+    var pattern3 = /status=error_uploading_image/;
+    var pattern4 = /status=wrong_file_format/;
     var exists1 = pattern1.test(url);
     var exists2 = pattern2.test(url);
     var exists3 = pattern3.test(url);
