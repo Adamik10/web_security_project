@@ -24,7 +24,7 @@ if(isset($_SESSION['sessionId'])){
         <label for="loginPassword">Password</label>
         <input name="loginPassword" type="password" class="form-control" id="loginPassword" placeholder="Password">
     </div>
-
+ 
     <?php
         require_once('api-set-token.php');
     ?>

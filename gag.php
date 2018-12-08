@@ -6,7 +6,7 @@ if(isset($_GET['p_id'])){
     // require database and top
     require_once('components/top.php');
     require_once('controllers/database.php');
-
+    
     // save post id from url
     $post_id = htmlentities($_GET['p_id']);
 
