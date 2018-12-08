@@ -1,12 +1,19 @@
-<?php $pageTitle = 'posts crud'?>
+<?php $pageTitle = 'comments crud'?>
 <?php 
 session_start();
 if(!isset($_SESSION['sessionId'])){
+    // if someone not logged in tried going here
     header('location: login.php?status=not_logged_in');
     exit;
 }
 if(empty($_SESSION['userPrivileges']) && $_SESSION['userPrivileges'] != 'admin'){
+    // if someone who is not an admin tries going here
     header('location: busted.php');
+    exit;
+}
+if(!isset($_GET['p_id'])){
+    // if post id is not passed
+    header('location: posts-crud.php');
     exit;
 }
 ?>
@@ -15,20 +22,19 @@ if(empty($_SESSION['userPrivileges']) && $_SESSION['userPrivileges'] != 'admin')
 require_once('components/top.php');
 ?>
 
+
 <!-- TEMPLATE START -->
 <div class="custom-container">
 
-    <h3 class="mt-5 text-center">Posts crud</h3>
+    <h3 class="mt-5 text-center">Comments crud</h3>
+    <h5 class="mt-5 text-center">Post id: <?php echo $_GET['p_id']?></h3>
     <div class="table-responsive">
     <table class="table table-hover table-dark mt-5">
     <thead>
         <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Headline</th>
-        <th scope="col">Image</th>
-        <th scope="col">OP</th>
-        <th scope="col">Comments</th>
-        <th scope="col">Upvotes</th>
+        <th scope="col">Post id</th>
+        <th scope="col">User</th>
+        <th scope="col">Comment</th>
         <th scope="col">Banned</th>
         <th scope="col">Edit</th>
         </tr>
@@ -40,11 +46,9 @@ require_once('components/top.php');
 require('controllers/database.php');
 
 try{
-    $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.banned, users.username, COUNT(comments.id_posts) AS comments, COUNT(upvotes.id_posts) AS upvotes FROM posts
-    LEFT JOIN users ON posts.id_users = users.id_users
-    LEFT JOIN comments ON posts.id_posts = comments.id_posts
-    LEFT JOIN upvotes ON posts.id_posts = upvotes.id_posts
-    GROUP BY posts.id_posts');
+    $stmt = $db->prepare('SELECT users.username, comments.comment, comments.banned, comments.time_stamp FROM comments
+    LEFT JOIN users ON comments.id_users = users.id_users
+    ORDER BY comments.time_stamp DESC');
     $stmt->execute();
     $aaResult = $stmt->fetchAll();
 }catch( PDOException $ex ){
@@ -80,9 +84,6 @@ try{
 
 
 
-
-
-
-<?php
+<?php 
 require_once('components/bottom.php');
 ?>

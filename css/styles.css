@@ -364,3 +364,13 @@ tr{
     outline: none;
     box-shadow: none;
 }
+
+td a {
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+td a:hover{
+    text-decoration: none;
+}
