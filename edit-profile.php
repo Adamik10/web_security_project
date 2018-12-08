@@ -290,7 +290,7 @@ if(isset($_POST['changedPassword1']) &&
         $uppercase = preg_match('@[A-Z]@', $changedPassword2);
         $lowercase = preg_match('@[a-z]@',$changedPassword2);
         $number    = preg_match('@[0-9]@', $changedPassword2);
-        if($changedPassword2 < 7  || !$uppercase || !$lowercase || !$number){
+        if(strlen($changedPassword2) < 7  || $uppercase == 0 || $lowercase == 0 || $number == 0){
             array_push($thingsThatWentGrong, 'password criteria not met');
             $validationPass2 = 0;
             $toAddToURL = $toAddToURL.'5b';
