@@ -26,9 +26,9 @@ $(document).ready(function(){
     //check whether we are getting anything in the URL
     var url = window.location.href;
     var pattern1 = /status=post_invalid/;
-    var pattern2 = /file_too_large/;
-    var pattern3 = /error_uploading_image/;
-    var pattern4 = /wrong_file_format/;
+    var pattern2 = /status=file_too_large/;
+    var pattern3 = /status=error_uploading_image/;
+    var pattern4 = /status=wrong_file_format/;
     var exists1 = pattern1.test(url);
     var exists2 = pattern2.test(url);
     var exists3 = pattern3.test(url);
@@ -131,6 +131,7 @@ if($('title').text() == 'posts crud'){
         $(this).parent().parent('tr').addClass("bg-danger");
   
         $(this).parent().siblings().find('input').attr('disabled', false)
+        // $(this).parent().siblings().find('input[name=txtPostIdCrud]').attr('disabled', true)
        
       }
   
@@ -142,15 +143,15 @@ if($('title').text() == 'posts crud'){
   
         $(this).parent().parent('tr').removeClass("bg-danger");
   
-        // $.ajax({
-        //   "method":"post",
-        //   "url":"api-save-changes-admin.php",
-        //   "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
-        // }).done( function( responseFromServer ){ 
-        //   // This is what we get back from the server
-        //   console.log( responseFromServer );
+        $.ajax({
+          "method":"post",
+          "url":"api-posts-crud.php",
+          "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
+        }).done( function( responseFromServer ){ 
+          // This is what we get back from the server
+          console.log( responseFromServer );
           
-        // })
+        })
   
         $(this).parent().siblings().find('input').attr('disabled', 'disabled')
   

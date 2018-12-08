@@ -14,7 +14,7 @@
     <?php 
         // if(!empty($_SESSION['userEmail'])){
         // echo 'session is not empty';
-        print_r($_SESSION);
+        // print_r($_SESSION);
         // }
     ?>
 

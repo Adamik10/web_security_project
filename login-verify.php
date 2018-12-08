@@ -1,19 +1,18 @@
 <?php
-// IDK WHAT ADAM WAS TRYING HERE BUT IT DOESNT LET ANYONE LOG IN BOI
-// session_start();
-// // a token was created if the real person wanted to do this - does it match what we got?
-// if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
-//     //echo 'The token is not set';
-//     header('location: ups.php');
-//     exit;
-// }else{
-//     // if there is a token, compare it to the one we got from the form
-//     if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
-//         // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
-//         header('location: ups.php');
-//         exit;
-//     }
-// }
+session_start();
+// a token was created if the real person wanted to do this - does it match what we got?
+if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
+    //echo 'The token is not set';
+    header('location: ups.php');
+    exit;
+}else{
+    // if there is a token, compare it to the one we got from the form
+    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+        header('location: ups.php');
+        exit;
+    }
+}
 ?>
 
 
@@ -82,7 +81,7 @@ function tryLoginAsAdmin(){
             // echo '<br>This is the pass entered: '.$enteredPassword;
             // echo '<br>This is the pass from db: '.$sUserPasswordFromDb;
             // echo '<br>This is the salt: '.$sUserSaltFromDb;
-            // echo '<br>This is the peber: '.$peber;
+            // echo '<br>This is the peber: '.$peber; 
 
             // check if the user is verified, if verified is 0 then redirect to login with status not verified
             

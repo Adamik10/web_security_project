@@ -1,6 +1,6 @@
 <?php
+
 require_once("controllers/database.php");
-require_once("components/top.php");
 
 // check if user is logged in
 session_start();
@@ -25,9 +25,10 @@ if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
     }
 }
 
+echo 'We here';
+
 // check if data was passed through the form
-if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
-){
+if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])){
     // echo 'yeah boi';
     // store post variables
     $newComment = htmlentities($_POST['postNewComment']);
@@ -61,4 +62,4 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])
 }else{
     // post variables werent passed throught the form so redirect to the index
     header('location: index.php');
-}
+} 

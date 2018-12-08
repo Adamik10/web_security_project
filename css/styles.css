@@ -390,6 +390,16 @@ tr{
     object-fit: cover;
     -webkit-transform: translate(-50%,-50%);
         -ms-transform: translate(-50%,-50%);
-            transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%); 
+        
+        }
     
+td a {
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+td a:hover{
+    text-decoration: none;
 }
