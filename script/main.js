@@ -124,27 +124,6 @@ function callApi(){
 setInterval(callApi, 15000);
 
 
-/* WE ARE NOT DOING TOKENS LIKE THIS ANYMORE
-//adding session token on every:
-    //click of POST a post button
-    //click of COMMENT submit button
-    // any more ?? - add if you find anything
-function callForToken() {
-    $.ajax({
-        "method": "post",
-        "url": "api-set-token.php"
-    }).done(function () {
-        // This is what we get back from the server
-        // in case u wanna see anything put 'data' in the parenthesis above like this function(data)
-        // console.log(data);
-        //console.log('New token has been created');
-    })
-};
-$('#postSubmitButton').click(callForToken);
-$('#commentSubmitButton').click(callForToken);
-*/
-
-
 //load more posts
 $('#loadMorePostsButton').click(function(){
     var dataWeGotBack;
@@ -177,12 +156,12 @@ $('#loadMorePostsButton').click(function(){
                 var currentPostUsername = dataWeGotBack[j].username;
                 var currentPostHeadline = dataWeGotBack[j].headline;
                 var currentPostImageName = dataWeGotBack[j].image_name;
-                var iCommentCount = dataWeGotBack[j].id_posts;
-                $('#postsContainer').append('<div class= "card align-self-center card-custom mt-5 mb-2 postHolder" id = "' + currentPostId +'" \> <div class= "card-header"\> <div class="row"\> <div style="background-image: url('+currentUserImgLocation+');" class="OP-img mr-3"\></div\> <a href="#"\>'+currentPostUsername+'</a\> </div\> </div\> <h4 class="card-title mt-1"\>'+currentPostHeadline+'</h4\> <a href="gag.php?p_id='+currentPostId+'"\><img class="card-img-top" src="'+currentPostImageLocation+'" alt="'+currentPostImageName+'"\></a\> <div class="card-body"\> <div class="row"\> <a href="gag.php?p_id='+currentPostId+'" class="card-link post-link"\># Upvotes</a\> <a href="gag.php?p_id='+currentPostId+'#comment" class="card-link post-link"\>'+iCommentCount+' Comments</a\> </div\> <div class="row mt-3"\> <a href="#"\><i class="far fa-hand-point-up fa-2x mr-3"\></i\></a\> <a href="gag.php?p_id='+currentPostId+'#comment"\><i class="far fa-comment fa-2x"\></i\></a\> </div\> </div\> </div\>')
+                var currentPostCommentCount = dataWeGotBack[j].comment_count;
+                $('#postsContainer').append('<div class= "card align-self-center card-custom mt-5 mb-2 postHolder" id = "' + currentPostId + '" \> <div class= "card-header"\> <div class="row"\> <div style="background-image: url(' + currentUserImgLocation + ');" class="OP-img mr-3"\></div\> <a href="#"\>' + currentPostUsername + '</a\> </div\> </div\> <h4 class="card-title mt-1"\>' + currentPostHeadline + '</h4\> <a href="gag.php?p_id=' + currentPostId + '"\><img class="card-img-top" src="' + currentPostImageLocation + '" alt="' + currentPostImageName + '"\></a\> <div class="card-body"\> <div class="row"\> <a href="gag.php?p_id=' + currentPostId + '" class="card-link post-link"\># Upvotes</a\> <a href="gag.php?p_id=' + currentPostId + '#comment" class="card-link post-link"\>' + currentPostCommentCount + ' Comments</a\> </div\> <div class="row mt-3"\> <a href="#"\><i class="far fa-hand-point-up fa-2x mr-3"\></i\></a\> <a href="gag.php?p_id=' +currentPostId+'#comment"\><i class="far fa-comment fa-2x"\></i\></a\> </div\> </div\> </div\>')
             }  
         })
     }
-    setTimeout(contactApiForMorePosts, 1000)
+    setTimeout(contactApiForMorePosts, 10)
 })
 
 // POSTS CRUD FOR ADMIN
