@@ -98,10 +98,10 @@ foreach($user as $a){
             <label for="changedUsername">Username</label>
             <input name="changedUsername" type="text" class="form-control" value="<?php echo $username; ?>">
         </div>
-        <!-- <div class="form-group">
+        <div class="form-group">
             <label for="changedEmail">Email address</label>
             <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo $email; ?>">
-        </div> -->
+        </div>
 
                 <?php 
             // DISPLAY ERROR MESSAGES HERE
@@ -125,13 +125,12 @@ foreach($user as $a){
         <?php
             require_once('api-set-token.php');
         ?>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-    </form>
+        <!-- <button type="submit" class="btn btn-primary">Save changes</button> -->
+    <!-- </form>
 
-    <form action="edit-profile.php" method="post"> 
+    <form action="edit-profile.php" method="post">  -->
 
     <h5 class="mt-4">Change password</h5>
-    <p class="mt-4">Doesn't work yet.</p>
     <div class="form-group">
         <label for="changedPassword1">Password</label>
         <input name="changedPassword1" type="password" class="form-control" placeholder="New password">
