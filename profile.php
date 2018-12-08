@@ -54,6 +54,13 @@ foreach($user as $a){
                     <input type="file" class="form-control-file align-self-center justify-content-center mx-auto" id="profileImgFile" name="profileImgFile">
                 
                     <!-- ERROR MESSAGES GET APPENDED HERE -->
+                    <?php
+                    if(isset($_GET['status'])){
+                        if($_GET['status'] == 'all_good'){
+                            echo '<div id="successMessage"><br><p class="profile-success">Tadaaa! Data updated! :)</p></div>';
+                        }
+                    }
+                    ?>
                 
                 </div>  
                 </label>
@@ -74,6 +81,10 @@ foreach($user as $a){
         ?>
 
     <h5 class="mt-4">Change password</h5>
+    <div class="form-group">
+        <label for="changedPasswordOld">Old Password</label>
+        <input name="changedPasswordOld" type="password" class="form-control" placeholder="Old password">
+    </div>
     <div class="form-group">
         <label for="changedPassword1">Password</label>
         <input name="changedPassword1" type="password" class="form-control" placeholder="New password">

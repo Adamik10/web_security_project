@@ -236,6 +236,14 @@ textarea{
     margin-top: -1em;
     /*line-height: 0.5;*/
 }
+.profile-success{
+    color: green;
+    font-size: smaller;
+}
+#successMessage{
+    color: green;
+    font-size: smaller;
+}
 
 /* LOGOUT */
 

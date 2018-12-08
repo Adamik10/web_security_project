@@ -152,7 +152,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
 } 
 
     // change username or email
-    
+
     if(isset($_POST['changedUsername']) && isset($_POST['changedEmail'])){
 
     require_once('controllers/database.php');
@@ -175,7 +175,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
             $users = $stmt->fetchAll();
         } catch (PDOException $ex){
             echo 'error selecting users: '.$ex;
-            header('location: profile.php'); //in this case we can redirect and exit because if we didn't it could affect the database
+            header('location: profile.php?status=something_went_wrong?spec=6a'); //in this case we can redirect and exit because if we didn't it could affect the database
             exit();
         }
 
@@ -264,19 +264,45 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
 
 // change password
 
-if(isset($_POST['changedPassword1']) && 
-    !empty($_POST['changedPassword1']) && 
-    isset($_POST['changedPassword2']) && 
-    !empty($_POST['changedPassword2'])){
-
-    echo '123';
+if(isset($_POST['changedPassword1']) && !empty($_POST['changedPassword1']) && isset($_POST['changedPassword2']) && !empty($_POST['changedPassword2']) 
+ && isset($_POST['changedPasswordOld']) && !empty($_POST['changedPasswordOld'])){
 
     $changedPassword1 = $_POST['changedPassword1'];
     $changedPassword2 = $_POST['changedPassword2'];
+    $changedPasswordOld = $_POST['changedPasswordOld'];
+    $userId = $_SESSION['userId'];
 
     //validation
 
     $validationPass2 = 1;
+
+        //first we need to find out what the original password and salt were
+        try{
+            $stmt = $db->prepare('SELECT * FROM users WHERE id_users = :userIdFromSession');
+            $stmt->bindValue(':userIdFromSession', $userId);
+            $stmt->execute();
+            $aaUsers = $stmt->fetchAll();
+        } catch (PDOException $ex){
+            echo 'error selecting users: '.$ex;
+            header('location: profile.php?status=something_went_wrong?spec=6a'); //in this case we can redirect and exit because if we didn't it could affect the database
+            exit();
+        }
+        $aUser = $aaUsers[0];
+
+        $oldPasswordHashFromDb = $aUser['password_hash'];
+        $oldPasswordSalt = $aUser['salt'];
+        $peber = 'MaciejStopHackingUs';
+        
+        $doTheyEqual = password_verify($changedPasswordOld.$peber.$oldPasswordSalt, $oldPasswordHashFromDb);
+        //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
+        //does the old password match with the one from the form??
+        if($doTheyEqual != 1){
+            array_push($thingsThatWentGrong, 'old password and old password from db are not matching');
+            $validationPass2 = 0; 
+            echo 'old password not matching:<br>old password hash:'.$oldPasswordHash.'<br>do they equal?:'.$doTheyEqual.'<br>old password Salt from db:'.$oldPasswordSalt;
+            $toAddToURL = $toAddToURL.'5d';
+        }
+
 
         //if password1 and password2 are not matching
         if($changedPassword2 !== $changedPassword1){
@@ -309,8 +335,8 @@ if(isset($_POST['changedPassword1']) &&
 
             //if validation passes then update password
             try {
-                $stmt1 = $db->prepare('UPDATE users SET password_hash = :password, salt = :salt WHERE id_users=:loggedUserId');
-                $stmt1->bindValue(':password', $pass_hash);
+                $stmt1 = $db->prepare('UPDATE users SET password_hash = :new_password, salt = :salt WHERE id_users=:loggedUserId');
+                $stmt1->bindValue(':new_password', $pass_hash);
                 $stmt1->bindValue(':salt', $salt);
                 $stmt1->bindValue(':loggedUserId', $sUserIdFromDb);
                 $stmt1->execute();
@@ -321,7 +347,7 @@ if(isset($_POST['changedPassword1']) &&
                 $toAddToURL = $toAddToURL.'5c';
             }
         } else {
-            echo 'fields not filled out properly, try again - PASSWORD';
+            echo '<br>fields not filled out properly, try again - PASSWORD';
             array_push($thingsThatWentGrong, 'incorrect password data provided');
             // we don't need to add to URL here because we already established what's wron in the validation2 section
         }
@@ -329,7 +355,7 @@ if(isset($_POST['changedPassword1']) &&
 } 
 
 if(sizeof($thingsThatWentGrong) == 0){
-    header('location: profile.php');
+    header('location: profile.php?status=all_good');
 }else{
     // if something went wrong, then we need to let the user know what it was
     //loop through the array and add stuff into the url

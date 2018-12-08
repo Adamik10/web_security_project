@@ -53,6 +53,8 @@ $(document).ready(function(){
     var pattern15 = /5a/;
     var pattern16 = /5b/;
     var pattern17 = /5c/;
+    var pattern18 = /6a/;
+    var pattern19 = /5d/;
     var exists5 = pattern5.test(url);
     var exists6 = pattern6.test(url);
     var exists7 = pattern7.test(url);
@@ -66,7 +68,9 @@ $(document).ready(function(){
     var exists15 = pattern15.test(url);
     var exists16 = pattern16.test(url);
     var exists17 = pattern17.test(url);
-    if (exists1 || exists2 || exists3 || exists4 || exists5 || exists6 || exists7 || exists8 || exists9 || exists10 || exists11 || exists12 || exists13 || exists14 || exists15 || exists16 || exists17) {
+    var exists18 = pattern18.test(url);
+    var exists19 = pattern19.test(url);
+    if (exists1 || exists2 || exists3 || exists4 || exists5 || exists6 || exists7 || exists8 || exists9 || exists10 || exists11 || exists12 || exists13 || exists14 || exists15 || exists16 || exists17 || exists18 || exists19) {
         // if there is any error messages, add a default start
         $('#divForErrorMessagesProfile').append('<div id="errorMessagesAppendHere"><br><p class="login-error">Some things went wrong:</p></div>');
         if (exists5) {
@@ -104,6 +108,12 @@ $(document).ready(function(){
         }
         if (exists17) {
             $('#errorMessagesAppendHere').append('<p class="profile-error"> - Not even we at 8gag are pros (yet). We unfortunately could not update your password, please try again with crossed fingers </p>');
+        }
+        if (exists17) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Please try again </p>');
+        }
+        if (exists19) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - The old password that you entered unfortunately did not match the reality. Go ahead, try again </p>');
         }
     }
 })
