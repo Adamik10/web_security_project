@@ -42,9 +42,24 @@ $aOfPosts = $stmt->fetchAll();
 }catch (PDOException $exception){
     //echo $exception;
 }
+
+//COMMENT COUNT
+for($j = 0; $j < sizeof($aOfPosts); $j++){
+    $currentPostId = $aOfPosts[$j]['id_posts'];
+
+    // count comments for each post from db
+    try{
+    $stmt2 = $db->prepare(' SELECT COUNT(*) AS comments_count FROM comments WHERE id_posts = :currentPostId');
+    $stmt2->bindValue(':currentPostId', $currentPostId);
+    $stmt2->execute();
+    $aaCommentCount = $stmt2->fetchAll();
+
+    }catch (PDOException $ex){
+        echo $ex;
+    }
+
+    $aCommentCount = $aaCommentCount[0];
+    $iCommentCount = $aCommentCount['comments_count'];
+    $aOfPosts[$j]['comment_count'] = $iCommentCount;
+}
 echo json_encode($aOfPosts);
-// wtf this statement returns bullshiet but it works when entered into mySQL 
-// echo "SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name 
-// FROM posts INNER JOIN users ON posts.id_users = users.id_users 
-// WHERE posts.id_posts != '5bf6f31fb54d0' AND posts.id_posts != '5bf6edd742e11' AND posts.id_posts != '5bf6e98092933' AND posts.id_posts != '5bf6c78b74ecf' 
-// AND posts.id_posts != '5bf6c4ca6b7cf' ORDER BY posts.datetime DESC LIMIT 5";
