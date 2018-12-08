@@ -49,51 +49,17 @@ foreach($user as $a){
                     <img src="<?php if ($userImageLocation == NULL){echo 'images/users/default.png';}else{echo $userImageLocation;} ?>" 
                     id="uploadImg" class="img-fluid d-block align-self-center justify-content-center responsive"/>
                 </div>
-                <div class="float ml-4 mt-2">
+                <div class="float ml-4 mt-2" id="divForErrorMessagesProfile">
                     <label for="inputFile">Click to upload a new profile picture</label>
                     <input type="file" class="form-control-file align-self-center justify-content-center mx-auto" id="profileImgFile" name="profileImgFile">
                 
-                    <?php 
-                    // DISPLAY ERROR MESSAGES HERE
-                    if(isset($_GET['status'])){
-                        if ($_GET['status'] == 'file_too_large'){
-                            echo '  <div>
-                                    <br>
-                                    <p class="login-error">The file is too large.</p>
-                                    </div>';
-                        } else if ($_GET['status'] == 'wrong_file_format'){
-                            echo '  <div>
-                                    <br>
-                                    <p class="login-error">Please make sure your file is in either of these formats: .png .jpg .jpeg</p>
-                                    </div>';
-                        } 
-                    } 
-                    // ERROR MESSAGES END
-                    ?>
+                    <!-- ERROR MESSAGES GET APPENDED HERE -->
                 
                 </div>  
                 </label>
             </div>
 
         <h5 class="mt-4">Account</h5>
-
-                        <!-- 
-                        if ($_GET['status'] == 'email_pattern'){
-                            echo '  <div>
-                                    <p class="login-error">Email invalid.</p>
-                                    </div>';
-                        }
-                        if ($_GET['status'] == 'password_not_matching'){
-                            echo '  <div>
-                                    <p class="login-error">Password and repeat password do not match.</p>
-                                    </div>';
-                        }
-                        if ($_GET['status'] == 'password_criteria'){
-                            echo '  <div>
-                                    <p class="login-error">Password must have at least 8 characters, contain uppercase and lowercase letters and a number.</p>
-                                    </div>';
-                        } -->
-
             <div class="form-group">
             <label for="changedUsername">Username</label>
             <input name="changedUsername" type="text" class="form-control" value="<?php echo $username; ?>">
@@ -103,32 +69,9 @@ foreach($user as $a){
             <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo $email; ?>">
         </div>
 
-                <?php 
-            // DISPLAY ERROR MESSAGES HERE
-            if(isset($_GET['status'])){
-                if ($_GET['status'] == 'username_length'){
-                    echo '  <div>
-                            <p class="login-error">Username must be between 2 and 20 characters.</p>
-                            </div>';
-                }else if ($_GET['status'] == 'already_exists'){
-                    echo '  <div>
-                            <p class="login-error">Username already exists.</p>
-                            </div>';
-                }else if ($_GET['status'] == 'something_went_wrong'){
-                    echo '  <div>
-                            <p class="login-error">We could not register your changes. Please try again.</p>
-                            </div>';
-                }
-            } 
-            // ERROR MESSAGES END
-            ?>
         <?php
             require_once('api-set-token.php');
         ?>
-        <!-- <button type="submit" class="btn btn-primary">Save changes</button> -->
-    <!-- </form>
-
-    <form action="edit-profile.php" method="post">  -->
 
     <h5 class="mt-4">Change password</h5>
     <div class="form-group">

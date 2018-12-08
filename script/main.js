@@ -22,6 +22,7 @@ function readUrl(input) {
 
 
 //checks URL if we had a failed post and shows the post upload section
+// + checks whether there is any edit profile error messages
 $(document).ready(function(){
     //check whether we are getting anything in the URL
     var url = window.location.href;
@@ -37,6 +38,73 @@ $(document).ready(function(){
         //show the post upload section
         $('#screenBlind').css('visibility', 'visible');
         $('#uploadBox').css('visibility', 'visible');
+    }
+
+    var pattern5 = /0a/;
+    var pattern6 = /0b/;
+    var pattern7 = /1a/;
+    var pattern8 = /1b/;
+    var pattern9 = /1c/;
+    var pattern10 = /2a/;
+    var pattern11 = /2b/;
+    var pattern12 = /3a/;
+    var pattern13 = /3b/;
+    var pattern14 = /4a/;
+    var pattern15 = /5a/;
+    var pattern16 = /5b/;
+    var pattern17 = /5c/;
+    var exists5 = pattern5.test(url);
+    var exists6 = pattern6.test(url);
+    var exists7 = pattern7.test(url);
+    var exists8 = pattern8.test(url);
+    var exists9 = pattern9.test(url);
+    var exists10 = pattern10.test(url);
+    var exists11 = pattern11.test(url);
+    var exists12 = pattern12.test(url);
+    var exists13 = pattern13.test(url);
+    var exists14 = pattern14.test(url);
+    var exists15 = pattern15.test(url);
+    var exists16 = pattern16.test(url);
+    var exists17 = pattern17.test(url);
+    if (exists1 || exists2 || exists3 || exists4 || exists5 || exists6 || exists7 || exists8 || exists9 || exists10 || exists11 || exists12 || exists13 || exists14 || exists15 || exists16 || exists17) {
+        // if there is any error messages, add a default start
+        $('#divForErrorMessagesProfile').append('<div id="errorMessagesAppendHere"><br><p class="login-error">Some things went wrong:</p></div>');
+        if (exists5) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - ".exe" files are not allowed. You will look better in .png .jpg .jpeg </p>');
+        }
+        if (exists6) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - You look better in <b>.png .jpg</b> and <b>.jpeg</b> files </p>');
+        }
+        if (exists7 || exists8) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Not even we at 8gag are pros (yet). We unfortunately could not update your profile image, please try again and cross your fingers </p>');
+        }
+        if (exists9) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - The file you uploaded is way too big, pal. Chill down on the size, will you? - Love, 8gag team and your mum <3 </p>');
+        }
+        if (exists10) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - We are sorry to inform you, but someone already snatched that email address. Try a different one ;) </p>');
+        }
+        if (exists11) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - If you would like to change your email, it better be a valid one </p>');
+        }
+        if (exists12) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - We are sorry to inform you, but someone already snatched that email address. Try a different one ;) </p>');
+        }
+        if (exists13) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - A username should be between 2 and 20 characters long sugarpie <3 </p>');
+        }
+        if (exists14) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Not even we at 8gag are pros (yet). We unfortunately could not update your username and/or email, please try again. And cross your fingers this time </p>');
+        }
+        if (exists15) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Password not updated - make sure that the "Password" and "Repeat Password" fields match and try again. We will cross our fingers for you </p>');
+        }
+        if (exists16) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Password not updated - Your new password needs to be at least <b>7 characters long</b>, contain at least <b>one capital letter</b>, <b>one small case letter</b>, and <b>one number</b>. Try again, cheef. </p>');
+        }
+        if (exists17) {
+            $('#errorMessagesAppendHere').append('<p class="profile-error"> - Not even we at 8gag are pros (yet). We unfortunately could not update your password, please try again with crossed fingers </p>');
+        }
     }
 })
 
