@@ -131,6 +131,7 @@ if($('title').text() == 'posts crud'){
         $(this).parent().parent('tr').addClass("bg-danger");
   
         $(this).parent().siblings().find('input').attr('disabled', false)
+        // $(this).parent().siblings().find('input[name=txtPostIdCrud]').attr('disabled', true)
        
       }
   
@@ -142,15 +143,15 @@ if($('title').text() == 'posts crud'){
   
         $(this).parent().parent('tr').removeClass("bg-danger");
   
-        // $.ajax({
-        //   "method":"post",
-        //   "url":"api-save-changes-admin.php",
-        //   "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
-        // }).done( function( responseFromServer ){ 
-        //   // This is what we get back from the server
-        //   console.log( responseFromServer );
+        $.ajax({
+          "method":"post",
+          "url":"api-posts-crud.php",
+          "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
+        }).done( function( responseFromServer ){ 
+          // This is what we get back from the server
+          console.log( responseFromServer );
           
-        // })
+        })
   
         $(this).parent().siblings().find('input').attr('disabled', 'disabled')
   
