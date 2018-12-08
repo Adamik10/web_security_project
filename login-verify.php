@@ -105,6 +105,7 @@ function tryLoginAsAdmin(){
                 $_SESSION['userImgName'] = $sAdminImgNameFromDb;
                 $_SESSION['userFirstname'] = $sAdminFirstname;
                 $_SESSION['userLastname'] = $sAdminLastname;
+                $_SESSION['userPrivileges'] = 'admin';
                 if(isset($_SESSION['token'])){
                     unset($_SESSION['token']);
                 }

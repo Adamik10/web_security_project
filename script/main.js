@@ -116,3 +116,45 @@ $('#loadMorePostsButton').click(function(){
     }
     setTimeout(contactApiForMorePosts, 1000)
 })
+
+// POSTS CRUD FOR ADMIN
+if($('title').text() == 'posts crud'){
+
+    $(document).on('click', '.btnSaveChangesAdmin', function(e){ //dynamically built so it must be document on click
+      e.preventDefault();
+  
+      if($(this).hasClass('edit')){
+        console.log('clicked on edit');
+        $(this).find('.editIcon').css('display', 'none')
+        $(this).find('.saveIcon').css('display', 'block')
+  
+        $(this).parent().parent('tr').addClass("bg-danger");
+  
+        $(this).parent().siblings().find('input').attr('disabled', false)
+       
+      }
+  
+      if($(this).hasClass('save')){
+        console.log('clicked on save');
+        $(this).find('.saveIcon').css('display', 'none')
+        $(this).find('.editIcon').css('display', 'block')
+        console.log($('.posts-crud-form').serialize())
+  
+        $(this).parent().parent('tr').removeClass("bg-danger");
+  
+        // $.ajax({
+        //   "method":"post",
+        //   "url":"api-save-changes-admin.php",
+        //   "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
+        // }).done( function( responseFromServer ){ 
+        //   // This is what we get back from the server
+        //   console.log( responseFromServer );
+          
+        // })
+  
+        $(this).parent().siblings().find('input').attr('disabled', 'disabled')
+  
+      }
+      $(this).toggleClass('edit save')
+      })  
+  }

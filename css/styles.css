@@ -1,4 +1,30 @@
+*{
+    box-sizing: border-box;
+}
 
+*:focus{
+    outline: none !important;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+*:active{
+    outline: none !important;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+*:visited{
+    outline: none !important;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
 
 /* NAVBAR  */
 #profileNav{
@@ -6,6 +32,14 @@
 }
 
 #postNav {
+    display: none;
+}
+
+#postsCrudNav {
+    display: none;
+}
+
+#usersCrudNav {
     display: none;
 }
 
@@ -283,3 +317,50 @@ textarea{
     background-color: rgb(200, 208, 216);
 }
 
+/* ADMIN POSTS CRUD */
+
+.custom-container{
+    max-width: 1500px;
+    margin: auto;
+
+}
+
+.posts-crud-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url(http://www.quickmeme.com/img/cf/cf0d0eb8bd990d03503bd23512880b840ad9c5b15d1e29829f2192c91891a10f.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.fa-save{
+    display: none;
+}
+
+.btnSaveChangesAdmin{
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: white;
+    font-size: larger;
+}
+
+tr{
+    transition: all 1s ease;
+}
+
+.posts-crud-input{
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    color: white;
+    max-width: 80px;
+}
+
+.posts-crud-input:active{
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
