@@ -66,6 +66,7 @@
 }
 
 
+
 /* REGISTER */
 #frmRegister{
     max-width: 400px;
@@ -253,6 +254,7 @@ textarea{
     margin-top: auto;
     margin-bottom: auto;
     height: 100%;
+    padding: .5rem !important;
 }
 
 #logout_button:hover {

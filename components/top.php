@@ -35,7 +35,7 @@ session_start();
 
     <!-- DATATABLE -->
     <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 
@@ -90,14 +90,14 @@ session_start();
 
       <li class="nav-item 
       <?php if($pageTitle == 'profile'){echo ' active';}
-            if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
+            if(!empty($_SESSION['userEmail']) && $_SESSION['userPrivileges']!='admin'){echo ' display';}?>"
             id="profileNav">
         <a class="nav-link" href="profile.php"><div id="nav-profile-div" style="background:url(<?php echo $sUserImgLocation;?>)"></div></a>
       </li>
 
       <li class="nav-item 
       <?php if($pageTitle == 'post'){echo ' active';}
-            if(!empty($_SESSION['userEmail'])){echo ' display';}?>"
+            if(!empty($_SESSION['userEmail']) && $_SESSION['userPrivileges']!='admin'){echo ' display';}?>"
             id="postNav">
         <span class="nav-link">Upload +</span>
       </li>
