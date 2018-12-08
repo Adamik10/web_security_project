@@ -64,6 +64,7 @@ try{
         // echo '<br>'.$aResult['headline'];
         echo '  <tr>
                 <form class="comments-crud-form">
+                <td><input type="text" class="posts-crud-input" name="txtCommentsIdCrud" value="'.htmlentities($aResult['id_comments']).'" disabled></td>
                 <td><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['user_image_location']).')"></div></td>
                 <td>'.htmlentities($aResult['comment']).'</td>
                 <td><input type="text" class="posts-crud-input" name="txtBannedCrudComments" value="'.htmlentities($aResult['banned']).'" disabled></td>

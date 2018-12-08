@@ -37,8 +37,9 @@ if(isset($_GET['p_id'])){
     try{
     $stmt2 = $db->prepare(' SELECT COUNT(*) AS comments_count
                             FROM comments
-                            WHERE id_posts = :currentPostId');
+                            WHERE id_posts = :currentPostId AND comments.banned = :banned' );
     $stmt2->bindValue(':currentPostId', $currentPostId);
+    $stmt2->bindValue(':banned', 0);
     $stmt2->execute();
     $aaCommentCount = $stmt2->fetchAll();
 
@@ -118,10 +119,11 @@ if(isset($_GET['p_id'])){
     
     }
 
-    // get all necessary for displaying comments from db
+    // get all necessary for displaying comments from db (only not banned comments)
     try{
         $stmt = $db->prepare('SELECT comments.id_comments, comments.comment, users.username, users.user_image_location, users.user_image_name 
-                                FROM comments INNER JOIN users ON comments.id_users = users.id_users WHERE comments.id_posts = :postId ORDER BY comments.time_stamp DESC LIMIT 10');
+                                FROM comments INNER JOIN users ON comments.id_users = users.id_users WHERE comments.id_posts = :postId AND comments.banned = :banned ORDER BY comments.time_stamp DESC LIMIT 10');
+        $stmt->bindValue(':banned', 0);
         $stmt->bindValue(':postId', $post_id);
         $stmt->execute();
         $aResult2 = $stmt->fetchAll();

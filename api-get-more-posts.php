@@ -49,8 +49,9 @@ for($j = 0; $j < sizeof($aOfPosts); $j++){
 
     // count comments for each post from db
     try{
-    $stmt2 = $db->prepare(' SELECT COUNT(*) AS comments_count FROM comments WHERE id_posts = :currentPostId');
+    $stmt2 = $db->prepare(' SELECT COUNT(*) AS comments_count FROM comments WHERE id_posts = :currentPostId AND comments.banned = :banned');
     $stmt2->bindValue(':currentPostId', $currentPostId);
+    $stmt2->bindValue(':banned', 0);
     $stmt2->execute();
     $aaCommentCount = $stmt2->fetchAll();
 
