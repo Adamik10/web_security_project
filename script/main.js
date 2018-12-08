@@ -177,6 +177,15 @@ $('#loadMorePostsButton').click(function(){
 // POSTS CRUD FOR ADMIN
 if($('title').text() == 'posts crud'){
 
+    // TRYING DATATABLE BLEH
+    // $(document).ready(function() {
+    //     $('#example').DataTable({
+    //         "scrollY":        "500px",
+    //         "scrollCollapse": true,
+    //         "paging":         false
+    //     });
+    // } );
+
     $(document).on('click', '.btnSaveChangesAdmin', function(e){ //dynamically built so it must be document on click
       e.preventDefault();
   
@@ -216,3 +225,48 @@ if($('title').text() == 'posts crud'){
       $(this).toggleClass('edit save')
       })  
   }
+
+  // POSTS CRUD FOR ADMIN
+if($('title').text() == 'comments crud'){
+
+    $(document).on('click', '.btnSaveChangesAdminComments', function(e){ //dynamically built so it must be document on click
+      e.preventDefault();
+  
+      if($(this).hasClass('edit')){
+        console.log('clicked on edit');
+        $(this).find('.editIcon').css('display', 'none')
+        $(this).find('.saveIcon').css('display', 'block')
+  
+        $(this).parent().parent('tr').addClass("bg-danger");
+  
+        $(this).parent().siblings().find('input').attr('disabled', false)
+        // $(this).parent().siblings().find('input[name=txtPostIdCrud]').attr('disabled', true)
+       
+      }
+  
+      if($(this).hasClass('save')){
+        console.log('clicked on save');
+        $(this).find('.saveIcon').css('display', 'none')
+        $(this).find('.editIcon').css('display', 'block')
+        console.log($('.comments-crud-form').serialize())
+  
+        $(this).parent().parent('tr').removeClass("bg-danger");
+  
+        $.ajax({
+          "method":"post",
+          "url":"api-comments-crud.php",
+          "data": $('.comments-crud-form').serialize() //passing in data from form to ajax
+        }).done( function( responseFromServer ){ 
+          // This is what we get back from the server
+          console.log( responseFromServer );
+          
+        })
+  
+        $(this).parent().siblings().find('input').attr('disabled', 'disabled')
+  
+      }
+      $(this).toggleClass('edit save')
+      })  
+  }
+
+

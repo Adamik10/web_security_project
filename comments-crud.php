@@ -16,6 +16,8 @@ if(!isset($_GET['p_id'])){
     header('location: posts-crud.php');
     exit;
 }
+
+$postId = $_GET['p_id'];
 ?>
 
 <?php 
@@ -24,15 +26,15 @@ require_once('components/top.php');
 
 
 <!-- TEMPLATE START -->
-<div class="custom-container">
+<div class="custom-container mb-5">
 
     <h3 class="mt-5 text-center">Comments crud</h3>
-    <h5 class="mt-5 text-center">Post id: <?php echo $_GET['p_id']?></h3>
+    <h5 class="mt-5 text-center">Post id: <?php echo $postId?></h3>
     <div class="table-responsive">
     <table class="table table-hover table-dark mt-5">
     <thead>
         <tr>
-        <th scope="col">Post id</th>
+        <th scope="col">Comment id</th>
         <th scope="col">User</th>
         <th scope="col">Comment</th>
         <th scope="col">Banned</th>
@@ -46,9 +48,11 @@ require_once('components/top.php');
 require('controllers/database.php');
 
 try{
-    $stmt = $db->prepare('SELECT users.username, comments.comment, comments.banned, comments.time_stamp FROM comments
+    $stmt = $db->prepare('SELECT users.user_image_location, comments.id_comments, comments.comment, comments.banned, comments.time_stamp FROM comments
     LEFT JOIN users ON comments.id_users = users.id_users
+    WHERE comments.id_posts = :postId
     ORDER BY comments.time_stamp DESC');
+    $stmt->bindValue('postId', $postId);
     $stmt->execute();
     $aaResult = $stmt->fetchAll();
 }catch( PDOException $ex ){
@@ -59,15 +63,12 @@ try{
     foreach($aaResult as $iIndex => $aResult){
         // echo '<br>'.$aResult['headline'];
         echo '  <tr>
-                <form class="posts-crud-form">
-                <td><input type="text" class="posts-crud-input" name="txtPostIdCrud" value="'.$aResult['id_posts'].'" disabled></td>
-                <td><input type="text" class="posts-crud-input" name="txtHeadlineCrud" value="'.$aResult['headline'].'" disabled></td>
-                <td><div class="posts-crud-img" style="background-image: url('.$aResult['image_location'].')"></div></td>
-                <td>'.$aResult['username'].'</td>
-                <td><a href="comments-crud.php?p_id='.$aResult['id_posts'].'">'.$aResult['comments'].'</a></td>
-                <td>'.$aResult['upvotes'].'</td>
-                <td><input type="text" class="posts-crud-input" name="txtBannedCrud" value="'.$aResult['banned'].'" disabled></td>
-                <td><button class="btnSaveChangesAdmin admin-page-input edit" type="submit"><i class="editIcon fas fa-edit"></i><i class="saveIcon fas fa-save"></i></button></td>
+                <form class="comments-crud-form">
+                <td><input type="text" class="posts-crud-input" name="txtCommentsIdCrud" value="'.htmlentities($aResult['id_comments']).'" disabled></td>
+                <td><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['user_image_location']).')"></div></td>
+                <td>'.htmlentities($aResult['comment']).'</td>
+                <td><input type="text" class="posts-crud-input" name="txtBannedCrudComments" value="'.htmlentities($aResult['banned']).'" disabled></td>
+                <td><button class="btnSaveChangesAdminComments admin-page-input edit" type="submit"><i class="editIcon fas fa-edit"></i><i class="saveIcon fas fa-save"></i></button></td>
                 </form>
                 </tr>';
     }
