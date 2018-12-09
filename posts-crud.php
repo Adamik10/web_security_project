@@ -36,6 +36,13 @@ require_once('components/top.php');
     <tbody>
 
 <?php 
+// TOKENS
+session_start();
+//if user is logged in, or on login/register page this will generate a session token for them
+$newToken = uniqid();
+$newTokenHashed = hash('sha256', $newToken);
+$_SESSION['token'] = $newToken;
+
 // get the data from db to display
 require('controllers/database.php');
 
@@ -56,6 +63,7 @@ try{
         // echo '<br>'.$aResult['headline'];
         echo '  <tr>
                 <form class="posts-crud-form">
+                <input name="activityToken" type="text" value="'.$newTokenHashed.'" hidden>
                 <td><input type="text" class="posts-crud-input" name="txtPostIdCrud" value="'.htmlentities($aResult['id_posts']).'" disabled></td>
                 <td><input type="text" class="posts-crud-input" name="txtHeadlineCrud" value="'.htmlentities($aResult['headline']).'" disabled></td>
                 <td><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['image_location']).')"></div></td>
