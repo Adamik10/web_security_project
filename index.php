@@ -22,8 +22,8 @@
         require('controllers/database.php');
         // we need - image of user, user's nickname, post headline, post picture location
         try{
-        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name 
-                                FROM posts INNER JOIN users ON posts.id_users = users.id_users ORDER BY posts.datetime DESC LIMIT 5');
+        $stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, posts.banned, users.username, users.user_image_location, users.user_image_name 
+                                FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.banned = 0 ORDER BY posts.datetime DESC LIMIT 5');
         $stmt->execute();
         $aOfPosts = $stmt->fetchAll();
         }catch (PDOException $exception){
@@ -31,6 +31,7 @@
         }
 
     // echo 'These are the posts from the database: '.json_encode($aOfPosts).'<br>';
+
     
     for($j = 0; $j < sizeof($aOfPosts); $j++){
         $currentPostId = $aOfPosts[$j]['id_posts'];
@@ -40,6 +41,7 @@
         $currentPostUsername = $aOfPosts[$j]['username'];
         $currentUserImgLocation = $aOfPosts[$j]['user_image_location'];
         $currentUserImgName = $aOfPosts[$j]['user_image_name'];
+        $currentPostBanned = $aOfPosts[$j]['banned'];
 
         // count comments for each post from db
         try{

@@ -34,7 +34,10 @@ for( $i = 0; $i < count($listOfIds); $i++ ){
 require('controllers/database.php');
 // we need - image of user, user's nickname, post headline, post picture location
 try{
-$stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name FROM posts INNER JOIN users ON posts.id_users = users.id_users WHERE posts.id_posts != '.$clause.' ORDER BY posts.datetime DESC LIMIT 5');
+$stmt = $db->prepare('SELECT posts.id_posts, posts.headline, posts.image_location, posts.image_name, posts.datetime, users.username, users.user_image_location, users.user_image_name FROM posts 
+INNER JOIN users ON posts.id_users = users.id_users 
+WHERE posts.id_posts != '.$clause.' AND posts.banned = 0 
+ORDER BY posts.datetime DESC LIMIT 5');
 // die(json_encode($stmt));
 // echo $clause;
 $stmt->execute($listOfIds);
