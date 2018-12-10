@@ -178,9 +178,9 @@ $('#loadMorePostsButton').click(function(){
 
 $(document).on('click', '.upvote', function(){ 
 
-    console.log('upvote clicked');
+    // console.log('upvote clicked');
     var post_id = $(this).data('id');
-    console.log('this post id is - ' + post_id);
+    // console.log('this post id is - ' + post_id);
 
     $.ajax({
         method : "post",

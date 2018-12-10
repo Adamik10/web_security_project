@@ -41,10 +41,10 @@ $upvoteId = uniqid();
             $stmt2->bindValue(':id_upvotes',  $upvoteId);
             $stmt2->bindValue(':id_posts', $postId);
             $stmt2->bindValue(':id_users', $loggedInUserId);
-            $stmt2->execute(); 
+            $stmt2->execute();
         } catch (PDOException $ex){
             // echo 'error saving upvote: '.$ex;
-        //recirect either to index or gag.php
+
             exit();
         }
     } else {
@@ -66,17 +66,21 @@ $upvoteId = uniqid();
 
 //return to ajax number of upvotes for this post
 
-try{
-    $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost');
-    $stmt->bindValue(':upvotedPost', $postId);
-    $stmt->execute();
-    $users = $stmt->fetchAll();
-} catch (PDOException $ex){
-    // echo 'error selecting upvotes: '.$ex;
-//recirect either to index or gag.php
-    exit();
-}
 
-$numberOfUpvotes = count($users);
+    try{
+        $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost');
+        $stmt->bindValue(':upvotedPost', $postId);
+        $stmt->execute();
+        $users = $stmt->fetchAll();
+    } catch (PDOException $ex){
+        // echo 'error selecting upvotes: '.$ex;
+    //recirect either to index or gag.php
+        exit();
+    }
+    
+    $numberOfUpvotes = count($users);
+    
+    echo $numberOfUpvotes;
 
-echo $numberOfUpvotes;
+
+
