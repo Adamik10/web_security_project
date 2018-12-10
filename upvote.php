@@ -21,6 +21,8 @@ $upvoteId = uniqid();
 //    delete the upvote from the table
 // }
 
+$done = false;
+
 //go to database and see if this post has already been liked by the logged in user
     try{
         $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost AND id_users = :loggedInUserId');
@@ -30,7 +32,7 @@ $upvoteId = uniqid();
         $users = $stmt->fetchAll();
     } catch (PDOException $ex){
         // echo 'error selecting upvotes: '.$ex;
-    //recirect either to index or gag.php
+        //recirect either to index or gag.php
         exit();
     }
 
@@ -41,10 +43,11 @@ $upvoteId = uniqid();
             $stmt2->bindValue(':id_upvotes',  $upvoteId);
             $stmt2->bindValue(':id_posts', $postId);
             $stmt2->bindValue(':id_users', $loggedInUserId);
-            $stmt2->execute(); 
+            $stmt2->execute();
+            $done = true;
         } catch (PDOException $ex){
             // echo 'error saving upvote: '.$ex;
-        //recirect either to index or gag.php
+
             exit();
         }
     } else {
@@ -55,6 +58,7 @@ $upvoteId = uniqid();
             $stmt->bindValue(':upvotedPost', $postId);
             $stmt->bindValue(':loggedInUserId', $loggedInUserId);
             $stmt->execute();
+            $done = true;
         } catch (PDOException $ex){
             // echo 'error deleting upvote: '.$ex;
         //recirect either to index or gag.php
@@ -66,17 +70,22 @@ $upvoteId = uniqid();
 
 //return to ajax number of upvotes for this post
 
-try{
-    $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost');
-    $stmt->bindValue(':upvotedPost', $postId);
-    $stmt->execute();
-    $users = $stmt->fetchAll();
-} catch (PDOException $ex){
-    // echo 'error selecting upvotes: '.$ex;
-//recirect either to index or gag.php
-    exit();
+if($done){
+    try{
+        $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost');
+        $stmt->bindValue(':upvotedPost', $postId);
+        $stmt->execute();
+        $users = $stmt->fetchAll();
+    } catch (PDOException $ex){
+        // echo 'error selecting upvotes: '.$ex;
+    //recirect either to index or gag.php
+        exit();
+    }
+    
+    $numberOfUpvotes = count($users);
+    
+    echo $numberOfUpvotes;
 }
 
-$numberOfUpvotes = count($users);
 
-echo $numberOfUpvotes;
+

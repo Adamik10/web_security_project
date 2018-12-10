@@ -167,7 +167,8 @@ $('#loadMorePostsButton').click(function(){
                 var currentPostHeadline = dataWeGotBack[j].headline;
                 var currentPostImageName = dataWeGotBack[j].image_name;
                 var currentPostCommentCount = dataWeGotBack[j].comment_count;
-                $('#postsContainer').append('<div class= "card align-self-center card-custom mt-5 mb-2 postHolder" id = "' + currentPostId + '" \> <div class= "card-header"\> <div class="row"\> <div style="background-image: url(' + currentUserImgLocation + ');" class="OP-img mr-3"\></div\> <a href="#"\>' + currentPostUsername + '</a\> </div\> </div\> <h4 class="card-title mt-1"\>' + currentPostHeadline + '</h4\> <a href="gag.php?p_id=' + currentPostId + '"\><img class="card-img-top" src="' + currentPostImageLocation + '" alt="' + currentPostImageName + '"\></a\> <div class="card-body"\> <div class="row"\> <a href="gag.php?p_id=' + currentPostId + '" class="card-link post-link"\># Upvotes</a\> <a href="gag.php?p_id=' + currentPostId + '#comment" class="card-link post-link"\>' + currentPostCommentCount + ' Comments</a\> </div\> <div class="row mt-3"\> <a href="#"\><i class="far fa-hand-point-up fa-2x mr-3"\></i\></a\> <a href="gag.php?p_id=' +currentPostId+'#comment"\><i class="far fa-comment fa-2x"\></i\></a\> </div\> </div\> </div\>')
+                var upvotesCount = dataWeGotBack[j].upvote_count;
+                $('#postsContainer').append('<div class= "card align-self-center card-custom mt-5 mb-2 postHolder" id = "' + currentPostId + '" \> <div class= "card-header"\> <div class="row"\> <div style="background-image: url(' + currentUserImgLocation + ');" class="OP-img mr-3"\></div\> <a href="#"\>' + currentPostUsername + '</a\> </div\> </div\> <h4 class="card-title mt-1"\>' + currentPostHeadline + '</h4\> <a href="gag.php?p_id=' + currentPostId + '"\><img class="card-img-top" src="' + currentPostImageLocation + '" alt="' + currentPostImageName + '"\></a\> <div class="card-body"\> <div class="row"\> <p class="clickable noUpvotes">'+ upvotesCount +' Upvotes</p> <a href="gag.php?p_id=' + currentPostId + '#comment" class="card-link post-link"\>' + currentPostCommentCount + ' Comments</a\> </div\> <div class="row mt-3"\><i class="clickable upvote far fa-hand-point-up fa-2x mr-3" data-id="'+currentPostId+'"></i><a href="gag.php?p_id=' +currentPostId+'#comment"\><i class="far fa-comment fa-2x"\></i\></a\> </div\> </div\> </div\>')
             }  
         })
     }
@@ -178,9 +179,9 @@ $('#loadMorePostsButton').click(function(){
 
 $(document).on('click', '.upvote', function(){ 
 
-    console.log('upvote clicked');
+    // console.log('upvote clicked');
     var post_id = $(this).data('id');
-    console.log('this post id is - ' + post_id);
+    // console.log('this post id is - ' + post_id);
 
     $.ajax({
         method : "post",

@@ -68,4 +68,25 @@ for($j = 0; $j < sizeof($aOfPosts); $j++){
     $iCommentCount = $aCommentCount['comments_count'];
     $aOfPosts[$j]['comment_count'] = $iCommentCount;
 }
+
+//UPVOTES COUNT
+for($j = 0; $j < sizeof($aOfPosts); $j++){
+    $currentPostId = $aOfPosts[$j]['id_posts'];
+
+    // count upvotes for each post from db
+    try{
+    $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count FROM upvotes WHERE id_posts = :currentPostId');
+    $stmt2->bindValue(':currentPostId', $currentPostId);
+    $stmt2->execute();
+    $aaUpvoteCount = $stmt2->fetchAll();
+
+    }catch (PDOException $ex){
+        echo $ex;
+    }
+
+    $iCommentCount = count($aaUpvoteCount);
+    $aOfPosts[$j]['upvote_count'] = $iCommentCount;
+}
+
+
 echo json_encode($aOfPosts);
