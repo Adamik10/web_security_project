@@ -65,8 +65,8 @@ try{
                 <form class="posts-crud-form">
                 <input name="activityToken" type="text" value="'.$newTokenHashed.'" hidden>
                 <td><input type="text" class="posts-crud-input" name="txtPostIdCrud" value="'.htmlentities($aResult['id_posts']).'" disabled></td>
-                <td><input type="text" class="posts-crud-input" name="txtHeadlineCrud" value="'.htmlentities($aResult['headline']).'" disabled></td>
-                <td><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['image_location']).')"></div></td>
+                <td>'.htmlentities($aResult['headline']).'</td>
+                <td><a href="gag.php?p_id='.htmlentities($aResult['id_posts']).'"><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['image_location']).')"></div></a></td>
                 <td>'.htmlentities($aResult['username']).'</td>
                 <td><a href="comments-crud.php?p_id='.htmlentities($aResult['id_posts']).'">'.htmlentities($aResult['comments']).'</a></td>
                 <td>'.htmlentities($aResult['upvotes']).'</td>
