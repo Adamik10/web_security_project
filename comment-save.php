@@ -25,21 +25,26 @@ if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
     }
 }
 
-echo 'We here';
-
 // check if data was passed through the form
 if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])){
-    // echo 'yeah boi';
     // store post variables
     $newComment = htmlentities($_POST['postNewComment']);
-    $postId = $_POST['postId'];
+    $postId = htmlentities($_POST['postId']);
     // store user id and token from session
     $loggedInUserId = $_SESSION['userId'];
     $newCommentId = uniqid();
+
     
     // echo "comment: ".$newComment;
     // echo "<br> post id: ".$postId;
-    // echo "<br> user id of logged in user: ".$sUserIdFromDb;
+    // echo "<br> user id of logged in user: ".$loggedInUserId."<br>";
+    // echo strlen( $newComment);
+
+    if(strlen($newComment) > 300){
+        // echo "here";
+        header("location: gag.php?p_id={$postId}&status=wrong");
+        exit;
+    }
 
     try {
         $stmt1 = $db->prepare('INSERT INTO comments (id_comments, id_posts, id_users, comment) 
@@ -57,9 +62,11 @@ if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])){
     }
 
     header("location: gag.php?p_id={$postId}");
+    exit;
 
     
 }else{
     // post variables werent passed throught the form so redirect to the index
     header('location: index.php');
+    exit;
 } 

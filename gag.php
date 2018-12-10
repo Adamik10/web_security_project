@@ -20,6 +20,7 @@ if(isset($_GET['p_id'])){
         $aResult = $stmt->fetchAll();
     }catch (PDOException $exception){
         echo $exception;
+        exit;
     }
 
     // save all variables from result to display them in the template
@@ -45,6 +46,7 @@ if(isset($_GET['p_id'])){
 
     }catch (PDOException $ex){
         echo $ex;
+        exit;
     }
 
     $aCommentCount = $aaCommentCount[0];
@@ -61,6 +63,7 @@ if(isset($_GET['p_id'])){
 
         }catch (PDOException $ex){
             echo $ex;
+            exit;
         }
 
         $upvotesCount = count($aUpvotesCount);
@@ -133,6 +136,15 @@ if(isset($_GET['p_id'])){
     
     }
 
+    // ECHO ERROR MESSAGE FOR TOO LONG COMMENT
+    if(isset($_GET['status'])){
+        if ($_GET['status'] == 'wrong'){
+            echo '  <div>
+                    <p class="login-error text-center">Your comment can only be 300 characters long.</p>
+                    </div>';
+        }
+    }
+
     // get all necessary for displaying comments from db (only not banned comments)
     try{
         $stmt = $db->prepare('SELECT comments.id_comments, comments.comment, users.username, users.user_image_location, users.user_image_name 
@@ -143,6 +155,7 @@ if(isset($_GET['p_id'])){
         $aResult2 = $stmt->fetchAll();
     }catch (PDOException $exception){
         echo $exception;
+        exit;
     }
 
     // save data from db to variables and echo them in the template
@@ -172,6 +185,7 @@ if(isset($_GET['p_id'])){
 }else{
     // redirect to index because p_id wasn´t passed to this page
     header('location: index.php');
+    exit;
 }?>
 
 

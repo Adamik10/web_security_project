@@ -3,8 +3,8 @@
 <?php 
 session_start();
 
-session_destroy();
-header('location: index.php');
+// session_destroy();
+// header('location: index.php');
 
 // a token was created if the real person wanted to do this - does it match what we got?
 if(!isset($_SESSION['logout_token']) || !isset($_POST['activityToken'])){
@@ -23,6 +23,7 @@ if(!isset($_SESSION['logout_token']) || !isset($_POST['activityToken'])){
         // echo 'Everything matches - logout';
         session_destroy();
         header('location: index.php');
+        exit;
     }
 }
 ?>

@@ -65,6 +65,7 @@ try{
     $aaResult = $stmt->fetchAll();
 }catch( PDOException $ex ){
     echo $ex;
+    exit;
     }
     // print_r($aaResult) ;
 // DYNAMIC PART OF THE TEMPLATE

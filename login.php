@@ -68,6 +68,7 @@ if(isset($_SESSION['sessionId'])){
 
             }catch (PDOException $exception){
                 echo $exception;
+                exit;
             }
         }
         // no username passed

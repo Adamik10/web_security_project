@@ -44,6 +44,7 @@ $stmt->execute($listOfIds);
 $aOfPosts = $stmt->fetchAll();
 }catch (PDOException $exception){
     //echo $exception;
+    exit;
 }
 
 //COMMENT COUNT
@@ -60,6 +61,7 @@ for($j = 0; $j < sizeof($aOfPosts); $j++){
 
     }catch (PDOException $ex){
         echo $ex;
+        exit;
     }
 
     $aCommentCount = $aaCommentCount[0];

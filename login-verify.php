@@ -64,6 +64,7 @@ function tryLoginAsAdmin(){
         if(empty($aaResult)){
             // echo '<br>there is no admin with that username';
             header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+            exit;
         }else{ //if there is a match, verify whether the password matches
             $aResult = $aaResult[0];
             $sAdminSaltFromDb = $aResult['salt'];
@@ -118,19 +119,22 @@ function tryLoginAsAdmin(){
                     $sUpdate->execute();
                     // redirect to index
                     header('location: index.php');
+                    exit; 
                 }catch( PDOException $ex ){
-                echo $ex;
+                    echo $ex;
+                    exit; 
                 }
                
                     
             }else{ //if the password is incorrect, redirect to login
-                // echo 'incorrect password in admins';
                 header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+                exit;
             }
         }
         
     }catch (PDOException $exception){
         echo $exception;
+        exit; 
     }
     
 }
@@ -168,7 +172,7 @@ function tryToLogin(){
         if(empty($aaResult)){
             // echo '<br> trying to login as admin';
             tryLoginAsAdmin();
-            // header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+            exit;
         }else{ //if there is a match, verify whether the password matches
             $aResult = $aaResult[0];
             $sUserSaltFromDb = $aResult['salt'];
@@ -200,10 +204,12 @@ function tryToLogin(){
                 // check if the account is verified
                 if($sUserVerifiedFromDb == 0){
                     header('location: login.php?username='.$enteredUsername.'&status=not_verified');
+                    exit;
                 }else{
                     // check if the account is banned
                     if($bBanned == 1){
                         header('location: login.php?username='.$enteredUsername.'&status=banned');
+                        exit;
                     }else{
                         // if its verified and not banned start session, clean attempts and redirect to index
                         session_start();
@@ -226,8 +232,10 @@ function tryToLogin(){
                             $sUpdate->execute();
                             // redirect to index
                             header('location: index.php');
+                            exit; 
                         }catch( PDOException $ex ){
-                        echo $ex;
+                            echo $ex;
+                            exit; 
                         }
                     }
                 }
@@ -235,11 +243,13 @@ function tryToLogin(){
                     
             }else{ //if the password is incorrect, redirect to login
                 header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+                exit;
             }
         }
         
     }catch (PDOException $exception){
         echo $exception;
+        exit; 
     }
 }
 // ------------------------------------ END OF LOGIN FUNCTION --------------------------------------------------
@@ -275,6 +285,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
         $aOfMatchedIPs = $stmt->fetchAll();
     }catch (PDOException $exception){
         echo $exception;
+        exit; 
     }
     // echo 'This is the records IPs + username that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
 
@@ -293,6 +304,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             tryToLogin();
         }catch( PDOException $ex){
             echo $ex;
+            exit; 
         }
 
     }else{
@@ -306,6 +318,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             $aaIPinfo = $stmt->fetchAll();
         }catch (PDOException $exception){
             echo $exception;
+            exit; 
         }
         // echo 'This is the IPs that match from the database: '.print_r($aaIPinfo).'<br>';
         // echo print_r($aaIPinfo[0]).'<br>';
@@ -325,6 +338,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                 tryToLogin();
             }catch( PDOException $ex ){
                 echo $ex;
+                exit; 
             }
         }else{
             // IF THIS IS 4th TIME
@@ -337,6 +351,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                 $sUpdate->execute();
             }catch( PDOException $ex ){
                 echo $ex;
+                exit; 
             }
 
 
@@ -352,8 +367,10 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
             if ($response != null && $response->success) {
                 // echo '<br>trying to login 351';
                 tryToLogin();
+                exit;
             }else{
                 header('location: login.php?username='.$enteredUsername.'&status=wrong_captcha');
+                exit;
             }
             
             
@@ -371,6 +388,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                     $aaMatchedUserProfileId = $stmt->fetchAll();
                 }catch (PDOException $exception){
                     echo $exception;
+                    exit; 
                 }
                 // echo 'This is the ID of user that has been trying to log in for 15 times: '.json_encode($aaMatchedProfileId).'<br>';
                     if(empty($aaMatchedUserProfileId)){
@@ -383,11 +401,13 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                             $aaMatchedAdminProfileId = $stmt2->fetchAll();
                         }catch (PDOException $exception){
                             echo $exception;
+                            exit; 
                         }
 
                         if(empty($aaMatchedAdminProfileId)){
                             // IF NOTHING IS MATCHED FROM USERS OR ADMINS TABLE
                             header('location: login.php?username='.$enteredUsername.'&status=doesnt_exist');
+                            exit;
                         }
 
                         $aMatchedAdminProfileId = $aaMatchedAdminProfileId[0];
@@ -408,6 +428,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                             $stmt->execute();
                         } catch (PDOException $exce){
                             echo $exce;
+                            exit; 
                         }
                         // send mail
                         require_once('send_email_potential_attack.php');
@@ -432,6 +453,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                     $stmt->execute();
                 } catch (PDOException $exce){
                     echo $exce;
+                    exit; 
                 }
 
                 // BAN THE MATCHED USER
@@ -442,6 +464,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                     $stmt3->execute();
                 } catch (PDOException $exce){
                     echo $exce;
+                    exit; 
                 }
 
                 require_once('send_email_potential_attack.php');
@@ -459,7 +482,8 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
 
 }else{
     // if form data wasnt passed to this page
-    header('location: login.php?status=not_logged_in');   
+    header('location: login.php?status=not_logged_in');
+    exit; 
 }
 
 

@@ -143,6 +143,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
                 exit();
             }
             header('location: index.php');
+            exit;
 
         }else{
             echo "ERROR UPLOADING FILE";
@@ -157,5 +158,6 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
 
 }else{
     header('location: index.php?status=post_invalid'); 
+    exit;
 }
 ?>

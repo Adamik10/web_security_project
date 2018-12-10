@@ -28,6 +28,7 @@
         $aOfPosts = $stmt->fetchAll();
         }catch (PDOException $exception){
             echo $exception;
+            exit;
         }
 
     // echo 'These are the posts from the database: '.json_encode($aOfPosts).'<br>';
@@ -55,6 +56,7 @@
     
         }catch (PDOException $ex){
             echo $ex;
+            exit;
         }
 
         $aCommentCount = $aaCommentCount[0];
@@ -71,6 +73,7 @@
     
             }catch (PDOException $ex){
                 echo $ex;
+                exit;
             }
 
             $upvotesCount = count($aUpvotesCount);

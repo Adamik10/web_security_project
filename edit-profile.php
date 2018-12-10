@@ -90,6 +90,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
                     // echo $ex;
                     array_push($thingsThatWentGrong, 'user was not banned due to an error updating database');
                     $toAddToURL = $toAddToURL.'0a';
+                    exit;
                 }
 
                 $userProfileId = $_SESSION['userId'];
@@ -133,6 +134,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
                     echo $ex;
                     array_push($thingsThatWentGrong, 'new user image data was not updated in database');
                     $toAddToURL = $toAddToURL.'1a';
+                    exit;
                 }
                 $_SESSION['userImgLocation'] = $newProfileImageLocation;
             }else{
@@ -254,6 +256,7 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
             echo 'error, database update email and username: '.$ex;
             array_push($thingsThatWentGrong, 'username and email could not be updated');
             $toAddToURL = $toAddToURL.'4a';
+            exit;
         }
     } else {
         echo 'fields not filled out properly, try again - USERNAME and EMAIL';
@@ -345,6 +348,7 @@ if(isset($_POST['changedPassword1']) && !empty($_POST['changedPassword1']) && is
                 echo 'error, database update password: '.$ex;
                 array_push($thingsThatWentGrong, 'password could not be updated');
                 $toAddToURL = $toAddToURL.'5c';
+                exit;
             }
         } else {
             echo '<br>fields not filled out properly, try again - PASSWORD';

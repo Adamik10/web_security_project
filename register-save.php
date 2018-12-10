@@ -126,5 +126,6 @@ if($validationPass == 1){
     }
 
 } else {
-    header('location: register.php?status=all_required'); 
+    header('location: register.php?status=all_required');
+    exit;
 } 

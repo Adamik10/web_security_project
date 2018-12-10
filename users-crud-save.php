@@ -114,6 +114,7 @@ if( isset($_POST['$txtUserId']) &&
         } catch (PDOException $ex) {
             echo 'error, database update email and username: '.$ex;
             array_push($thingsThatWentGrong, 'username and email could not be updated');
+            exit;
         }
     } else {
         echo 'fields not filled out properly, try again - USERNAME and EMAIL';
