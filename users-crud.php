@@ -64,8 +64,9 @@ try{
         $uVerified = $user['verified'];
 
         echo "
+     
+        <form class='users-crud-form'>
         <tr>
-        <form class='posts-crud-form'>
             <td><input type='text' class='posts-crud-input' name='txtUserId' value='".$uId."' disabled></td>
             <td><input type='text' class='posts-crud-input' name='txtUsernameCrud' value='".$uUsername."' disabled></td>
             <td><input type='text' class='posts-crud-input' name='txtEmailCrud' value='".$uEmail."' disabled></td>
@@ -81,8 +82,9 @@ try{
             <td><input type='text' class='posts-crud-input' name='txtVerifiedCrud' value='".$uVerified."' disabled></td>
             <td><button class='btnSaveChangesAdmin admin-page-input edit' type='submit'><i class='editIcon fas fa-edit'></i><i class='saveIcon fas fa-save'></i></button></td>
             <td><button class='btnSaveChangesAdmin admin-page-input' type='submit'><i class='editIcon fas fa-trash'></i></button></td>
-        </form>
-        </tr>       
+            </tr>  
+            </form>
+       
         ";
     }
     ?>    

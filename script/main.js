@@ -234,19 +234,32 @@ $(document).on('click', '.upvote', function(){
         console.log('clicked on save');
         $(this).find('.saveIcon').css('display', 'none')
         $(this).find('.editIcon').css('display', 'block')
-        console.log($('.posts-crud-form').serialize())
+        // console.log($('.posts-crud-form').serialize())
   
         $(this).parent().parent('tr').removeClass("bg-danger");
-  
-        $.ajax({
-          "method":"post",
-          "url":"api-posts-crud.php",
-          "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
-        }).done( function( responseFromServer ){ 
-          // This is what we get back from the server
-          console.log( responseFromServer );
-          
-        })
+        
+        if($('title').text() == 'posts crud'){ 
+            $.ajax({
+                "method":"post",
+                "url":"api-posts-crud.php",
+                "data": $('.posts-crud-form').serialize() //passing in data from form to ajax
+              }).done( function( responseFromServer ){ 
+                // This is what we get back from the server
+                console.log( responseFromServer );
+              })
+        }
+
+        if($('title').text() == 'users crud'){ 
+            $.ajax({
+                "method":"post",
+                "url":"users-crud-save.php",
+                "data": $('.users-crud-form').serialize() //passing in data from form to ajax
+              }).done( function( responseFromServer ){ 
+                // This is what we get back from the server
+                console.log( responseFromServer );
+              })
+        }
+
   
         $(this).parent().siblings().find('input').attr('disabled', 'disabled')
         $(this).parent().siblings().find('input').removeClass('editInputStyle')

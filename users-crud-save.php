@@ -10,18 +10,27 @@ if(!isset($_SESSION['sessionId'])){
     exit;
 }
 
-if( isset($_POST['$txtUserId']) &&
+// echo '1 - '. $_POST['txtUserId'].'   ';
+// echo '2 - '. $_POST['txtUsernameCrud'].'   ';
+// echo '3 - '. $_POST['txtEmailCrud'].'   ';
+// echo '4 - '. $_POST['txtPasswordCrud'].'   ';
+// echo '5 - '. $_POST['txtBannedCrud'].'   ';
+// echo '6 - '. $_POST['txtVerifiedCrud'].'   ';
+
+$thingsThatWentGrong = [];
+
+if( isset($_POST['txtUserId']) &&
     isset($_POST['txtUsernameCrud']) && 
     isset($_POST['txtEmailCrud']) && 
     isset($_POST['txtPasswordCrud']) && 
     isset($_POST['txtBannedCrud']) && 
     isset($_POST['txtVerifiedCrud'])
    ){
-
+    echo 'hooo';
     $txtIdCrud = htmlentities($_POST['txtUserId']);
     $txtUsernameCrud = htmlentities($_POST['txtUsernameCrud']);
     $txtEmailCrud = htmlentities($_POST['txtEmailCrud']);
-    $txtPasswordCrud = htmlentities($_POST['txtPasswordCrud']);
+    $txtPasswordCrud = $_POST['txtPasswordCrud'];
     $txtBannedCrud = htmlentities($_POST['txtBannedCrud']);
     $txtVerifiedCrud = htmlentities($_POST['txtVerifiedCrud']);
 
@@ -41,7 +50,7 @@ if( isset($_POST['$txtUserId']) &&
             $users = $stmt->fetchAll();
         } catch (PDOException $ex){
             echo 'error selecting users: '.$ex;
-            header('location: index.php'); //in this case we can redirect and exit because if we didn't it could affect the database
+            // header('location: index.php'); //in this case we can redirect and exit because if we didn't it could affect the database
             exit();
         }
 
@@ -84,101 +93,105 @@ if( isset($_POST['$txtUserId']) &&
         if(strlen($txtUsernameCrud) < 2 || strlen($txtUsernameCrud) > 20){
             array_push($thingsThatWentGrong, 'username invalid length');
             $validationPass = 0;
+            echo '1';
         }
     
         if(filter_var($txtEmailCrud, FILTER_VALIDATE_EMAIL) == false){
             array_push($thingsThatWentGrong, 'email pattern invalid');
             $validationPass = 0;
+            echo '2';
         }
     
         if($alreadyUsedEmail == 1){
             array_push($thingsThatWentGrong, 'email already in use');
             $validationPass = 0;
+            echo '3';
         }
 
         if($alreadyUsedUsername == 1){
             array_push($thingsThatWentGrong, 'username already in use');
             $validationPass = 0;
+            echo '4';
         }
 
-    if($validationPass == 1){
 
-        //if validation passes then update email and username
-        try {
-            $stmt1 = $db->prepare('UPDATE users SET username=:username, email=:email WHERE id_users=:loggedUserId');
+        if($txtBannedCrud < 0 && $txtBannedCrud > 1){
+            array_push($thingsThatWentGrong, 'ban status is not expressed with 0 or 1');
+            $validationPass = 0;
+            echo '5';
+        }
+
+        if($txtVerifiedCrud < 0 && $txtVerifiedCrud > 1){
+            array_push($thingsThatWentGrong, 'verified status is not expressed with 0 or 1');
+            $validationPass = 0;
+            echo '6';
+        }
+
+         //password pattern validation 
+         $uppercase = preg_match('@[A-Z]@', $txtPasswordCrud);
+         $lowercase = preg_match('@[a-z]@',$txtPasswordCrud);
+         $number    = preg_match('@[0-9]@', $txtPasswordCrud);
+         if($txtPasswordCrud < 7  || !$uppercase || !$lowercase || !$number){
+             array_push($thingsThatWentGrong, 'password criteria not met');
+             $validationPass = 0;
+             echo 'password drama';
+         }
+
+        $sUserId = $_SESSION['userId'];
+
+    if($validationPass == 1){
+        //if validation passes then update username, email, banned, verified
+        try {;
+            $stmt1 = $db->prepare('UPDATE users SET username=:username, email=:email, verified=:verified, banned=:banned WHERE id_users=:loggedUserId');
             $stmt1->bindValue(':username', $txtUsernameCrud);
             $stmt1->bindValue(':email', $txtEmailCrud);
-            $stmt1->bindValue(':loggedUserId', $sUserIdFromDb);
+            $stmt1->bindValue(':verified', $txtVerifiedCrud);
+            $stmt1->bindValue(':banned', $txtBannedCrud);
+            $stmt1->bindValue(':loggedUserId', $sUserId);
             $stmt1->execute();
 
         } catch (PDOException $ex) {
-            echo 'error, database update email and username: '.$ex;
-            array_push($thingsThatWentGrong, 'username and email could not be updated');
+            echo 'error, database update user data: '.$ex;
+            array_push($thingsThatWentGrong, 'user data could not be updated');
             exit;
         }
+
+        //if password is altered then update password
+    if($_POST['txtPasswordCrud'] !== 'password'){
+    
+        //hashing pattern:
+        $salt = rand(100000, 999999);
+        $peber = "MaciejStopHackingUs";
+        $options = [
+            'cost' => 12
+        ];
+        //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
+        $pass_hash = password_hash($txtPasswordCrud.$peber.$salt, PASSWORD_DEFAULT, $options);
+
+        //if validation passes then update password
+        try {
+            $stmt1 = $db->prepare('UPDATE users SET password_hash = :password, salt = :salt WHERE id_users=:loggedUserId');
+            $stmt1->bindValue(':password', $pass_hash);
+            $stmt1->bindValue(':salt', $salt);
+            $stmt1->bindValue(':loggedUserId', $sUserId);
+            $stmt1->execute();
+
+        } catch (PDOException $ex) {
+            echo 'error, database update password: '.$ex;
+            array_push($thingsThatWentGrong, 'password could not be updated');
+        }
     } else {
-        echo 'fields not filled out properly, try again - USERNAME and EMAIL';
+        echo 'fields not filled out properly, try again - PASSWORD';
+        array_push($thingsThatWentGrong, 'incorrect password data provided');
+    }
+} 
+
+
+    } else {
+        echo 'fields not filled out properly, try again';
         array_push($thingsThatWentGrong, 'incorrect data provided');
     }
-}
 
 
-    // if(isset($_POST['changedPassword1']) && 
-    //     !empty($_POST['changedPassword1']) && 
-    //     isset($_POST['changedPassword2']) && 
-    //     !empty($_POST['changedPassword2'])){
+
     
-    //     echo '123';
-    
-    //     $changedPassword1 = $_POST['changedPassword1'];
-    //     $changedPassword2 = $_POST['changedPassword2'];
-    
-    //     //validation
-    
-    //     $validationPass2 = 1;
-    
-    //         //if password1 and password2 are not matching
-    //         if($changedPassword2 !== $changedPassword1){
-    //             array_push($thingsThatWentGrong, 'password and repeat password are not matching');
-    //             $validationPass2 = 0; 
-    //             echo 'password not matching';
-    //         }
-    
-    //         //password pattern validation 
-    //         $uppercase = preg_match('@[A-Z]@', $changedPassword2);
-    //         $lowercase = preg_match('@[a-z]@',$changedPassword2);
-    //         $number    = preg_match('@[0-9]@', $changedPassword2);
-    //         if($changedPassword2 < 7  || !$uppercase || !$lowercase || !$number){
-    //             array_push($thingsThatWentGrong, 'password criteria not met');
-    //             $validationPass2 = 0;
-    //         }
-    
-    //         if($validationPass2 == 1){
-    
-    //             //hashing pattern:
-    //             $salt = rand(100000, 999999);
-    //             $peber = "MaciejStopHackingUs";
-    //             $options = [
-    //                 'cost' => 12
-    //             ];
-    //             //PASSWORD_DEFAULT - uses bcrypt algorithm - designed to change over time so the length of the result might change over time - DB column should have at least 60 characters
-    //             $pass_hash = password_hash($changedPassword2.$peber.$salt, PASSWORD_DEFAULT, $options);
-    
-    //             //if validation passes then update password
-    //             try {
-    //                 $stmt1 = $db->prepare('UPDATE users SET password_hash = :password, salt = :salt WHERE id_users=:loggedUserId');
-    //                 $stmt1->bindValue(':password', $pass_hash);
-    //                 $stmt1->bindValue(':salt', $salt);
-    //                 $stmt1->bindValue(':loggedUserId', $sUserIdFromDb);
-    //                 $stmt1->execute();
-        
-    //             } catch (PDOException $ex) {
-    //                 echo 'error, database update password: '.$ex;
-    //                 array_push($thingsThatWentGrong, 'password could not be updated');
-    //             }
-    //         } else {
-    //             echo 'fields not filled out properly, try again - PASSWORD';
-    //             array_push($thingsThatWentGrong, 'incorrect password data provided');
-    //         }
-    
-    // } 
