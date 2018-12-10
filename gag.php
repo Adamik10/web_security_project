@@ -49,7 +49,6 @@ if(isset($_GET['p_id'])){
     $aCommentCount = $aaCommentCount[0];
     $iCommentCount = $aCommentCount['comments_count'];
 
-    
     // if there is no profile img echo default profile image else echo the profile img from db
     if($currentUserImgLocation == NULL){
         echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.$currentPostId.'">
@@ -63,11 +62,11 @@ if(isset($_GET['p_id'])){
         <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
         <div class="card-body">
             <div class="row">
-                <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
+                <p class="clickable noUpvotes"></p>
                 <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
             </div>
             <div class="row mt-3">
-                <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
+                <i data-id="'.$currentPostId.'" class="clickable upvote far fa-hand-point-up fa-2x mr-3"></i>
                 <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
             </div>
         </div>
@@ -84,12 +83,12 @@ if(isset($_GET['p_id'])){
         <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
         <div class="card-body">
             <div class="row">
-                <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
+                <p class="clickable noUpvotes"></p>
                 <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
             </div>
             <div class="row mt-3">
-                <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
-                <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
+            <i data-id="'.$currentPostId.'" class="clickable upvote far fa-hand-point-up fa-2x mr-3"></i>
+            <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
             </div>
         </div>
     </div>';

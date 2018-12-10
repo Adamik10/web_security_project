@@ -59,16 +59,16 @@ try{
         } else {
             $uImageLocation = $user['user_image_location'];  
         }
-        
+
         $uBanned = $user['banned'];
         $uVerified = $user['verified'];
 
         echo "
         <tr>
         <form class='posts-crud-form'>
-            <td><input type='text' class='posts-crud-input' name='txtIdCrud' value='Id' disabled></td>
-            <td><input type='text' class='posts-crud-input' name='txtUsernameCrud' value='Username' disabled></td>
-            <td><input type='text' class='posts-crud-input' name='txtEmailCrud' value='Email' disabled></td>
+            <td><input type='text' class='posts-crud-input' name='txtUserId' value='".$uId."' disabled></td>
+            <td><input type='text' class='posts-crud-input' name='txtUsernameCrud' value='".$uUsername."' disabled></td>
+            <td><input type='text' class='posts-crud-input' name='txtEmailCrud' value='".$uEmail."' disabled></td>
             <td><input type='password' class='posts-crud-input' name='txtPasswordCrud' value='password' disabled></td>
 
             <td>
@@ -77,15 +77,14 @@ try{
                     id='uploadImgUsersCrud' class='users-crud-img img-fluid d-block align-self-center justify-content-center responsive'/>
                 </div>
             </td>
-            <td><input type='text' class='posts-crud-input' name='txtBannedCrud' value='0' disabled></td>
-            <td><input type='text' class='posts-crud-input' name='txtVerifiedCrud' value='1' disabled></td>
+            <td><input type='text' class='posts-crud-input' name='txtBannedCrud' value='".$uBanned."' disabled></td>
+            <td><input type='text' class='posts-crud-input' name='txtVerifiedCrud' value='".$uVerified."' disabled></td>
             <td><button class='btnSaveChangesAdmin admin-page-input edit' type='submit'><i class='editIcon fas fa-edit'></i><i class='saveIcon fas fa-save'></i></button></td>
-            <td><button class='btnSaveChangesAdmin admin-page-input edit' type='submit'><i class='editIcon fas fa-trash'></i></button></td>
+            <td><button class='btnSaveChangesAdmin admin-page-input' type='submit'><i class='editIcon fas fa-trash'></i></button></td>
         </form>
         </tr>       
         ";
     }
-    
     ?>    
     </tbody>
     </table>

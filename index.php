@@ -57,6 +57,21 @@
         $aCommentCount = $aaCommentCount[0];
         $iCommentCount = $aCommentCount['comments_count'];
 
+        // count upvotes for each post from db
+        try{
+            $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count
+                                    FROM upvotes
+                                    WHERE id_upvotes = :currentPostId');
+            $stmt2->bindValue(':currentPostId', $currentPostId);
+            $stmt2->execute();
+            $aUpvotesCount = $stmt2->fetchAll();
+    
+            }catch (PDOException $ex){
+                echo $ex;
+            }
+
+            $upvotesCount = count($aUpvotesCount);
+
         echo '<div class="card align-self-center card-custom mt-5 mb-2 postHolder" id="'.$currentPostId.'">
             <div class="card-header">
                 <div class="row">
@@ -68,11 +83,11 @@
             <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
             <div class="card-body">
                 <div class="row">
-                    <a href="gag.php?p_id='.$currentPostId.'" class="card-link post-link"># Upvotes</a>
+                    <p class="clickable noUpvotes">'.$upvotesCount.' Upvotes</p>
                     <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
                 </div>
                 <div class="row mt-3">
-                    <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
+                    <i class="clickable upvote far fa-hand-point-up fa-2x mr-3" data-id="'.$currentPostId.'"></i>
                     <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
                 </div>
             </div>

@@ -60,7 +60,7 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
    $uppercase = preg_match('@[A-Z]@', $registerPassword2);
    $lowercase = preg_match('@[a-z]@',$registerPassword2);
    $number    = preg_match('@[0-9]@', $registerPassword2);
-   if(strlen($registerPassword2) < 7  || !$uppercase || !$lowercase || !$number){
+   if(strlen($registerPassword2) < 7 || strlen($registerPassword2) > 30 || !$uppercase || !$lowercase || !$number){
        header('location: register.php?status=password_criteria');
         $validationPass = 0;    
    }

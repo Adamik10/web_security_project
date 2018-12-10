@@ -365,6 +365,22 @@ tr{
     box-shadow: none;
 }
 
+td a {
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+td a:hover{
+    text-decoration: none;
+}
+
+.editInputStyle {
+    border: 1px solid white;
+    padding-left:10px;
+
+}
+
 /* ADMIN USERS CRUD */
 
 #uploadImgThumbnailUserCrud{
@@ -393,13 +409,21 @@ tr{
             transform: translate(-50%,-50%); 
         
         }
-    
-td a {
-    color: white;
-    cursor: pointer;
-    text-decoration: none;
+
+
+.clickable {
+    color: #007bff !important;
 }
 
-td a:hover{
-    text-decoration: none;
+p.clickable {
+    font-size: smaller;
+    margin-right: 10px;
+}
+
+.clickable:hover {
+    color: #0045a9 !important;
+}
+
+.clickedUpvote {
+    color: #0045a9 !important;
 }

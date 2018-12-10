@@ -117,8 +117,35 @@ $('#loadMorePostsButton').click(function(){
     setTimeout(contactApiForMorePosts, 1000)
 })
 
+//UPVOTES
+
+$(document).on('click', '.upvote', function(){ 
+
+    console.log('upvote clicked');
+    var post_id = $(this).data('id');
+    console.log('this post id is - ' + post_id);
+
+    $.ajax({
+        method : "post",
+        url: "upvote.php",
+        data: { p_id: post_id }
+    }).done(function (gotBack) {
+         console.log(gotBack);
+         var numberOfUpvotes = gotBack + ' Upvotes';
+         $('.noUpvotes').text(numberOfUpvotes);
+    })
+
+});
+
+//when you have upvoted the icon changes color
+
+// $(document).on('click', '.fa-hand-point-up', function(){ 
+//     $(".fa-hand-point-up").toggleClass('clickedUpvote');
+// })
+
+
 // POSTS CRUD FOR ADMIN
-if($('title').text() == 'posts crud'){
+// if($('title').text() == 'posts crud'){
 
     $(document).on('click', '.btnSaveChangesAdmin', function(e){ //dynamically built so it must be document on click
       e.preventDefault();
@@ -131,6 +158,7 @@ if($('title').text() == 'posts crud'){
         $(this).parent().parent('tr').addClass("bg-danger");
   
         $(this).parent().siblings().find('input').attr('disabled', false)
+        $(this).parent().siblings().find('input').addClass('editInputStyle')
         // $(this).parent().siblings().find('input[name=txtPostIdCrud]').attr('disabled', true)
        
       }
@@ -154,8 +182,10 @@ if($('title').text() == 'posts crud'){
         })
   
         $(this).parent().siblings().find('input').attr('disabled', 'disabled')
+        $(this).parent().siblings().find('input').removeClass('editInputStyle')
+
   
       }
       $(this).toggleClass('edit save')
       })  
-  }
+//   }
