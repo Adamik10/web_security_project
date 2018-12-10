@@ -271,6 +271,7 @@ if($('title').text() == 'comments crud'){
         $(this).parent().parent('tr').addClass("bg-danger");
   
         $(this).parent().siblings().find('input').attr('disabled', false)
+        $(this).parent().siblings().find('input').addClass('editInputStyle')
         // $(this).parent().siblings().find('input[name=txtPostIdCrud]').attr('disabled', true)
        
       }
@@ -294,6 +295,7 @@ if($('title').text() == 'comments crud'){
         })
   
         $(this).parent().siblings().find('input').attr('disabled', 'disabled')
+        $(this).parent().siblings().find('input').removeClass('editInputStyle')
   
       }
       $(this).toggleClass('edit save')
