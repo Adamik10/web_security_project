@@ -50,6 +50,21 @@ if(isset($_GET['p_id'])){
     $aCommentCount = $aaCommentCount[0];
     $iCommentCount = $aCommentCount['comments_count'];
 
+     // count upvotes for each post from db
+     try{
+        $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count
+                                FROM upvotes
+                                WHERE id_upvotes = :currentPostId');
+        $stmt2->bindValue(':currentPostId', $currentPostId);
+        $stmt2->execute();
+        $aUpvotesCount = $stmt2->fetchAll();
+
+        }catch (PDOException $ex){
+            echo $ex;
+        }
+
+        $upvotesCount = count($aUpvotesCount);
+
     // if there is no profile img echo default profile image else echo the profile img from db
     if($currentUserImgLocation == NULL){
         echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.htmlentities($currentPostId).'">
@@ -63,21 +78,12 @@ if(isset($_GET['p_id'])){
         <a href="gag.php?p_id='.htmlentities($currentPostId).'"><img class="card-img-top" src="'.htmlentities($currentPostImageLocation).'" alt="'.htmlentities($currentPostImageName).'"></a>
         <div class="card-body">
             <div class="row">
-<<<<<<< HEAD
-                <p class="clickable noUpvotes"></p>
-                <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
-            </div>
-            <div class="row mt-3">
-                <i data-id="'.$currentPostId.'" class="clickable upvote far fa-hand-point-up fa-2x mr-3"></i>
-                <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
-=======
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'" class="card-link post-link"># Upvotes</a>
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment" class="card-link post-link">'.htmlentities($iCommentCount).' Comments</a>
             </div>
             <div class="row mt-3">
                 <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment"><i class="far fa-comment fa-2x"></i></a>
->>>>>>> 2eed412680ea5883072809ed15fa90ae16611232
             </div>
         </div>
     </div>';
@@ -93,21 +99,12 @@ if(isset($_GET['p_id'])){
         <a href="gag.php?p_id='.htmlentities($currentPostId).'"><img class="card-img-top" src="'.htmlentities($currentPostImageLocation).'" alt="'.htmlentities($currentPostImageName).'"></a>
         <div class="card-body">
             <div class="row">
-<<<<<<< HEAD
-                <p class="clickable noUpvotes"></p>
-                <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
-            </div>
-            <div class="row mt-3">
-            <i data-id="'.$currentPostId.'" class="clickable upvote far fa-hand-point-up fa-2x mr-3"></i>
-            <a href="gag.php?p_id='.$currentPostId.'#comment"><i class="far fa-comment fa-2x"></i></a>
-=======
-                <a href="gag.php?p_id='.htmlentities($currentPostId).'" class="card-link post-link"># Upvotes</a>
+                <p class="clickable noUpvotes">'.$upvotesCount.' Upvotes</p>
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment" class="card-link post-link">'.htmlentities($iCommentCount).' Comments</a>
             </div>
             <div class="row mt-3">
-                <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
+                <i class="clickable upvote far fa-hand-point-up fa-2x mr-3" data-id="'.$currentPostId.'"></i>
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment"><i class="far fa-comment fa-2x"></i></a>
->>>>>>> 2eed412680ea5883072809ed15fa90ae16611232
             </div>
         </div>
     </div>';
