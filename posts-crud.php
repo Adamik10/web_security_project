@@ -16,7 +16,7 @@ require_once('components/top.php');
 ?>
 
 <!-- TEMPLATE START -->
-<div class="custom-container">
+<div class="custom-container mb-5">
 
     <h3 class="mt-5 text-center">Posts crud</h3>
     <div class="table-responsive">
@@ -36,6 +36,13 @@ require_once('components/top.php');
     <tbody>
 
 <?php 
+// TOKENS
+session_start();
+//if user is logged in, or on login/register page this will generate a session token for them
+$newToken = uniqid();
+$newTokenHashed = hash('sha256', $newToken);
+$_SESSION['token'] = $newToken;
+
 // get the data from db to display
 require('controllers/database.php');
 
@@ -56,13 +63,14 @@ try{
         // echo '<br>'.$aResult['headline'];
         echo '  <tr>
                 <form class="posts-crud-form">
-                <td><input type="text" class="posts-crud-input" name="txtPostIdCrud" value="'.$aResult['id_posts'].'" disabled></td>
-                <td><input type="text" class="posts-crud-input" name="txtHeadlineCrud" value="'.$aResult['headline'].'" disabled></td>
-                <td><div class="posts-crud-img" style="background-image: url('.$aResult['image_location'].')"></div></td>
-                <td>'.$aResult['username'].'</td>
-                <td><a href="comments-crud.php?p_id='.$aResult['id_posts'].'">'.$aResult['comments'].'</a></td>
-                <td>'.$aResult['upvotes'].'</td>
-                <td><input type="text" class="posts-crud-input" name="txtBannedCrud" value="'.$aResult['banned'].'" disabled></td>
+                <input name="activityToken" type="text" value="'.$newTokenHashed.'" hidden>
+                <td><input type="text" class="posts-crud-input" name="txtPostIdCrud" value="'.htmlentities($aResult['id_posts']).'" disabled></td>
+                <td><input type="text" class="posts-crud-input" name="txtHeadlineCrud" value="'.htmlentities($aResult['headline']).'" disabled></td>
+                <td><div class="posts-crud-img" style="background-image: url('.htmlentities($aResult['image_location']).')"></div></td>
+                <td>'.htmlentities($aResult['username']).'</td>
+                <td><a href="comments-crud.php?p_id='.htmlentities($aResult['id_posts']).'">'.htmlentities($aResult['comments']).'</a></td>
+                <td>'.htmlentities($aResult['upvotes']).'</td>
+                <td><input type="text" class="posts-crud-input" name="txtBannedCrud" value="'.htmlentities($aResult['banned']).'" disabled></td>
                 <td><button class="btnSaveChangesAdmin admin-page-input edit" type="submit"><i class="editIcon fas fa-edit"></i><i class="saveIcon fas fa-save"></i></button></td>
                 </form>
                 </tr>';
@@ -70,8 +78,6 @@ try{
 // DYNAMIC PART END
 ?>
 
-
-        
     </tbody>
     </table>
     </div>

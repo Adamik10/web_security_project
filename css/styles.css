@@ -66,6 +66,7 @@
 }
 
 
+
 /* REGISTER */
 #frmRegister{
     max-width: 400px;
@@ -230,6 +231,20 @@ textarea{
     color: red;
     font-size: smaller;
 }
+.profile-error{
+    color: red;
+    font-size: smaller;
+    margin-top: -1em;
+    /*line-height: 0.5;*/
+}
+.profile-success{
+    color: green;
+    font-size: smaller;
+}
+#successMessage{
+    color: green;
+    font-size: smaller;
+}
 
 /* LOGOUT */
 
@@ -247,6 +262,7 @@ textarea{
     margin-top: auto;
     margin-bottom: auto;
     height: 100%;
+    padding: .5rem !important;
 }
 
 #logout_button:hover {
@@ -338,7 +354,7 @@ textarea{
     display: none;
 }
 
-.btnSaveChangesAdmin{
+.btnSaveChangesAdmin, .btnSaveChangesAdminComments{
     cursor: pointer;
     border: none;
     background: none;

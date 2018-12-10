@@ -1,8 +1,8 @@
 <?php
 
 // echo $_POST['txtPostIdCrud'];
-if(isset($_POST['txtHeadlineCrud']) && isset($_POST['txtBannedCrud']) && isset($_POST['txtPostIdCrud'])){
-
+if(isset($_POST['txtBannedCrudComments']) && isset($_POST['txtCommentsIdCrud'])){
+    
     // TOKENS
     session_start();
     // a token was created if the real person wanted to do this - does it match what we got?
@@ -21,16 +21,14 @@ if(isset($_POST['txtHeadlineCrud']) && isset($_POST['txtBannedCrud']) && isset($
 
     require('controllers/database.php');
     // SAVE DATA FROM FORM
-    $postId = htmlentities($_POST['txtPostIdCrud']);
-    $newHeadline = htmlentities($_POST['txtHeadlineCrud']);
-    $newBanned = htmlentities($_POST['txtBannedCrud']);
+    $commentsId = htmlentities($_POST['txtCommentsIdCrud']);
+    $newBanned = htmlentities($_POST['txtBannedCrudComments']);
     
     // UPDATE THE DB WITH FORM DATA
     try{
-        $sUpdate = $db->prepare( 'UPDATE posts SET headline = :newHeadline, banned = :newBanned  WHERE id_posts = :postId' );
-        $sUpdate->bindValue( ':newHeadline' , $newHeadline );
+        $sUpdate = $db->prepare( 'UPDATE comments SET banned = :newBanned  WHERE id_comments = :commentsId' );
         $sUpdate->bindValue( ':newBanned' , $newBanned );
-        $sUpdate->bindValue( ':postId' , $postId );
+        $sUpdate->bindValue( ':commentsId' , $commentsId );
         $sUpdate->execute();
     }catch( PDOException $ex ){
     echo $ex;

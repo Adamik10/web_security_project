@@ -13,6 +13,9 @@
 <!-- RECAPTCHA -->
 <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
 
+<!-- DATA TABLE -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
 <!-- CUSTOM SCRIPT -->
 <script src="script/main.js"></script>
 <script src="script/preview-image-upload.js"></script>
