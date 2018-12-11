@@ -134,6 +134,7 @@ if( isset($_POST['txtUserId']) &&
          if($txtPasswordCrud < 7  || !$uppercase || !$lowercase || !$number){
              array_push($thingsThatWentGrong, 'password criteria not met');
              $validationPass = 0;
+            //  echo $uppercase.'       '.$lowercase.'       '.$number.'       '.$txtPasswordCrud;
              echo 'password drama';
          }
 
@@ -158,6 +159,8 @@ if( isset($_POST['txtUserId']) &&
 
         //if password is altered then update password
     if($_POST['txtPasswordCrud'] !== 'password'){
+
+        echo 'yes I am trying to save something';
     
         //hashing pattern:
         $salt = rand(100000, 999999);
