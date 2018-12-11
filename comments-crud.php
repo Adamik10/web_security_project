@@ -17,7 +17,7 @@ if(!isset($_GET['p_id'])){
     exit;
 }
 
-$postId = $_GET['p_id'];
+$postId = urlencode($_GET['p_id']);
 ?>
 
 <?php 
