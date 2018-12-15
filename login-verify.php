@@ -197,8 +197,6 @@ function tryToLogin(){
             
 
             $doTheyEqual = password_verify($enteredPassword.$peber.$sUserSaltFromDb, $sUserPasswordFromDb);
-            // $registerPassword1.$peber.$salt, PASSWORD_DEFAULT, $options
-            // echo '<br> do they: '.$doTheyEqual;
 
             // check if they equal 
             if($doTheyEqual == 1){
@@ -277,7 +275,7 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     echo 'This is the current IP: '.$currentIp.'<br>';
 
 
-    // get an array of IPs with the same username that match from the database - logging in table
+    // get an array of IPs with the same username and IP that match from the database - logging in table
     try{
         $stmt = $db->prepare('SELECT * FROM logging_in 
                                         WHERE ip = :currentIP AND username = :enteredUsername');
@@ -365,9 +363,8 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
                 );
             }
             
-            // IF RESPONSE IS OKE TRY TO LOGIN
+            // ONLY IF RESPONSE FROM RECAPTCHA IS OK TRY TO LOGIN
             if ($response != null && $response->success) {
-                // echo '<br>trying to login 351';
                 tryToLogin();
                 exit;
             }else{

@@ -63,28 +63,33 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
    $number    = preg_match('@[0-9]@', $registerPassword2);
    if(strlen($registerPassword2) < 7 || strlen($registerPassword2) > 30 || !$uppercase || !$lowercase || !$number){
        header('location: register.php?status=password_criteria');
-        $validationPass = 0;    
+        $validationPass = 0;  
+        exit();  
    }
    // echo $lowercase.', '.$uppercase.', '.$number.', '.strlen($registerPassword2);
 
    if($registerCheckbox !== 'on' ){
        header('location: register.php?status=privacy_statement');
        $validationPass = 0;
+       exit();
    }
 
    if(strlen($registerUsername) < 2 || strlen($registerUsername) > 20){
        header('location: register.php?status=username_length');
        $validationPass = 0;
+       exit();
    }
 
    if(filter_var($registerEmail, FILTER_VALIDATE_EMAIL) == false){
        header('location: register.php?status=email_pattern');
        $validationPass = 0;
+       exit();
    }
 
    if($alreadyUsedEmail == 1 || $alreadyUsedUsername == 1){
        header('location: register.php?status=already_exists');
        $validationPass = 0;
+       exit();
    }
 
 
