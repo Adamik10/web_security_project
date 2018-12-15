@@ -43,7 +43,7 @@ try {
     //Content
     $mail->isHTML(true);                                  // Set email format to HTML
     $mail->Subject = '8gag.com account activation';
-    $mail->Body    = 'Click <a href="http://localhost/web_security_project/account-activation.php?user='. $verificationCode .'">here</a> to activate your account.';
+    $mail->Body    = 'Click <a href="http://104.248.30.208/account-activation.php?user='. $verificationCode .'">here</a> to activate your account.';
     $mail->Body    = '<!DOCTYPE html>
     <html>
     <head>
@@ -58,7 +58,7 @@ try {
             <div id="container">
                 <p>Dear '. $registerUsername .',<br><strong>welcome to 8gag!</strong></p>
                 <p>To activate your account click on the link below:</p>
-                <a href="http://localhost/web_security_project/account-activation.php?user='. $verificationCode .'">Activate account</a>
+                <a href="http://104.248.30.208/account-activation.php?user='. $verificationCode .'">Activate account</a>
                 <p>Best regards,<br>8gag team.</p>
             </div>    
         </section>   
