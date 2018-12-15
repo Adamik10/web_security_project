@@ -14,14 +14,10 @@ if(isset($_SESSION['sessionId'])){
 
     <!-- REGISTER FORM START -->
     <form id="frmRegister" method="post" action="register-save.php">
-    <!-- <div class="form-group">
-        <label for="registerFirstName">First name</label>
-        <input name="registerFirstName" type="text" class="form-control" id="registerFirstName" placeholder="Enter first name">
-    </div>
-    <div class="form-group">
-        <label for="registerLastName">Last name</label>
-        <input name="registerLastName" type="text" class="form-control" id="registerLastName" placeholder="Enter last name">
-    </div> -->
+
+
+    <input name="byeBot" type="text" id="byeBot" hidden>
+    
     <div class="form-group">
         <label for="registerUsername">Username*</label>
         <input name="registerUsername" type="text" class="form-control" id="registerUsername" placeholder="Enter username">
