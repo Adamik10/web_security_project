@@ -5,7 +5,8 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
     isset($_POST['registerEmail']) && !empty($_POST['registerEmail']) &&
     isset($_POST['registerPassword2']) && !empty($_POST['registerPassword2']) &&
     isset($_POST['registerPassword1']) && !empty($_POST['registerPassword1']) &&
-    isset($_POST['registerCheckbox']) && !empty($_POST['registerCheckbox'])
+    isset($_POST['registerCheckbox']) && !empty($_POST['registerCheckbox']) &&
+    empty($_POST['byeBot'])
 ){
 
     $registerUsername = htmlentities($_POST['registerUsername']);
