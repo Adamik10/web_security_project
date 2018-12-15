@@ -66,17 +66,17 @@
         try{
             $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count
                                     FROM upvotes
-                                    WHERE id_upvotes = :currentPostId');
+                                    WHERE id_posts = :currentPostId');
             $stmt2->bindValue(':currentPostId', $currentPostId);
             $stmt2->execute();
-            $aUpvotesCount = $stmt2->fetchAll();
+            $aaUpvotesCount = $stmt2->fetchAll();
     
             }catch (PDOException $ex){
                 echo $ex;
                 exit;
             }
-
-            $upvotesCount = count($aUpvotesCount);
+        $aUpvotesCount = $aaUpvotesCount[0];
+        $iUpvotesCount = $aUpvotesCount['upvotes_count'];
 
         echo '<div class="card align-self-center card-custom mt-5 mb-2 postHolder" id="'.$currentPostId.'">
             <div class="card-header">
@@ -89,7 +89,7 @@
             <a href="gag.php?p_id='.$currentPostId.'"><img class="card-img-top" src="'.$currentPostImageLocation.'" alt="'.$currentPostImageName.'"></a>
             <div class="card-body">
                 <div class="row">
-                    <p class="clickable noUpvotes">'.$upvotesCount.' Upvotes</p>
+                    <p class="clickable noUpvotes" data-post-id='.$currentPostId.'>'.$iUpvotesCount.' Upvotes</p>
                     <a href="gag.php?p_id='.$currentPostId.'#comment" class="card-link post-link">'.$iCommentCount.' Comments</a>
                 </div>
                 <div class="row mt-3">

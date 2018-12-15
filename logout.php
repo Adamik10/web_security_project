@@ -13,7 +13,7 @@ if(!isset($_SESSION['logout_token']) || !isset($_POST['activityToken'])){
     exit;
 }else{
     // if there is a token, compare it to the one we got from the form
-    if (hash('sha256', $_SESSION['logout_token']) != $_POST['activityToken']){
+    if ($_SESSION['logout_token'] != $_POST['activityToken']){
         // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
         // echo 'The tokens dont match';
         header('location: ups.php');

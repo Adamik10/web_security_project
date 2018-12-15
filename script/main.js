@@ -180,17 +180,17 @@ $('#loadMorePostsButton').click(function(){
 $(document).on('click', '.upvote', function(){ 
 
     // console.log('upvote clicked');
-    var post_id = $(this).data('id');
+    var post_id = $(this).attr('data-id');
     // console.log('this post id is - ' + post_id);
 
     $.ajax({
         method : "post",
         url: "upvote.php",
-        data: { p_id: post_id }
+        data: { 'p_id': post_id }
     }).done(function (gotBack) {
-         console.log(gotBack);
-         var numberOfUpvotes = gotBack + ' Upvotes';
-         $('.noUpvotes').text(numberOfUpvotes);
+        //console.log(gotBack);
+        var numberOfUpvotes = gotBack + ' Upvotes';
+        $('.noUpvotes[data-post-id="' + post_id+'"]').text(numberOfUpvotes); // TODO this doesn't work on dynamically added elements - find other solutions
     })
 
 });

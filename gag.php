@@ -52,46 +52,23 @@ if(isset($_GET['p_id'])){
     $aCommentCount = $aaCommentCount[0];
     $iCommentCount = $aCommentCount['comments_count'];
 
-     // count upvotes for each post from db
-     try{
+    // count upvotes for each post from db
+    try{
         $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count
                                 FROM upvotes
-                                WHERE id_upvotes = :currentPostId');
+                                WHERE id_posts = :currentPostId');
         $stmt2->bindValue(':currentPostId', $currentPostId);
         $stmt2->execute();
-        $aUpvotesCount = $stmt2->fetchAll();
+        $aaUpvotesCount = $stmt2->fetchAll();
 
         }catch (PDOException $ex){
             echo $ex;
             exit;
         }
+    $aUpvotesCount = $aaUpvotesCount[0];
+    $iUpvotesCount = $aUpvotesCount['upvotes_count'];
 
-        $upvotesCount = count($aUpvotesCount);
-
-    // if there is no profile img echo default profile image else echo the profile img from db
-    if($currentUserImgLocation == NULL){
-        echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.htmlentities($currentPostId).'">
-        <div class="card-header">
-            <div class="row">
-            <div style="background-image: url(images/users/default.png);" class="OP-img mr-3"></div>
-            <a href="#">'.htmlentities($currentPostUsername).'</a>
-            </div>
-        </div>
-        <h4 class="card-title mt-1">'.htmlentities($currentPostHeadline).'</h4>
-        <a href="gag.php?p_id='.htmlentities($currentPostId).'"><img class="card-img-top" src="'.htmlentities($currentPostImageLocation).'" alt="'.htmlentities($currentPostImageName).'"></a>
-        <div class="card-body">
-            <div class="row">
-                <a href="gag.php?p_id='.htmlentities($currentPostId).'" class="card-link post-link"># Upvotes</a>
-                <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment" class="card-link post-link">'.htmlentities($iCommentCount).' Comments</a>
-            </div>
-            <div class="row mt-3">
-                <a href="#"><i class="far fa-hand-point-up fa-2x mr-3"></i></a>
-                <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment"><i class="far fa-comment fa-2x"></i></a>
-            </div>
-        </div>
-    </div>';
-    }else{
-        echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.htmlentities($currentPostId).'">
+    echo '<div class="card align-self-center card-custom mt-5 mb-2" id="'.htmlentities($currentPostId).'">
         <div class="card-header">
             <div class="row">
             <div style="background-image: url('.htmlentities($currentUserImgLocation).');" class="OP-img mr-3"></div>
@@ -102,7 +79,7 @@ if(isset($_GET['p_id'])){
         <a href="gag.php?p_id='.htmlentities($currentPostId).'"><img class="card-img-top" src="'.htmlentities($currentPostImageLocation).'" alt="'.htmlentities($currentPostImageName).'"></a>
         <div class="card-body">
             <div class="row">
-                <p class="clickable noUpvotes">'.$upvotesCount.' Upvotes</p>
+                <a href="gag.php?p_id='.htmlentities($currentPostId).'" class="card-link post-link upvote noUpvotes" data-post-id="'.htmlentities($currentPostId).'">'.htmlentities($iUpvotesCount).' Upvotes</a>
                 <a href="gag.php?p_id='.htmlentities($currentPostId).'#comment" class="card-link post-link">'.htmlentities($iCommentCount).' Comments</a>
             </div>
             <div class="row mt-3">
@@ -111,7 +88,7 @@ if(isset($_GET['p_id'])){
             </div>
         </div>
     </div>';
-    }
+    
 
     // echo html for posting a comment only if you are logged in
     if(!empty($_SESSION['userId'])){

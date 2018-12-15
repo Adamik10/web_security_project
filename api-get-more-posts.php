@@ -75,17 +75,19 @@ for($j = 0; $j < sizeof($aOfPosts); $j++){
 
     // count upvotes for each post from db
     try{
-    $stmt2 = $db->prepare(' SELECT COUNT(*) AS upvotes_count FROM upvotes WHERE id_posts = :currentPostId');
-    $stmt2->bindValue(':currentPostId', $currentPostId);
-    $stmt2->execute();
-    $aaUpvoteCount = $stmt2->fetchAll();
+    $stmt3 = $db->prepare(' SELECT COUNT(*) AS upvotes_count FROM upvotes WHERE id_posts = :currentPostId');
+    $stmt3->bindValue(':currentPostId', $currentPostId);
+    $stmt3->execute();
+    $aaUpvoteCount = $stmt3->fetchAll();
 
     }catch (PDOException $ex){
         echo $ex;
     }
 
-    $iCommentCount = count($aaUpvoteCount);
-    $aOfPosts[$j]['upvote_count'] = $iCommentCount;
+
+    $aUpvoteCount = $aaUpvoteCount[0];
+    $iUpvoteCount = $aUpvoteCount['upvotes_count'];
+    $aOfPosts[$j]['upvote_count'] = $iUpvoteCount;
 }
 
 

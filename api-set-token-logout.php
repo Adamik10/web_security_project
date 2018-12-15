@@ -11,7 +11,7 @@ session_start();
 //if user is logged in, this will generate a logout session token for them
 $newLogoutToken = uniqid();
 $newLogoutTokenHashed = hash('sha256', $newLogoutToken);
-$_SESSION['logout_token'] = $newLogoutToken;
+$_SESSION['logout_token'] = $newLogoutTokenHashed;
 
 //this file will be used as an require_once() in other files so now we need to echo an input in the form that uses the same values
 echo '<input name="activityToken" type="text" value="'.$newLogoutTokenHashed.'" hidden>';
