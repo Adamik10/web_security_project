@@ -429,6 +429,7 @@ td a:hover{
 
 .clickable {
     color: #007bff !important;
+    cursor: pointer;
 }
 
 p.clickable {

@@ -1,17 +1,15 @@
 
 <?php
-
-require_once("controllers/database.php");
-
 // check if user is logged in
 session_start();
 if(!isset($_SESSION['sessionId'])){
     header('location: login.php?status=not_logged_in');
     exit;
 }
+require_once("controllers/database.php");
+
 
 $postId = $_POST['p_id'];
-// echo 'SERVER - Apparently the post Id for this post is - '.$postId; 
 $loggedInUserId = $_SESSION['userId'];
 $upvoteId = uniqid();
 
@@ -52,7 +50,6 @@ $done = false;
         }
     } else {
         // echo 'this post has been liked by you already';
-
         try{
             $stmt = $db->prepare('DELETE FROM upvotes WHERE id_posts = :upvotedPost AND id_users = :loggedInUserId');
             $stmt->bindValue(':upvotedPost', $postId);
@@ -72,20 +69,17 @@ $done = false;
 
 if($done){
     try{
-        $stmt = $db->prepare('SELECT * FROM upvotes WHERE id_posts = :upvotedPost');
+        $stmt = $db->prepare('SELECT COUNT(*) AS new_upvotes_count FROM upvotes WHERE id_posts = :upvotedPost');
         $stmt->bindValue(':upvotedPost', $postId);
         $stmt->execute();
-        $users = $stmt->fetchAll();
+        $aaUpvotesAfterChange = $stmt->fetchAll();
     } catch (PDOException $ex){
         // echo 'error selecting upvotes: '.$ex;
     //recirect either to index or gag.php
         exit();
     }
+    $aUpvotesAfterChange = $aaUpvotesAfterChange[0];
+    $iNumberOfUpvotes = $aUpvotesAfterChange['new_upvotes_count'];
     
-    $numberOfUpvotes = count($users);
-    
-    echo $numberOfUpvotes;
+    echo $iNumberOfUpvotes;
 }
-
-
-
