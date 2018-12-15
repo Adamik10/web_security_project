@@ -2,16 +2,18 @@
 session_start();
 // a token was created if the real person wanted to do this - does it match what we got?
 if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
-    //echo 'The token is not set';
+    echo 'The token is not set';
     header('location: ups.php');
     exit;
-}else{
-    // if there is a token, compare it to the one we got from the form
-    if ($_SESSION['token'] != $_POST['activityToken']){
-        // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
-        header('location: ups.php');
-        exit;
-    }
+}
+
+// if there is a token, compare it to the one we got from the form
+if ($_SESSION['token'] != $_POST['activityToken']){
+    // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
+    echo 'tokens dont match<br>';
+    echo $_SESSION['token'].'<br>'.$_POST['activityToken'];
+    header('location: ups.php');
+    exit;
 }
 ?>
 
@@ -487,4 +489,4 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
 }
 
 
-?>
+?> 
