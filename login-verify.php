@@ -7,7 +7,7 @@ if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
     exit;
 }else{
     // if there is a token, compare it to the one we got from the form
-    if (hash('sha256', $_SESSION['token']) != $_POST['activityToken']){
+    if ($_SESSION['token'] != $_POST['activityToken']){
         // redirect to UPS THIS WASN'T SUPPOSED TO HAPPEN page 
         header('location: ups.php');
         exit;
