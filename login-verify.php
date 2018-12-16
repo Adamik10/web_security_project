@@ -284,7 +284,8 @@ if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
         $stmt->execute();
         $aOfMatchedIPs = $stmt->fetchAll();
     }catch (PDOException $exception){
-        echo $exception;
+        header('location: login.php?status=doesnt_exist');
+        // echo $exception;
         exit; 
     }
     // echo 'This is the records IPs + username that match from the database: '.json_encode($aOfMatchedIPs).'<br>';
