@@ -27,12 +27,12 @@ if( isset($_POST['txtUserId']) &&
     isset($_POST['txtVerifiedCrud'])
    ){
     echo 'hooo';
-    $txtIdCrud = htmlentities($_POST['txtUserId']);
-    $txtUsernameCrud = htmlentities($_POST['txtUsernameCrud']);
-    $txtEmailCrud = htmlentities($_POST['txtEmailCrud']);
+    $txtIdCrud = $_POST['txtUserId'];
+    $txtUsernameCrud = $_POST['txtUsernameCrud'];
+    $txtEmailCrud = $_POST['txtEmailCrud'];
     $txtPasswordCrud = $_POST['txtPasswordCrud'];
-    $txtBannedCrud = htmlentities($_POST['txtBannedCrud']);
-    $txtVerifiedCrud = htmlentities($_POST['txtVerifiedCrud']);
+    $txtBannedCrud = $_POST['txtBannedCrud'];
+    $txtVerifiedCrud = $_POST['txtVerifiedCrud'];
 
     require_once('controllers/database.php');
 

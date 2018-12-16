@@ -159,8 +159,8 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
 
     require_once('controllers/database.php');
 
-    $changedUsername = htmlentities($_POST['changedUsername']);
-    $changedEmail = htmlentities($_POST['changedEmail']);
+    $changedUsername = $_POST['changedUsername'];
+    $changedEmail = $_POST['changedEmail'];
     $sUserIdFromDb = $_SESSION['userId'];
 
         //first we need to find out 

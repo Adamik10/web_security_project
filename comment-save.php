@@ -27,9 +27,9 @@ if(!isset($_SESSION['token']) || !isset($_POST['activityToken'])){
 
 // check if data was passed through the form
 if(isset($_POST['postNewComment']) && !empty($_POST['postNewComment'])){
-    // store post variables, sanitize using htmlentities!
-    $newComment = htmlentities($_POST['postNewComment']);
-    $postId = htmlentities($_POST['postId']);
+    // store post variables, sanitize 
+    $newComment = $_POST['postNewComment'];
+    $postId = $_POST['postId'];
     // store user id and token from session
     $loggedInUserId = $_SESSION['userId'];
     $newCommentId = uniqid();

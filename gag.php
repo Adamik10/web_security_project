@@ -8,7 +8,7 @@ if(isset($_GET['p_id'])){
     require_once('controllers/database.php');
     
     // save post id from url
-    $post_id = htmlentities($_GET['p_id']);
+    $post_id = $_GET['p_id'];
 
     // get all the data from database - name of OP, img of OP, post headline, post imageURL, post image name 
     try{

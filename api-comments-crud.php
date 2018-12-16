@@ -21,8 +21,8 @@ if(isset($_POST['txtBannedCrudComments']) && isset($_POST['txtCommentsIdCrud']))
 
     require('controllers/database.php');
     // SAVE DATA FROM FORM
-    $commentsId = htmlentities($_POST['txtCommentsIdCrud']);
-    $newBanned = htmlentities($_POST['txtBannedCrudComments']);
+    $commentsId = $_POST['txtCommentsIdCrud'];
+    $newBanned = $_POST['txtBannedCrudComments'];
     
     // UPDATE THE DB WITH FORM DATA
     try{
