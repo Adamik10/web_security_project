@@ -259,8 +259,8 @@ function tryToLogin(){
 // check if the form was passed
 if(!empty($_POST['loginUsername']) && !empty($_POST['loginPassword'])){
     require('controllers/database.php');
-    $enteredUsername = htmlentities($_POST['loginUsername']);
-    $enteredPassword = htmlentities($_POST['loginPassword']);
+    $enteredUsername = $_POST['loginUsername'];
+    $enteredPassword = $_POST['loginPassword'];
     echo '<br>username: '.$enteredUsername.' and password: '.$enteredPassword.'<br>';
 
 

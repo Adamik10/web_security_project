@@ -24,7 +24,7 @@ try {
     $mail->Host = 'smtp.gmail.com';                      // Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
     $mail->Username = '8gag.web.sec@gmail.com';                 // SMTP username
-    $mail->Password = file_get_contents('controllers/password.txt');                           // SMTP password
+    $mail->Password = file_get_contents('password.txt');                           // SMTP password
     $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
     $mail->Port = 587;                                    // TCP port to connect to
 
@@ -43,7 +43,7 @@ try {
     //Content
     $mail->isHTML(true);                                  // Set email format to HTML
     $mail->Subject = '8gag.com account activation';
-    $mail->Body    = 'Click <a href="http://104.248.30.208/account-activation.php?user='. $verificationCode .'">here</a> to activate your account.';
+    $mail->Body    = 'Click <a href="http://localhost/web_security_project/account-activation.php?user='. $verificationCode .'">here</a> to activate your account.';
     $mail->Body    = '<!DOCTYPE html>
     <html>
     <head>
@@ -58,7 +58,7 @@ try {
             <div id="container">
                 <p>Dear '. $registerUsername .',<br><strong>welcome to 8gag!</strong></p>
                 <p>To activate your account click on the link below:</p>
-                <a href="http://104.248.30.208/account-activation.php?user='. $verificationCode .'">Activate account</a>
+                <a href="http://localhost/web_security_project/account-activation.php?user='. $verificationCode .'">Activate account</a>
                 <p>Best regards,<br>8gag team.</p>
             </div>    
         </section>   
