@@ -13,7 +13,7 @@ if(isset($_POST['kvcArray'])){
     $listOfIds = $_POST['kvcArray'];
 }else{
     echo 'there was no data';
-    header('location: index.php')
+    //header('location: index.php') DO NOT ENABLE THIS - THEN LOAD MORE POSTS FAILS
     exit; 
 }
 
