@@ -194,8 +194,8 @@ if( isset($_FILES['profileImgFile']) && $_FILES['profileImgFile']['size'] != 0 )
             }
         }
 
-        echo $emailTouched;
-        echo $usernameTouched;
+        // echo $emailTouched;
+        // echo $usernameTouched;
 
     // if the changed username or email are already used by someone else
 

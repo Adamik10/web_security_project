@@ -69,11 +69,11 @@ foreach($user as $a){
         <h5 class="mt-4">Account</h5>
             <div class="form-group">
             <label for="changedUsername">Username</label>
-            <input name="changedUsername" type="text" class="form-control" value="<?php echo $username; ?>">
+            <input name="changedUsername" type="text" class="form-control" value="<?php echo htmlentities($username); ?>">
         </div>
         <div class="form-group">
             <label for="changedEmail">Email address</label>
-            <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo $email; ?>">
+            <input name="changedEmail" type="email" class="form-control" aria-describedby="emailHelp" value="<?php echo htmlentities($email); ?>">
         </div>
 
         <?php

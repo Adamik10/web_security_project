@@ -13,6 +13,7 @@ if(isset($_POST['kvcArray'])){
     $listOfIds = $_POST['kvcArray'];
 }else{
     echo 'there was no data';
+    header('location: index.php')
     exit; 
 }
 

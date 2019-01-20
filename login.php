@@ -2,6 +2,7 @@
 <?php require_once('components/top.php'); ?>
 <?php require_once("components/recaptchalib.php"); 
 
+// makes sure that a logged in user can't access this
 session_start();
 if(isset($_SESSION['sessionId'])){
     header('location: index.php');

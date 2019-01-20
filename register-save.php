@@ -55,6 +55,7 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
        header('location: register.php?status=password_not_matching');
        $validationPass = 0;
        echo 'password not matching';
+       exit;
    }
 
    //password pattern validation 
@@ -94,7 +95,7 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
 
 
 
-if($validationPass == 1){
+    if($validationPass == 1){
    
        //hashing pattern:
        $salt = rand(100000, 999999);

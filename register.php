@@ -1,6 +1,7 @@
 <?php $pageTitle = 'register'?>
 <?php require_once('components/top.php');
 
+// makes sure that a logged in user can't access this
 session_start();
 if(isset($_SESSION['sessionId'])){
     header('location: index.php');

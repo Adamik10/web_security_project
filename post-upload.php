@@ -21,7 +21,7 @@ if(!isset($_SESSION['tokenPost']) || !isset($_POST['activityToken'])){
         exit;
     }
 }
-
+// check whether we got data from the form
 if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_POST['postHeader'])){
 
     require('controllers/database.php');
@@ -38,7 +38,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
     }
     
     // echo $_FILES['postFile']['size'];
-    if( $_FILES['postFile']['size'] < 4000000 ){ // unit is bytes
+    if( $_FILES['postFile']['size'] < 4000000 ){ // unit is bytes - 4 MB
         // use the image
         $aImage = $_FILES['postFile'];
         // print_r( $aImage );
@@ -104,6 +104,7 @@ if( isset($_FILES['postFile']) && $_FILES['postFile']['size'] != 0 && !empty($_P
                 exit;
             }
         }
+        //if there was NOT an exe
         // get extension knowing that the last element is the extension
         $sExtension = $aImageName[count($aImageName)-1];
         // now we whitelist PNG JPG JPEG

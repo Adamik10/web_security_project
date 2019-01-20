@@ -9,6 +9,7 @@ if(!isset($_SESSION['sessionId'])){
     header('location: login.php?status=not_logged_in');
     exit;
 }
+//here check for a token 
 
 // echo '1 - '. $_POST['txtUserId'].'   ';
 // echo '2 - '. $_POST['txtUsernameCrud'].'   ';

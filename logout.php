@@ -3,6 +3,7 @@
 <?php 
 session_start();
 
+//ONE DOES NOT SIMPLY DESTROY SESSION
 // session_destroy();
 // header('location: index.php');
 

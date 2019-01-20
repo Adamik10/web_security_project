@@ -149,8 +149,8 @@ $('#loadMorePostsButton').click(function(){
     function contactApiForMorePosts(){
         $.ajax({
             method : "post",
-            url: "api-get-more-posts.php",
-            data: { kvcArray: currentPostsIds }
+            url: "api-get-more-posts.php", 
+            data: { kvcArray: currentPostsIds } // kvcArray is a variable that sends an Array to the AJAX
         }).done(function (gotBack) {
              console.log(JSON.parse(gotBack));
             // console.log(gotBack);
@@ -177,7 +177,7 @@ $('#loadMorePostsButton').click(function(){
 
 //UPVOTES
 
-$(document).on('click', '.upvote', function(){ 
+$(document).on('click', '.upvote', function(){  // since the posts are dynamically loaded, we need to use the document on function
 
     // console.log('upvote clicked');
     var post_id = $(this).attr('data-id');
