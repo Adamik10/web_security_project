@@ -328,7 +328,7 @@ if(isset($_POST['changedPassword1']) && !empty($_POST['changedPassword1']) && is
         if($validationPass2 == 1){
 
             //hashing pattern:
-            $salt = rand(100000, 999999);
+            $salt = base64_encode(uniqid());
             $peber = "MaciejStopHackingUs";
             $options = [
                 'cost' => 12

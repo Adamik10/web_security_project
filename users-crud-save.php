@@ -164,7 +164,7 @@ if( isset($_POST['txtUserId']) &&
         echo 'yes I am trying to save something';
     
         //hashing pattern:
-        $salt = rand(100000, 999999);
+        $salt = base64_encode(uniqid());
         $peber = "MaciejStopHackingUs";
         $options = [
             'cost' => 12

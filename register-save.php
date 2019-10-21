@@ -98,7 +98,7 @@ if(isset($_POST['registerUsername']) && !empty($_POST['registerUsername']) &&
     if($validationPass == 1){
    
        //hashing pattern:
-       $salt = rand(100000, 999999);
+       $salt = base64_encode(uniqid());
        $peber = "MaciejStopHackingUs";
        $options = [
            'cost' => 12
